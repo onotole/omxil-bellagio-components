@@ -22,9 +22,9 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-07-03 10:00:23 +0200 (Thu, 03 Jul 2008) $
-  Revision $Rev: 559 $
-  Author $Author: gsent $
+  $Date$
+  Revision $Rev$
+  Author $Author$
 */
 
 #ifndef __OMXVOLCONTROLTEST_H__

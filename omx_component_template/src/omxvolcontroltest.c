@@ -22,9 +22,9 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-06-27 12:00:23 +0200 (Fri, 27 Jun 2008) $
-  Revision $Rev: 554 $
-  Author $Author: pankaj_sen $
+  $Date$
+  Revision $Rev$
+  Author $Author$
 */
 
 #include "omxvolcontroltest.h"
