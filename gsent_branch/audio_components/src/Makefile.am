@@ -1,13 +1,15 @@
-omxaudioeffectsdir = $(plugindir)
+SUBDIRS = audio_capturer audio_decoder  audio_reader  audio_renderer \
+          audio_writer content_pipe
 
-omxaudioeffects_LTLIBRARIES = libomxaudioeffects.la
+omxaudiosetdir = $(plugindir)
 
-libomxaudioeffects_la_SOURCES = omx_audio_effect.c omx_audio_effect.h \
-                                 library_entry_point.c
+omxaudioset_LTLIBRARIES = libomxaudioset.la
+libomxaudioset_la_SOURCES = library_entry_point.c
+libomxaudioset_la_LIBADD = audio_capturer/libomxaudio_capturer.la \
+                           audio_decoder/libomxaudio_decoder.la \
+                           audio_reader/libomxaudio_reader.la \
+                           audio_renderer/libomxaudio_renderer.la \
+                           audio_writer/libomxaudio_writer.la \
+                           content_pipe/libomx_content_pipe.la
 
-libomxaudioeffects_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio
-
-bin_PROGRAMS = omxvolcontroltest
-
-omxvolcontroltest_SOURCES = omxvolcontroltest.c omxvolcontroltest.h
-omxvolcontroltest_LDADD = -lpthread -lomxil-bellagio
+libomxaudioset_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio

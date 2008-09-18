@@ -1,9 +1,11 @@
 /**
-  @file src/omxvolcontroltest.c
+  @file src/audio_decoder/audio_decoder_test.h
 
-  This simple test application provides a testing stream for the volume control component.
+  This simple test application take an input stream from a file,
+  passes it to the audio_decoder component and writes the output
+  stream to a file.
 
-  Copyright (C) 2007-2008 STMicroelectronics
+  Copyright (C) 2007, 2008  STMicroelectronics
   Copyright (C) 2007-2008 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
@@ -26,8 +28,8 @@
   Author $Author$
 */
 
-#ifndef __OMXVOLCONTROLTEST_H__
-#define __OMXVOLCONTROLTEST_H__
+#ifndef __AUDIO_DECODER_TEST_H__
+#define __AUDIO_DECODER_TEST_H__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,8 +44,8 @@
 #include <OMX_Types.h>
 #include <OMX_Audio.h>
 
-#include <bellagio/tsemaphore.h>
 #include <bellagio/omx_comp_debug_levels.h>
+#include <bellagio/tsemaphore.h>
 
 /** Specification version*/
 #define VERSIONMAJOR    1
@@ -51,21 +53,27 @@
 #define VERSIONREVISION 0
 #define VERSIONSTEP     0
 
+#define BUFFER_COUNT_ACTUAL 2
+
+#include <ctype.h>
+
+#include "audio_decoder.h"
+
 /* Application's private data */
 typedef struct appPrivateType{
-  pthread_cond_t condition;
-  pthread_mutex_t mutex;
-  void* input_data;
-  OMX_BUFFERHEADERTYPE* currentInputBuffer;
+
+  int ipd;
+  int opd;
+
   tsem_t* eventSem;
   tsem_t* eofSem;
-}appPrivateType;
 
-/* Size of the buffers requested to the component */
-#define BUFFER_IN_SIZE 2*8192*2
+  OMX_HANDLETYPE decoderHandle;
+
+} appPrivateType;
 
 /* Callback prototypes */
-OMX_ERRORTYPE volcEventHandler(
+OMX_ERRORTYPE audiomixerEventHandler(
   OMX_OUT OMX_HANDLETYPE hComponent,
   OMX_OUT OMX_PTR pAppData,
   OMX_OUT OMX_EVENTTYPE eEvent,
@@ -73,17 +81,27 @@ OMX_ERRORTYPE volcEventHandler(
   OMX_OUT OMX_U32 Data2,
   OMX_IN OMX_PTR pEventData);
 
-OMX_ERRORTYPE volcEmptyBufferDone(
+OMX_ERRORTYPE audiomixerEmptyBufferDone(
   OMX_OUT OMX_HANDLETYPE hComponent,
   OMX_OUT OMX_PTR pAppData,
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
 
-OMX_ERRORTYPE volcFillBufferDone(
+OMX_ERRORTYPE audiomixerFillBufferDone(
   OMX_OUT OMX_HANDLETYPE hComponent,
   OMX_OUT OMX_PTR pAppData,
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
 
-/** Helper functions */
-static int getFileSize(int fd);
+OMX_ERRORTYPE audiosinkEventHandler(
+  OMX_OUT OMX_HANDLETYPE hComponent,
+  OMX_OUT OMX_PTR pAppData,
+  OMX_OUT OMX_EVENTTYPE eEvent,
+  OMX_OUT OMX_U32 Data1,
+  OMX_OUT OMX_U32 Data2,
+  OMX_OUT OMX_PTR pEventData);
+
+OMX_ERRORTYPE audiosinkEmptyBufferDone(
+  OMX_OUT OMX_HANDLETYPE hComponent,
+  OMX_OUT OMX_PTR pAppData,
+  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
 
 #endif

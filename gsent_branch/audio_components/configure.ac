@@ -32,6 +32,12 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
+    src/audio_capturer/Makefile
+    src/audio_decoder/Makefile
+    src/audio_reader/Makefile
+    src/audio_renderer/Makefile
+    src/audio_writer/Makefile
+    src/content_pipe/Makefile
     m4/Makefile
 ])
 
