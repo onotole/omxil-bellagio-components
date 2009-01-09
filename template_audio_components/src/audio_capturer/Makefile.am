@@ -1,5 +1,3 @@
-omxaudio_capturerdir = $(plugindir)
-
 noinst_LTLIBRARIES = libomxaudio_capturer.la
 
 libomxaudio_capturer_la_SOURCES = audio_capturer.c audio_capturer.h

@@ -1,5 +1,3 @@
-omxaudio_writerdir = $(plugindir)
-
 noinst_LTLIBRARIES = libomxaudio_writer.la
 
 libomxaudio_writer_la_SOURCES = audio_writer.c audio_writer.h

@@ -1,5 +1,3 @@
-omxaudio_decoderdir = $(plugindir)
-
 noinst_LTLIBRARIES = libomxaudio_decoder.la
 
 libomxaudio_decoder_la_SOURCES = audio_decoder.c audio_decoder.h

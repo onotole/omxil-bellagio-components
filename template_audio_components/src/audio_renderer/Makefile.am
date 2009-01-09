@@ -1,5 +1,3 @@
-omxaudio_rendererrdir = $(plugindir)
-
 noinst_LTLIBRARIES = libomxaudio_renderer.la
 
 libomxaudio_renderer_la_SOURCES = audio_renderer.c audio_renderer.h

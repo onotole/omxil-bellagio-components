@@ -1,5 +1,3 @@
-omxaudio_readerrdir = $(plugindir)
-
 noinst_LTLIBRARIES = libomxaudio_reader.la
 
 libomxaudio_reader_la_SOURCES = audio_reader.c audio_reader.h
