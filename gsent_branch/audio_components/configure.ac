@@ -37,7 +37,6 @@ AC_CONFIG_FILES([
     src/audio_reader/Makefile
     src/audio_renderer/Makefile
     src/audio_writer/Makefile
-    src/content_pipe/Makefile
     m4/Makefile
 ])
 
