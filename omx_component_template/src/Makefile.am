@@ -1,6 +1,4 @@
-omxaudioeffectsdir = $(plugindir)
-
-omxaudioeffects_LTLIBRARIES = libomxaudioeffects.la
+lib_LTLIBRARIES = libomxaudioeffects.la
 
 libomxaudioeffects_la_SOURCES = omx_audio_effect.c omx_audio_effect.h \
                                  library_entry_point.c
