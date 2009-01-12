@@ -1,11 +1,10 @@
-lib_LTLIBRARIES = libomxaudioeffects.la
+lib_LTLIBRARIES = libomxxvideo.la
 
-libomxaudioeffects_la_SOURCES = omx_audio_effect.c omx_audio_effect.h \
-                                 library_entry_point.c
+libomxxvideo_la_SOURCES = omx_xvideo_sink_component.c omx_xvideo_sink_component.h \
+			 library_entry_point.c
 
-libomxaudioeffects_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio
-
-bin_PROGRAMS = omxvolcontroltest
-
-omxvolcontroltest_SOURCES = omxvolcontroltest.c omxvolcontroltest.h
-omxvolcontroltest_LDADD = -lpthread -lomxil-bellagio
+libomxxvideo_la_LIBADD = -lomxil-bellagio
+libomxxvideo_la_LDFLAGS = $(PLUGIN_LDFLAGS) $(X11_LIBS)
+libomxxvideo_la_CFLAGS = -I$(top_srcdir)/include \
+			-I$(top_srcdir)/src \
+			-I$(top_srcdir)/src/base

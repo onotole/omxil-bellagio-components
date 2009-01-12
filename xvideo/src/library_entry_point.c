@@ -1,5 +1,5 @@
 /**
-  @file src/library_entry_point.c
+  @file src/components/xvideo/library_entry_point.c
 
   The library entry point. It must have the same name for each
   library of the components loaded by the ST static component loader.
@@ -32,8 +32,9 @@
 
 */
 
+
 #include <bellagio/st_static_component_loader.h>
-#include "omx_audio_effect.h"
+#include <omx_xvideo_sink_component.h>
 
 /** @brief The library entry point. It must have the same name for each
   * library of the components loaded by the ST static component loader.
@@ -41,23 +42,23 @@
   * This function fills the version, the component name and if existing also the roles
   * and the specific names for each role. This base function is only an explanation.
   * For each library it must be implemented, and it must fill data of any component
-  * in the library
+  * in the library.
   *
   * @param stComponents pointer to an array of components descriptors.If NULL, the
   * function will return only the number of components contained in the library
   *
   * @return number of components contained in the library
-  */
+*/
 int omx_component_library_Setup(stLoaderComponentType **stComponents) {
-  unsigned int i;
+  int i;
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
 
   if (stComponents == NULL) {
     DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
-    return 1; // Return Number of Components - one for audio volume component
+    return 1; // Return Number of Components - one for xvideo sink component
   }
 
-  /** component 1 - volume component */
+  /** component 1 - xvideo sink component */
   stComponents[0]->componentVersion.s.nVersionMajor = 1;
   stComponents[0]->componentVersion.s.nVersionMinor = 1;
   stComponents[0]->componentVersion.s.nRevision = 1;
@@ -67,9 +68,9 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   if (stComponents[0]->name == NULL) {
     return OMX_ErrorInsufficientResources;
   }
-  strcpy(stComponents[0]->name, "OMX.st.audio_effect");
+  strcpy(stComponents[0]->name, "OMX.st.video.xvideo_sink");
   stComponents[0]->name_specific_length = 1;
-  stComponents[0]->constructor = omx_audio_effect_component_Constructor;
+  stComponents[0]->constructor = omx_xvideo_sink_component_Constructor;
 
   stComponents[0]->name_specific = calloc(stComponents[0]->name_specific_length,sizeof(char *));
   stComponents[0]->role_specific = calloc(stComponents[0]->name_specific_length,sizeof(char *));
@@ -86,9 +87,8 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
       return OMX_ErrorInsufficientResources;
     }
   }
-
-  strcpy(stComponents[0]->name_specific[0], "OMX.st.audio_effect.volume");
-  strcpy(stComponents[0]->role_specific[0], "volume");
+  strcpy(stComponents[0]->name_specific[0], "OMX.st.video.xvideosink");
+  strcpy(stComponents[0]->role_specific[0], "video.xvideosink");
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
   return 1;
