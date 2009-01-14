@@ -1,4 +1,4 @@
-AC_INIT([OpenMAX Audio Effect], [0.1], [], [libomxaudioeffect])
+AC_INIT([OpenMAX X video], [0.1], [], [libomxxvideo])
 AM_INIT_AUTOMAKE([tar-ustar])
 
 # Prerequisite autoconf version
@@ -39,14 +39,14 @@ AC_CONFIG_FILES([
 # Define the extra arguments the user can pass to the configure script         #
 ################################################################################
 
-# Check whether audio effect component has been requested
+# Check whether X video component has been requested
 AC_ARG_ENABLE(
-    [audioeffects],
+    [xvideosink],
     [AC_HELP_STRING(
-        [--disable-audioeffects],
-        [whether to disable the audio effects components compilation])],
-    [with_audioeffects=$enableval],
-    [with_audioeffects=yes])
+        [--disable-xvideosink],
+        [whether to disable the X video components compilation])],
+    [with_xvideosink=$enableval],
+    [with_xvideosink=yes])
 
 ################################################################################
 # Check for programs                                                           #
@@ -81,6 +81,8 @@ AC_SEARCH_LIBS([dlopen], [dl], [], [AC_MSG_ERROR([libdl is required])])
 PLUGIN_LDFLAGS="-module -avoid-version -no-undefined -as-needed"
 AC_SUBST(PLUGIN_LDFLAGS)
 
+AX_SET_PLUGINDIR
+
 ################################################################################
 # Check for header files                                                       #
 ################################################################################
@@ -95,6 +97,13 @@ fi
 ################################################################################
 
 # unused
+
+# Check if X-Video header file is present
+if test "x$with_xvideosink" = "xyes"; then
+        AC_CHECK_HEADER([X11/Xlib.h], [with_xvideosink=yes], [with_xvideosink=no])
+        X11_LIBS="-lX11 -lXext -lXv"
+        AC_SUBST(X11_LIBS)
+fi
 
 ################################################################################
 # Check for types                                                              #
@@ -129,6 +138,6 @@ fi
 ################################################################################
 # Conditionals and file output                                                 #
 ################################################################################
-AM_CONDITIONAL([WITH_AUDIOEFFECTS], [test x$with_audioeffects = xyes && test x$with_omxcore_files = xyes])
+AM_CONDITIONAL([WITH_AUDIOEFFECTS], [test x$with_xvideosink = xyes && test x$with_omxcore_files = xyes])
 
 AC_OUTPUT
