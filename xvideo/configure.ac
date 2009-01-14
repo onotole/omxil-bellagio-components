@@ -5,6 +5,7 @@ AM_INIT_AUTOMAKE([tar-ustar])
 AC_PREREQ([2.59])
 
 AC_CONFIG_HEADERS([config.h])
+CFLAGS="${CFLAGS} -Werror"
 
 ################################################################################
 # Set the shared versioning info, according to section 6.3 of the libtool info #
@@ -40,13 +41,13 @@ AC_CONFIG_FILES([
 ################################################################################
 
 # Check whether X video component has been requested
-AC_ARG_ENABLE(
-    [xvideosink],
-    [AC_HELP_STRING(
-        [--disable-xvideosink],
-        [whether to disable the X video components compilation])],
-    [with_xvideosink=$enableval],
-    [with_xvideosink=yes])
+#AC_ARG_ENABLE(
+#    [xvideosink],
+#    [AC_HELP_STRING(
+#        [--disable-xvideosink],
+#        [whether to disable the X video components compilation])],
+#    [with_xvideosink=$enableval],
+#    [with_xvideosink=yes])
 
 ################################################################################
 # Check for programs                                                           #
@@ -81,8 +82,6 @@ AC_SEARCH_LIBS([dlopen], [dl], [], [AC_MSG_ERROR([libdl is required])])
 PLUGIN_LDFLAGS="-module -avoid-version -no-undefined -as-needed"
 AC_SUBST(PLUGIN_LDFLAGS)
 
-AX_SET_PLUGINDIR
-
 ################################################################################
 # Check for header files                                                       #
 ################################################################################
@@ -97,13 +96,9 @@ fi
 ################################################################################
 
 # unused
-
-# Check if X-Video header file is present
-if test "x$with_xvideosink" = "xyes"; then
-        AC_CHECK_HEADER([X11/Xlib.h], [with_xvideosink=yes], [with_xvideosink=no])
-        X11_LIBS="-lX11 -lXext -lXv"
-        AC_SUBST(X11_LIBS)
-fi
+AC_CHECK_HEADER([X11/Xlib.h], [with_xvideosink=yes], [with_xvideosink=no])
+X11_LIBS="-lX11 -lXext -lXv"
+AC_SUBST(X11_LIBS)
 
 ################################################################################
 # Check for types                                                              #

@@ -1,6 +1,4 @@
-omxxvideodir = $(plugindir)
-
-omxxvideo_LTLIBRARIES = libomxxvideo.la
+lib_LTLIBRARIES = libomxxvideo.la
 
 libomxxvideo_la_SOURCES = omx_xvideo_sink_component.c omx_xvideo_sink_component.h \
 			 library_entry_point.c
