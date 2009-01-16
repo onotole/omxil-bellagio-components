@@ -36,6 +36,7 @@ AC_CONFIG_FILES([
     src/Makefile
     src/libjpeg-6c/Makefile
     m4/Makefile
+    test/Makefile
 ])
 
 ################################################################################
