@@ -1,0 +1,9 @@
+The MAD, id3tag library OpenMAX Mp3 audio decoder component.
+
+To compile the component execute:
+
+autoreconf -i -f
+./configure --prefix=$INSTALL_DIR_PATH
+make
+make install
+
