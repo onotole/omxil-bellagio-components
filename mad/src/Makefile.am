@@ -6,5 +6,5 @@ libomxmad_la_SOURCES = omx_maddec_component.c  \
 
 libomxmad_la_LIBADD  = -lomxil-bellagio
 libomxmad_la_LDFLAGS = $(PLUGIN_LDFLAGS) $(MAD_LIBS)
-libomxmad_la_CFLAGS  = $(FFMPEG_CFLAGS)
+libomxmad_la_CFLAGS  = 
 

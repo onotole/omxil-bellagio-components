@@ -62,8 +62,6 @@ DERIVEDCLASS(omx_maddec_component_PrivateType, omx_base_filter_PrivateType)
   OMX_AUDIO_PARAM_PCMMODETYPE pAudioPcmMode;  \
   /** @param maddecReady boolean flag that is true when the audio coded has been initialized */ \
   OMX_BOOL maddecReady;  \
-  /** @param minBufferLength Field that stores the minimun allowed size for ffmpeg decoder */ \
-  OMX_U16 minBufferLength; \
   /** @param inputCurrBuffer Field that stores pointer of the current input buffer position */ \
   OMX_U8* inputCurrBuffer;\
   /** @param inputCurrLength Field that stores current input buffer length in bytes */ \
