@@ -36,6 +36,7 @@
 #include <config.h>
 #include <omx_amr_audiodec_component.h>
 #include <omx_amr_audioenc_component.h>
+#include <omx_mux_component.h>
 
 /** @brief The library entry point. It must have the same name for each
 * library of the components loaded by the ST static component loader.
@@ -50,13 +51,14 @@
 *
 * @return number of components contained in the library
 */
+
 int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   OMX_U32 i;
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
 
   if (stComponents == NULL) {
     DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
-    return 2;
+    return 3;
   }
 
   /** component 1 - audio decoder */
@@ -125,6 +127,40 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   strcpy(stComponents[1]->name_specific[0], "OMX.st.audio_encoder.amr");
   strcpy(stComponents[1]->role_specific[0], "audio_encoder.amr");
 
-  return 2;
+  /** component 3 - Muxer Component */
+  stComponents[2]->componentVersion.s.nVersionMajor = 1;
+  stComponents[2]->componentVersion.s.nVersionMinor = 1;
+  stComponents[2]->componentVersion.s.nRevision = 1;
+  stComponents[2]->componentVersion.s.nStep = 1;
+
+  stComponents[2]->name = calloc(1,OMX_MAX_STRINGNAME_SIZE);
+  if (stComponents[2]->name == NULL) {
+    return OMX_ErrorInsufficientResources;
+  }
+
+  strcpy(stComponents[2]->name, "OMX.st.mux.3gp");
+  stComponents[2]->name_specific_length = 1;
+  stComponents[2]->constructor = omx_mux_component_Constructor;
+
+  stComponents[2]->name_specific = calloc(stComponents[2]->name_specific_length,sizeof(char *));
+  stComponents[2]->role_specific = calloc(stComponents[2]->name_specific_length,sizeof(char *));
+
+  for(i=0;i<stComponents[2]->name_specific_length;i++) {
+    stComponents[2]->name_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[2]->name_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+  for(i=0;i<stComponents[2]->name_specific_length;i++) {
+    stComponents[2]->role_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[2]->role_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+
+  strcpy(stComponents[2]->name_specific[0], "OMX.st.mux.3gp");
+  strcpy(stComponents[2]->role_specific[0], "mux.3gp");
+
+  return 3;
 
 }
