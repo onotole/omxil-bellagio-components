@@ -125,6 +125,6 @@ fi
 ################################################################################
 # Conditionals and file output                                                 #
 ################################################################################
-AM_CONDITIONAL([WITH_VORBISCOMPONENTS], [test x$with_videosrc = xyes && test x$with_omxcore_files = xyes])
+AM_CONDITIONAL([WITH_VIDEOSRCCOMPONENTS], [test x$with_videosrc = xyes && test x$with_omxcore_files = xyes])
 
 AC_OUTPUT
