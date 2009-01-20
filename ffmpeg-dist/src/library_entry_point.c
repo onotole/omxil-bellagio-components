@@ -61,7 +61,7 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
 
   if (stComponents == NULL) {
     DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
-    return 5;
+    return 6;
   }
 
   /** component 1 - audio decoder */
@@ -243,8 +243,42 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   strcpy(stComponents[4]->role_specific[1], "audio_encoder.aac");
   strcpy(stComponents[4]->role_specific[2], "audio_encoder.g726");
 
+  /** component 5 - 3gp parser */
+  stComponents[5]->componentVersion.s.nVersionMajor = 1;
+  stComponents[5]->componentVersion.s.nVersionMinor = 1;
+  stComponents[5]->componentVersion.s.nRevision = 1;
+  stComponents[5]->componentVersion.s.nStep = 1;
+
+  stComponents[5]->name = calloc(1,OMX_MAX_STRINGNAME_SIZE);
+  if (stComponents[5]->name == NULL) {
+    return OMX_ErrorInsufficientResources;
+  }
+
+  strcpy(stComponents[5]->name, "OMX.st.parser.3gp");
+  stComponents[5]->name_specific_length = 1;
+  stComponents[5]->constructor = omx_parser3gp_component_Constructor;
+
+  stComponents[5]->name_specific = calloc(stComponents[5]->name_specific_length,sizeof(char *));
+  stComponents[5]->role_specific = calloc(stComponents[5]->name_specific_length,sizeof(char *));
+
+  for(i=0;i<stComponents[5]->name_specific_length;i++) {
+    stComponents[5]->name_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[5]->name_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+  for(i=0;i<stComponents[5]->name_specific_length;i++) {
+    stComponents[5]->role_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[5]->role_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+
+  strcpy(stComponents[5]->name_specific[0], "OMX.st.parser.3gp");
+  strcpy(stComponents[5]->role_specific[0], "parser.3gp");
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
 
-  return 5;
+  return 6;
 
 }
