@@ -1,0 +1,9 @@
+The libasound library OpenMAX ALSA Source and Sink component.
+
+To compile the component execute:
+
+autoreconf -i -f
+./configure --prefix=$INSTALL_DIR_PATH
+make
+make install
+
