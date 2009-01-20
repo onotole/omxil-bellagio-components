@@ -39,7 +39,9 @@ APPSOURCES= cjpeg.c djpeg.c jpegtran.c rdjpgcom.c wrjpgcom.c cdjpeg.c \
         rdcolmap.c rdswitch.c transupp.c rdppm.c wrppm.c rdgif.c wrgif.c \
         rdtarga.c wrtarga.c rdbmp.c wrbmp.c rdrle.c wrrle.c
 
-lib_LTLIBRARIES = libjpeg.la
+jpegdir = /usr/local/lib
+
+jpeg_LTLIBRARIES = libjpeg.la
 
 libjpeg_la_SOURCES = $(LIBSOURCES) $(SYSDEPSOURCES)
 
