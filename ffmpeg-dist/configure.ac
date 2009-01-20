@@ -5,7 +5,7 @@ AM_INIT_AUTOMAKE([tar-ustar])
 AC_PREREQ([2.59])
 
 AC_CONFIG_HEADERS([config.h])
-#CFLAGS="${CFLAGS} -Werror"
+CFLAGS="${CFLAGS} -Werror"
 AC_PREFIX_DEFAULT(/usr/local/lib/extern_omxcomp)
 
 ################################################################################
