@@ -33,7 +33,8 @@
 */
 
 #include <bellagio/st_static_component_loader.h>
-#include "omx_audio_effect.h"
+#include <omx_audio_effect.h>
+#include <omx_audiomixer_component.h>
 
 /** @brief The library entry point. It must have the same name for each
   * library of the components loaded by the ST static component loader.
@@ -54,7 +55,7 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
 
   if (stComponents == NULL) {
     DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
-    return 1; // Return Number of Components - one for audio volume component
+    return 2; // Return Number of Components - one for audio volume component
   }
 
   /** component 1 - volume component */
@@ -90,6 +91,39 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   strcpy(stComponents[0]->name_specific[0], "OMX.st.audio_effect.volume");
   strcpy(stComponents[0]->role_specific[0], "volume");
 
+  /** component 2 - audio mixer component */
+  stComponents[1]->componentVersion.s.nVersionMajor = 1;
+  stComponents[1]->componentVersion.s.nVersionMinor = 1;
+  stComponents[1]->componentVersion.s.nRevision = 1;
+  stComponents[1]->componentVersion.s.nStep = 1;
+
+  stComponents[1]->name = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+  if (stComponents[1]->name == NULL) {
+    return OMX_ErrorInsufficientResources;
+  }
+  strcpy(stComponents[1]->name, "OMX.st.audio_effect.mixer");
+  stComponents[1]->name_specific_length = 1;
+  stComponents[1]->constructor = omx_audio_mixer_component_Constructor;
+  
+  stComponents[1]->name_specific = calloc(stComponents[0]->name_specific_length,sizeof(char *));
+  stComponents[1]->role_specific = calloc(stComponents[0]->name_specific_length,sizeof(char *));
+  
+  for(i=0;i<stComponents[1]->name_specific_length;i++) {
+    stComponents[1]->name_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[1]->name_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+  for(i=0;i<stComponents[1]->name_specific_length;i++) {
+    stComponents[1]->role_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[1]->role_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+  
+  strcpy(stComponents[1]->name_specific[0], "OMX.st.audio_effect.mixer");
+  strcpy(stComponents[1]->role_specific[0], "audio_effect.mixer");
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
-  return 1;
+  return 2;
 }
