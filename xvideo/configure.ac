@@ -133,6 +133,6 @@ AC_SUBST(X11_LIBS)
 ################################################################################
 # Conditionals and file output                                                 #
 ################################################################################
-AM_CONDITIONAL([WITH_AUDIOEFFECTS], [test x$with_xvideosink = xyes && test x$with_omxcore_files = xyes])
+AM_CONDITIONAL([WITH_XVIDEOSINK], [test x$with_xvideosink = xyes && test x$with_omxcore_files = xyes])
 
 AC_OUTPUT
