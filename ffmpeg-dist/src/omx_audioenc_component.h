@@ -4,7 +4,8 @@
   This component implements an audio(MP3/AAC/G726) encoder. The encoder is based on ffmpeg
   software library.
 
-  Copyright (C) 2008  STMicroelectronics and Nokia
+  Copyright (C) 2007-2009  STMicroelectronics
+  Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the Free
@@ -21,9 +22,9 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-02-19 15:50:33 +0530 (Tue, 19 Feb 2008) $
-  Revision $Rev: 1320 $
-  Author $Author: pankaj_sen $
+  $Date$
+  Revision $Rev$
+  Author $Author$
 */
 
 #ifndef _OMX_AUDIOENC_COMPONENT_H_

@@ -4,8 +4,8 @@
   OpenMAX parser3gp component. This component is a 3gp parser that parses the input
   3gp file to provide the audio and video streams outputs
 
-  Copyright (C) 2008  STMicroelectronics
-  Copyright (C) 2008 Nokia Corporation and/or its subsidiary(-ies).
+  Copyright (C) 2007-2009  STMicroelectronics
+  Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the Free
@@ -22,9 +22,9 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2009-01-05 16:07:42 +0530 (Mon, 05 Jan 2009) $
-  Revision $Rev: 717 $
-  Author $Author: pankaj_sen $
+  $Date$
+  Revision $Rev$
+  Author $Author$
 
 */
 

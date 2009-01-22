@@ -7,7 +7,7 @@
   thumbnail. It has 3 (output) ports: Port 0 is used for preview; Port 1 is used
   for video and image capture; Port 2 is used for video and image thumbnail.
 
-  Copyright (C) 2007-2008  Motorola and STMicroelectronics
+  Copyright (C) 2007-2009  Motorola and STMicroelectronics
 
   This code is licensed under LGPL see README for full LGPL notice.
 

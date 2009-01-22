@@ -4,8 +4,8 @@
   OpenMAX video source component. This component is a video source component
   that captures video from the video camera.This camera component is based on V4L2.
 
-  Copyright (C) 2007-2008 STMicroelectronics
-  Copyright (C) 2007-2008 Nokia Corporation and/or its subsidiary(-ies).
+  Copyright (C) 2007-2009 STMicroelectronics
+  Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the Free

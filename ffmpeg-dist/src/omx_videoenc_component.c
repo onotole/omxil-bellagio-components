@@ -4,8 +4,8 @@
   This component implements MPEG-4 video encoder.
   The MPEG-4 Video encoder is based on FFmpeg software library.
 
-  Copyright (C) 2007-2008 STMicroelectronics
-  Copyright (C) 2007-2008 Nokia Corporation and/or its subsidiary(-ies)
+  Copyright (C) 2007-2009 STMicroelectronics
+  Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies)
 
   This library is free software; you can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the Free
@@ -22,9 +22,9 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-11-26 16:39:39 +0530 (Wed, 26 Nov 2008) $
-  Revision $Rev: 689 $
-  Author $Author: gsent $
+  $Date$
+  Revision $Rev$
+  Author $Author$
 */
 
 #include <bellagio/omxcore.h>

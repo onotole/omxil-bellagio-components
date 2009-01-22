@@ -4,8 +4,8 @@
   OpenMAX file reader component. This component is an file reader that detects the input
   file format so that client calls the appropriate decoder.
 
-  Copyright (C) 2007-2008 STMicroelectronics
-  Copyright (C) 2007-2008 Nokia Corporation and/or its subsidiary(-ies).
+  Copyright (C) 2007-2009 STMicroelectronics
+  Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the Free
@@ -22,9 +22,9 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-12-11 19:35:53 +0530 (Thu, 11 Dec 2008) $
-  Revision $Rev: 708 $
-  Author $Author: gsent $
+  $Date$
+  Revision $Rev$
+  Author $Author$
 
 */
 

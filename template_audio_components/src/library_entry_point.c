@@ -1,3 +1,36 @@
+/**
+  @file src/library_entry_point.c
+
+  The library entry point. It must have the same name for each
+  library of the components loaded by the ST static component loader.
+  This function fills the version, the component name and if existing also the roles
+  and the specific names for each role. This base function is only an explanation.
+  For each library it must be implemented, and it must fill data of any component
+  in the library
+
+  Copyright (C) 2007-2009 STMicroelectronics
+  Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
+
+  This library is free software; you can redistribute it and/or modify it under
+  the terms of the GNU Lesser General Public License as published by the Free
+  Software Foundation; either version 2.1 of the License, or (at your option)
+  any later version.
+
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+  details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this library; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin St, Fifth Floor, Boston, MA
+  02110-1301  USA
+
+  $Date$
+  Revision $Rev$
+  Author $Author$
+
+*/
 
 #include <stdlib.h>
 #include <string.h>

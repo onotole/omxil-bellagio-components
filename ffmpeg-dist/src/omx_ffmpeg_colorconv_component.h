@@ -5,7 +5,7 @@
   software library.
 
   Originally developed by Peter Littlefield
-  Copyright (C) 2007-2008  STMicroelectronics and Agere Systems
+  Copyright (C) 2007-2009  STMicroelectronics and Agere Systems
 
   This library is free software; you can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the Free
@@ -22,9 +22,9 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-12-16 22:27:07 +0530 (Tue, 16 Dec 2008) $
-  Revision $Rev: 714 $
-  Author $Author: gsent $
+  $Date$
+  Revision $Rev$
+  Author $Author$
 */
 
 #ifndef _OMX_FFMPEG_COLORCONV_COMPONENT_H_
