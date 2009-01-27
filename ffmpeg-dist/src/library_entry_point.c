@@ -61,7 +61,7 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
 
   if (stComponents == NULL) {
     DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
-    return 6;
+    return 7;
   }
 
   /** component 1 - audio decoder */
@@ -277,8 +277,21 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   strcpy(stComponents[5]->name_specific[0], "OMX.st.parser.3gp");
   strcpy(stComponents[5]->role_specific[0], "parser.3gp");
 
+  stComponents[6]->componentVersion.s.nVersionMajor = 1;
+  stComponents[6]->componentVersion.s.nVersionMinor = 1;
+  stComponents[6]->componentVersion.s.nRevision = 1;
+  stComponents[6]->componentVersion.s.nStep = 1;
+
+  stComponents[6]->name = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+  if (stComponents[6]->name == NULL) {
+    return OMX_ErrorInsufficientResources;
+  }
+  strcpy(stComponents[6]->name, "OMX.st.audio_filereader");
+  stComponents[6]->name_specific_length = 0;
+  stComponents[6]->constructor = omx_parser3gp_component_Constructor;
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
 
-  return 6;
+  return 7;
 
 }

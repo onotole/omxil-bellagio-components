@@ -2,7 +2,7 @@ noinst_LTLIBRARIES = libomxaudio_writer.la
 
 libomxaudio_writer_la_SOURCES = audio_writer.c audio_writer.h
 
-libomxaudio_writer_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio
+libomxaudio_writer_la_LDFLAGS = -lomxil-bellagio
 
 bin_PROGRAMS = audio_writer_test
 

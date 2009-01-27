@@ -4,5 +4,5 @@ libomxaudioeffects_la_SOURCES = omx_audio_effect.c omx_audio_effect.h \
                                 omx_audiomixer_component.c omx_audiomixer_component.h \
                                 library_entry_point.c
 
-libomxaudioeffects_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio
+libomxaudioeffects_la_LDFLAGS = -lomxil-bellagio
 

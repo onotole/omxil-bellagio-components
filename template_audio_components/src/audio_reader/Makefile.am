@@ -2,7 +2,7 @@ noinst_LTLIBRARIES = libomxaudio_reader.la
 
 libomxaudio_reader_la_SOURCES = audio_reader.c audio_reader.h
 
-libomxaudio_reader_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio
+libomxaudio_reader_la_LDFLAGS = -lomxil-bellagio
 
 bin_PROGRAMS = audio_reader_test
 

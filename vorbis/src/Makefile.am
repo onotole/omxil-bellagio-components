@@ -5,6 +5,6 @@ libomxvorbis_la_SOURCES = omx_vorbisdec_component.c  \
                           library_entry_point.c
 
 libomxvorbis_la_LIBADD  = -lomxil-bellagio
-libomxvorbis_la_LDFLAGS = $(PLUGIN_LDFLAGS) $(VORBIS_LIBS)
+libomxvorbis_la_LDFLAGS = $(VORBIS_LIBS)
 libomxvorbis_la_CFLAGS  = 
 

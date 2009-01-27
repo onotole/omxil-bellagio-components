@@ -2,7 +2,7 @@ noinst_LTLIBRARIES = libomxaudio_renderer.la
 
 libomxaudio_renderer_la_SOURCES = audio_renderer.c audio_renderer.h
 
-libomxaudio_renderer_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio
+libomxaudio_renderer_la_LDFLAGS = -lomxil-bellagio
 
 bin_PROGRAMS = audio_renderer_test
 

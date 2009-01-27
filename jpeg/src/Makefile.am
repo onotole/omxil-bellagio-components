@@ -11,5 +11,5 @@ libomximagejpeg_la_SOURCES = omx_jpegdec_component.c \
                              omx_jpegenc_component.h
 
 libomximagejpeg_la_LIBADD  = -lomxil-bellagio  libjpeg-6c/libjpeg.la
-libomximagejpeg_la_LDFLAGS =   $(PLUGIN_LDFLAGS)
+libomximagejpeg_la_LDFLAGS =
 libomximagejpeg_la_CFLAGS  = -I$(srcdir)/libjpeg-6c 

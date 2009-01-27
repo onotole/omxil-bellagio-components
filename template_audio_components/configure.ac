@@ -4,6 +4,10 @@ AM_INIT_AUTOMAKE([tar-ustar])
 # Prerequisite autoconf version
 AC_PREREQ([2.59])
 
+PKG_CHECK_MODULES(OMXIL, libomxil-bellagio >= 0.9 )
+AC_SUBST(OMXIL_CFLAGS)
+AC_SUBST(OMXIL_LIBS)
+
 AC_CONFIG_HEADERS([config.h])
 
 ################################################################################

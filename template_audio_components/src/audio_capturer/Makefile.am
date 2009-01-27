@@ -2,7 +2,7 @@ noinst_LTLIBRARIES = libomxaudio_capturer.la
 
 libomxaudio_capturer_la_SOURCES = audio_capturer.c audio_capturer.h
                                  
-libomxaudio_capturer_la_LDFLAGS = $(PLUGIN_LDFLAGS) -lomxil-bellagio
+libomxaudio_capturer_la_LDFLAGS = -lomxil-bellagio
 
 bin_PROGRAMS = audio_capturer_test
 
