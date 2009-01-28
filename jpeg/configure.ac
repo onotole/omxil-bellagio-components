@@ -1,4 +1,4 @@
-AC_INIT([OpenMAX Bellagio IJG's libjpeg based Component ], [0.1], [], [libomxjpeg])
+AC_INIT([OpenMAX Bellagio Jpeg Components ], [0.1], [], [libomxjpeg])
 AM_INIT_AUTOMAKE([tar-ustar])
 
 # Prerequisite autoconf version

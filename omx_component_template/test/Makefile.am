@@ -1,4 +1,4 @@
-bin_PROGRAMS = omxvolcontroltest omxaudiomixertest
+check_PROGRAMS = omxvolcontroltest omxaudiomixertest
 
 omxvolcontroltest_SOURCES = omxvolcontroltest.c omxvolcontroltest.h
 omxvolcontroltest_LDADD   = -lpthread -lomxil-bellagio
