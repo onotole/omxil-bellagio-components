@@ -49,7 +49,7 @@
 /** Maximum number of base_component component instances */
 #define MAX_NUM_OF_videosrc_component_INSTANCES 1
 
-#define VIDEO_DEV_NAME "/dev/video"
+#define VIDEO_DEV_NAME "/dev/video0"
 
 struct buffer
 {

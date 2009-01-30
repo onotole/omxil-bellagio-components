@@ -1,5 +1,5 @@
 /**
-  @file src/components/xvideo/omx_xvideo_sink_component.c
+  @file src/omx_xvideo_sink_component.c
 
   OpenMAX X-Video sink component.
 

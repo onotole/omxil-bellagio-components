@@ -1,5 +1,5 @@
 /**
-  @file src/components/camera/omx_camera_source_component.c
+  @file src/omx_camera_source_component.c
 
   OpenMAX camera source component.
   The OpenMAX camera component is a V4L2-based video source whose functionalities
@@ -840,7 +840,7 @@ OMX_ERRORTYPE omx_camera_source_component_Destructor(OMX_COMPONENTTYPE *openmaxS
   }
 
   pthread_mutex_destroy(&omx_camera_source_component_Private->idle_state_mutex);
-  
+
   if(omx_camera_source_component_Private->idle_wait_condition){
     tsem_deinit(omx_camera_source_component_Private->idle_wait_condition);
     free(omx_camera_source_component_Private->idle_wait_condition);
@@ -943,7 +943,7 @@ static OMX_ERRORTYPE omx_camera_source_component_DoStateSet(OMX_COMPONENTTYPE *o
     }
     camera_StopCameraDevice(omx_camera_source_component_Private);
     pthread_mutex_unlock(&omx_camera_source_component_Private->idle_state_mutex);
-  } 
+  }
 
 
 EXIT:
@@ -1338,7 +1338,7 @@ static void* omx_camera_source_component_BufferMgmtFunction (void* param) {
     omx_camera_source_component_Private->bCapturing = omx_camera_source_component_Private->bCapturingNext;
     pthread_mutex_unlock(&omx_camera_source_component_Private->setconfig_mutex);
 
-    if(omx_camera_source_component_Private->state==OMX_StatePause && 
+    if(omx_camera_source_component_Private->state==OMX_StatePause &&
        omx_camera_source_component_Private->state != OMX_StateInvalid &&
         !(PORT_IS_BEING_FLUSHED(pPreviewPort) || PORT_IS_BEING_FLUSHED(pCapturePort) || PORT_IS_BEING_FLUSHED(pThumbnailPort))) {
       /*Waiting at paused state*/
@@ -1360,7 +1360,7 @@ static void* omx_camera_source_component_BufferMgmtFunction (void* param) {
       tsem_up(omx_camera_source_component_Private->idle_process_condition);
 
       tsem_down(omx_camera_source_component_Private->idle_wait_condition);
-      if(omx_camera_source_component_Private->transientState == OMX_TransStateIdleToLoaded || 
+      if(omx_camera_source_component_Private->transientState == OMX_TransStateIdleToLoaded ||
          omx_camera_source_component_Private->state == OMX_StateInvalid) {
         DEBUG(DEB_LEV_FULL_SEQ, "In %s Buffer Management Thread is exiting\n",__func__);
         break;
