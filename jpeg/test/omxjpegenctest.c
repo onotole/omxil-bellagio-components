@@ -1,5 +1,5 @@
 /**
-  @file test/omxjpegenctest.c
+  test/omxjpegenctest.c
 
   OpenMAX Integration Layer JPEG component test program
 

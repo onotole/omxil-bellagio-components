@@ -1,5 +1,5 @@
 /**
-  @file src/omx_parser3gp_component.h
+  src/omx_parser3gp_component.h
 
   OpenMAX parser3gp component. This component is a 3gp parser that parses the input
   3gp file to provide the audio and video streams outputs

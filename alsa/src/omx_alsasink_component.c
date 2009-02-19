@@ -1,5 +1,5 @@
 /**
-  @file src/omx_alsasink_component.c
+  src/omx_alsasink_component.c
 
   OpenMAX ALSA sink component. This component is an audio sink that uses ALSA library.
 

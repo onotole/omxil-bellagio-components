@@ -1,5 +1,5 @@
 /**
-  @file src/omx_filereader_component.h
+  src/omx_filereader_component.h
 
   OpenMAX file reader component. This component is a file reader that detects the input
   file format so that client calls the appropriate decoder.

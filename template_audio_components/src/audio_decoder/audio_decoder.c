@@ -1,5 +1,5 @@
 /**
-  @file src/audio_decoder/audio_decoder.c
+  src/audio_decoder/audio_decoder.c
 
   OpenMax audio_decoder component.
   This component implements an audio_decoder stub
@@ -28,7 +28,7 @@
 */
 
 /**
-  @file audio_decoder.c
+  audio_decoder.c
 
 */
 

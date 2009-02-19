@@ -1,5 +1,5 @@
 /**
-  @file test/components/audio/omxaudiocapnplay.c
+  test/components/audio/omxaudiocapnplay.c
   
   Test application that uses a OpenMAX component, a generic audio source. 
   The application receives an audio stream (.m4v or .264) decoded by a multiple format source component.

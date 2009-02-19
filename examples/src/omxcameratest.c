@@ -1,5 +1,5 @@
 /**
-  @file test/components/camera/omxcameratest.c
+  test/components/camera/omxcameratest.c
 
   Test application that uses two OpenMAX components, a camera and a fbsink.
   The preview port of the camera is tunneled with the fbsink component;

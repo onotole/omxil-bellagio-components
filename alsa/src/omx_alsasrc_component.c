@@ -1,5 +1,5 @@
 /**
-  @file src/omx_alsasrc_component.c
+  src/omx_alsasrc_component.c
 
   OpenMAX ALSA source component. This component is an audio source that uses ALSA library.
 

@@ -1,5 +1,5 @@
 /**
-  @file test/components/video/omxvideoenctest.h
+  test/components/video/omxvideoenctest.h
 
   Test application that uses a OpenMAX component, a generic video encoder.
   The application receives an video stream (.yuv) and encodes it in

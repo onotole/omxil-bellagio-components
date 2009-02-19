@@ -1,5 +1,5 @@
 /**
-  @file src/omx_ffmpeg_colorconv_component.c
+  src/omx_ffmpeg_colorconv_component.c
 
   This component implements a color converter using the FFmpeg
   software library.

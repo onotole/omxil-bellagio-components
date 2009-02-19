@@ -1,5 +1,5 @@
 /**
-  @file test/components/parser/omxparsertest.c
+  test/components/parser/omxparsertest.c
 
   Test application uses following OpenMAX components, 
     mux  -- 3gp file muxer ,

@@ -1,5 +1,5 @@
 /**
-  @file test/components/parser/omxparsertest.h
+  test/components/parser/omxparsertest.h
   Test application uses following OpenMAX components,
     parser3gp  -- 3gp file parser ,
     audio decoder pipeline  - audio decoder, volume component and alsa sink,

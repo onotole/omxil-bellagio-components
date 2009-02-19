@@ -1,5 +1,5 @@
 /**
-  @file test/components/audio/omxaudioenctest.c
+  test/components/audio/omxaudioenctest.c
 
   This test application can encode audio pcm stream into mp3/aac/amr format.
 

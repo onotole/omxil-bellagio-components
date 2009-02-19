@@ -1,5 +1,5 @@
 /**
-  @file src/audio_reader/audio_reader.c
+  src/audio_reader/audio_reader.c
 
   OpenMax audio_reader component.
   This component uses a content_pipe to read audio data

@@ -1,5 +1,5 @@
 /**
-  @file src/omx_amr_audiodec_component.h
+  src/omx_amr_audiodec_component.h
 
   This component implements an AUDIO(MP3/AAC/VORBIS/G726/AMR) decoder. The decoder is based on FFmpeg
   software library.

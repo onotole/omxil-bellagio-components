@@ -1,5 +1,5 @@
 /**
-  @file src/audio_decoder/audio_decoder_test.c
+  src/audio_decoder/audio_decoder_test.c
 
   This simple test application take an input stream from a file,
   passes it to the audio_decoder component and writes the output

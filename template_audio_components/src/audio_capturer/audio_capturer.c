@@ -1,5 +1,5 @@
 /**
-  @file src/audio_capturer/audio_capturer.c
+  src/audio_capturer/audio_capturer.c
 
   OpenMax audio capturer component.
   This component implements an audio_capturer that accepts a

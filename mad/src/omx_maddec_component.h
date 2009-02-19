@@ -1,5 +1,5 @@
 /**
-  @file src/omx_maddec_component.h
+  src/omx_maddec_component.h
 
   This component implements an MP3 decoder based on mad
   software library.

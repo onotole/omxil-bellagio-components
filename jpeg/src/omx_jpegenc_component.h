@@ -1,5 +1,5 @@
 /**
-  @file src/omx_jpegenc_component.h
+  src/omx_jpegenc_component.h
 
   This component implements an JPEG encoder based on Tom Lane's jpeg library (http://www.ijg.org/files/)
 

@@ -1,5 +1,5 @@
 /**
-  @file src/audio_reader/audio_reader_test.c
+  src/audio_reader/audio_reader_test.c
 
   This simple test application uses an audio_reader and
   content_pipe to read audio data from a file URI

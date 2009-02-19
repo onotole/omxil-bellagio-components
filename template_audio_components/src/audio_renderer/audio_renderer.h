@@ -1,5 +1,5 @@
 /**
-  @file src/audio_renderer/audio_renderer.h
+  src/audio_renderer/audio_renderer.h
 
   OpenMax audio renderer component.
   This component implements an audio_renderer that accepts

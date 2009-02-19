@@ -1,5 +1,5 @@
 /**
-  @file src/omx_vorbisdec_component.c
+  src/omx_vorbisdec_component.c
 
   This component implements an Ogg Vorbis decoder. The Vorbis decoder is based on
   the libvorbis software library.

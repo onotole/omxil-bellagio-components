@@ -1,5 +1,5 @@
 /**
-  @file src/audio_renderer/audio_renderer_test.h
+  src/audio_renderer/audio_renderer_test.h
 
   This simple test application take an input stream from a file,
   passes it to the audio_splitter component and writes the output

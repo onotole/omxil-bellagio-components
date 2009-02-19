@@ -1,5 +1,5 @@
 /**
-  @file src/omx_amr_audiodec_component.c
+  src/omx_amr_audiodec_component.c
 
   This component implements an AUDIO(AMR) decoder. The decoder is based on FFmpeg
   software library.

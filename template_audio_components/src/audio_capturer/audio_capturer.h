@@ -1,5 +1,5 @@
 /**
-  @file src/audio_capturer/audio_capturer.h
+  src/audio_capturer/audio_capturer.h
 
   OpenMax audio_capturer component.
   This component implements an audio_capturer stub

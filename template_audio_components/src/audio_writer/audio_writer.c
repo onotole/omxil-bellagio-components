@@ -1,5 +1,5 @@
 /**
-  @file src/audio_writer/audio_writer.c
+  src/audio_writer/audio_writer.c
 
   OpenMax audio_writer component.
   This component uses a content_pipe to read audio data

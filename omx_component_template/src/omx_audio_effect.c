@@ -1,5 +1,5 @@
 /**
-  @file src/omx_audio_effect.c
+  src/omx_audio_effect.c
 
   OpenMAX generic audio effect on PCM stream.
 

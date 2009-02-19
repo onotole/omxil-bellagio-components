@@ -1,5 +1,5 @@
 /**
-  @file src/omx_audiodec_component.c
+  src/omx_audiodec_component.c
 
   This component implements an AUDIO(MP3/AAC/VORBIS/G726) decoder. The decoder is based on FFmpeg
   software library.

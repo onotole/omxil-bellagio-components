@@ -1,5 +1,5 @@
 /**
-  @file src/omx_camera_source_component.c
+  src/omx_camera_source_component.c
 
   OpenMAX camera source component.
   The OpenMAX camera component is a V4L2-based video source whose functionalities

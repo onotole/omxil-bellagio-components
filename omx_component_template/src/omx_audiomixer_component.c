@@ -1,5 +1,5 @@
 /**
-  @file src/omx_audiomixer_component.c
+  src/omx_audiomixer_component.c
 
   OpenMAX audio mixer control component. This component implements a mixer that
   mixes multiple audio PCM streams and produces a single output stream.

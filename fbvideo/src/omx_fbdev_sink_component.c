@@ -1,5 +1,5 @@
 /**
-  @file src/omx_fbdev_sink_component.c
+  src/omx_fbdev_sink_component.c
 
   OpenMAX FBDEV sink component. This component is a video sink that copies
   data to a Linux framebuffer device.

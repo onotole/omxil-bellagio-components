@@ -1,5 +1,5 @@
 /**
-  @file src/audio_capturer/audio_capturer_test.c
+  src/audio_capturer/audio_capturer_test.c
 
   This simple test application writes captured audio to an output file
 

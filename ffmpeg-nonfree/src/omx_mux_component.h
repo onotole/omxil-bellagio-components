@@ -1,5 +1,5 @@
 /**
-  @file src/omx_mux_component.h
+  src/omx_mux_component.h
 
   OpenMAX mux component. This component is a 3gp stream muxer that muxes the inputs and
   write into an output file.

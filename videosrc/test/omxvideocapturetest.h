@@ -1,5 +1,5 @@
 /**
-  @file test/omxvideocapturetest.h
+  test/omxvideocapturetest.h
 
   Test application that uses a OpenMAX component, a generic video videosrc.
   The application receives an video stream (.yuv) captured using a camera.

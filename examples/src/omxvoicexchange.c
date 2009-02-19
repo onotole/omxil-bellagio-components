@@ -1,5 +1,5 @@
 /**
-  @file test/components/audio/omxvoicexchange.c
+  test/components/audio/omxvoicexchange.c
 
   This test application is supposed to exchange voice over the network
   using some client server mechanism.

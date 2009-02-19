@@ -1,5 +1,5 @@
 /**
-  @file src/omx_videosrc_component.c
+  src/omx_videosrc_component.c
 
   OpenMAX video source component. This component is a video source component
   that captures video from the video camera.This camera component is based on V4L2.

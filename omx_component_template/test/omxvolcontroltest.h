@@ -1,5 +1,5 @@
 /**
-  @file src/omxvolcontroltest.c
+  src/omxvolcontroltest.c
 
   This simple test application provides a testing stream for the volume control component.
 

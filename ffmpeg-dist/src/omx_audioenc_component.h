@@ -1,5 +1,5 @@
 /**
-  @file src/omx_audioenc_component.h
+  src/omx_audioenc_component.h
 
   This component implements an audio(MP3/AAC/G726) encoder. The encoder is based on ffmpeg
   software library.

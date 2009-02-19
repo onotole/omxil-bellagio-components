@@ -1,5 +1,5 @@
 /**
-  @file test/components/video/omxvideoenctest.c
+  test/components/video/omxvideoenctest.c
   
   Test application that uses a OpenMAX component, a generic video encoder. 
   The application receives an video stream (.yuv) encode in Mpeg4 Video format(.m4v).

@@ -1,5 +1,5 @@
 /**
-  @file src/omx_amr_audioenc_component.h
+  src/omx_amr_audioenc_component.h
 
   This component implements an audio(AMR) encoder. The encoder is based on ffmpeg
   software library.

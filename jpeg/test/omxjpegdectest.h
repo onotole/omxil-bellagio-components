@@ -1,5 +1,5 @@
 /**
-  @file test/omxjpegdectest.h
+  test/omxjpegdectest.h
 
   OpenMAX Integration Layer JPEG component test program
 
@@ -63,7 +63,7 @@ typedef struct appPrivateType{
 
 /* Size of the buffers requested to the component */
 #define INPUT_BUFFER_SIZE    4096        /*Max input buffer size*/
-#define OUTPUT_BUFFER_SIZE   304128      /*Max output buffer size*/
+#define OUTPUT_BUFFER_SIZE   304128  * 8    /*Max output buffer size*/
 
 /* Size of the buffers requested to the component */
 #define BUFFER_SIZE   4096

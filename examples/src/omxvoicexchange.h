@@ -1,5 +1,5 @@
 /**
-  @file test/components/audio/omxaudiocapnplay.h
+  test/components/audio/omxaudiocapnplay.h
 
   This test application is supposed to exchange voice over the network
   using some client server mechanism.

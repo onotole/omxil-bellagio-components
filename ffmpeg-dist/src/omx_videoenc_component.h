@@ -1,5 +1,5 @@
 /**
-  @file src/omx_videoenc_component.h
+  src/omx_videoenc_component.h
 
   This component implements an MPEG-4 video encoder.
   The MPEG-4 Video encoder is based on the FFmpeg software library.

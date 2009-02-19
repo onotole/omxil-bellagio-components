@@ -1,5 +1,5 @@
 /**
-  @file test/components/video/omxvideocapnplay.h
+  test/components/video/omxvideocapnplay.h
 
   Test application that uses a OpenMAX component, a generic video decoder.
   The application receives an video stream (.m4v or .264) decoded by a multiple format decoder component.
