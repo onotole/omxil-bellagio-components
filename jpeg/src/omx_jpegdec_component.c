@@ -533,7 +533,7 @@ void omx_jpegdec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCom
          NULL);
 
       if(pOutputBuffer->nAllocLen< pOutPort->sPortParam.nBufferSize){ // 54 File header length
-        DEBUG(DEB_LEV_ERR, "Output Buffer AllocLen %d less than required ouput %d", (int)pOutputBuffer->nAllocLen, (int)pOutPort->sPortParam.nBufferSize);
+        DEBUG(DEB_LEV_ERR, "Output Buffer AllocLen %d less than required ouput %d\n", (int)pOutputBuffer->nAllocLen, (int)pOutPort->sPortParam.nBufferSize);
         //omx_jpegdec_component_Private->dest_mgr->buffer= &(pOutputBuffer->pBuffer);
       }
     }
@@ -697,11 +697,18 @@ void* omx_jpegdec_component_BufferMgmtFunction(void* param)
 
 
         if(pOutputBuffer->nAllocLen< pOutPort->sPortParam.nBufferSize){ // 54 File header length
-          DEBUG(DEB_LEV_ERR, "Output Buffer AllocLen %d less than required ouput %d\n", (int)pOutputBuffer->nAllocLen, (int)pOutPort->sPortParam.nBufferSize);
+          DEBUG(DEB_LEV_ERR, "Output Buffer AllocLen %d less than required ouput %d Returning Zero Output Buffer\n", (int)pOutputBuffer->nAllocLen, (int)pOutPort->sPortParam.nBufferSize);
+          /*Return Buffer*/
+          pOutPort->ReturnBufferFunction(pOutPort,pOutputBuffer);
+          outBufExchanged--;
+          pOutputBuffer=NULL;
+          isOutputBufferNeeded=OMX_TRUE;
           //omx_jpegdec_component_Private->dest_mgr->buffer= &(pOutputBuffer->pBuffer);
         }
       }
-      pOutputBuffer->nFilledLen= (width * height + width * height / 2)*2 +54;
+      if(pOutputBuffer != NULL) {
+        pOutputBuffer->nFilledLen= (width * height + width * height / 2)*2 +54;
+      }
     }
 
     if(isOutputBufferNeeded==OMX_FALSE) {
