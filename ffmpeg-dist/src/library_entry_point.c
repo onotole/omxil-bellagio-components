@@ -288,7 +288,7 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   }
   strcpy(stComponents[6]->name, "OMX.st.audio_filereader");
   stComponents[6]->name_specific_length = 0;
-  stComponents[6]->constructor = omx_parser3gp_component_Constructor;
+  stComponents[6]->constructor = omx_filereader_component_Constructor;
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
 
