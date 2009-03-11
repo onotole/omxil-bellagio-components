@@ -1,9 +1,9 @@
 /**
   test/components/video/omxvideoenctest.c
-  
-  Test application that uses a OpenMAX component, a generic video encoder. 
+
+  Test application that uses a OpenMAX component, a generic video encoder.
   The application receives an video stream (.yuv) encode in Mpeg4 Video format(.m4v).
-  
+
   Copyright (C) 2008  STMicroelectronics
   Copyright (C) 2008 Nokia Corporation and/or its subsidiary(-ies).
 
@@ -21,7 +21,7 @@
   along with this library; if not, write to the Free Software Foundation, Inc.,
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
-  
+
   $Date$
   Revision $Rev$
   Author $Author$
@@ -35,13 +35,13 @@
 #define BASE_ROLE "video_encoder.mpeg4"
 #define COMPONENT_NAME_BASE_LEN 20
 
-OMX_CALLBACKTYPE videoenccallbacks = { 
+OMX_CALLBACKTYPE videoenccallbacks = {
     .EventHandler = videoencEventHandler,
     .EmptyBufferDone = videoencEmptyBufferDone,
     .FillBufferDone = videoencFillBufferDone
   };
 
-OMX_CALLBACKTYPE videosrccallbacks = { 
+OMX_CALLBACKTYPE videosrccallbacks = {
     .EventHandler = videosrcEventHandler,
     .EmptyBufferDone = NULL,
     .FillBufferDone = videosrcFillBufferDone
@@ -122,7 +122,7 @@ OMX_ERRORTYPE test_OMX_RoleEnum(OMX_STRING component_name) {
   DEBUG(DEFAULT_MESSAGES, "The number of roles for the component %s is: %i\n", component_name, (int)no_of_roles);
 
   if(no_of_roles == 0) {
-    DEBUG(DEB_LEV_ERR, "The Number or roles is 0.\nThe component selected is not correct for the purpose of this test.\nExiting...\n");    
+    DEBUG(DEB_LEV_ERR, "The Number or roles is 0.\nThe component selected is not correct for the purpose of this test.\nExiting...\n");
     err = OMX_ErrorInvalidComponentName;
   }  else {
     string_of_roles = (OMX_U8**)malloc(no_of_roles * sizeof(OMX_STRING));
@@ -215,7 +215,7 @@ OMX_ERRORTYPE test_OpenClose(OMX_STRING component_name) {
 int find_encoder(char* searchname) {
   char filename_lower[255];
   char* ptr = filename_lower;
-  
+
   strcpy(filename_lower, searchname);
   while (*ptr != '\0' && ptr - filename_lower < 255) {
     *ptr = tolower(*ptr);
@@ -224,7 +224,7 @@ int find_encoder(char* searchname) {
   if (strstr(filename_lower, "m4v") != NULL) {
     strcpy(&codecName[0],"m4v");
     return 0;
-  } 
+  }
   return 1;
 }
 
@@ -275,9 +275,9 @@ int setPortParameters() {
   paramPort.format.video.xFramerate = frame_rate;
   err = OMX_SetParameter(appPriv->videoenchandle, OMX_IndexParamPortDefinition, &paramPort);
   if(err!=OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err); 
-    return err; 
-  } 
+    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err);
+    return err;
+  }
   DEBUG(DEB_LEV_SIMPLE_SEQ, "input picture width : %d height : %d \n", (int)in_width, (int)in_height);
 
   if(flagIsCameraRequested) {
@@ -288,9 +288,9 @@ int setPortParameters() {
     paramPort.format.video.nFrameHeight = in_height;
     err = OMX_SetParameter(appPriv->videosrchandle, OMX_IndexParamPortDefinition, &paramPort);
     if(err!=OMX_ErrorNone) {
-      DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err); 
-      return err; 
-    } 
+      DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err);
+      return err;
+    }
   }
 
   return err;
@@ -366,7 +366,7 @@ int main(int argc, char** argv) {
           } else {
             output_file = malloc(strlen(argv[argn_dec]) * sizeof(char) + 1);
             strcpy(output_file,argv[argn_dec]);
-          }          
+          }
           flagIsOutputExpected = 0;
           flagOutputReceived = 1;
         } else if(flagIsFormatRequested) {
@@ -378,10 +378,10 @@ int main(int argc, char** argv) {
           flagIsFormatRequested = 0;
         } else if(flagIsWidth) {
           in_width = atoi(argv[argn_dec]);
-          flagIsWidth = 0; 
+          flagIsWidth = 0;
         } else if(flagIsHeight) {
           in_height = atoi(argv[argn_dec]);
-          flagIsHeight = 0; 
+          flagIsHeight = 0;
         } else if(flagIsInputExpected){
           input_file = malloc(strlen(argv[argn_dec]) * sizeof(char) + 1);
           strcpy(input_file,argv[argn_dec]);
@@ -447,14 +447,14 @@ int main(int argc, char** argv) {
   }
 
   /* Initialize application private data */
-  appPriv = malloc(sizeof(appPrivateType));  
+  appPriv = malloc(sizeof(appPrivateType));
   appPriv->encoderEventSem = malloc(sizeof(tsem_t));
   appPriv->eofSem = malloc(sizeof(tsem_t));
   appPriv->sourceEventSem = malloc(sizeof(tsem_t));
   tsem_init(appPriv->encoderEventSem, 0);
   tsem_init(appPriv->eofSem, 0);
   tsem_init(appPriv->sourceEventSem, 0);
-  
+
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Init the Omx core\n");
   err = OMX_Init();
   if (err != OMX_ErrorNone) {
@@ -463,7 +463,7 @@ int main(int argc, char** argv) {
   } else {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Omx core is initialized \n");
   }
-    
+
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
   test_OMX_ComponentNameEnum();
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
@@ -473,12 +473,12 @@ int main(int argc, char** argv) {
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
   test_OpenClose(COMPONENT_NAME_BASE);
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  
+
   full_component_name = (OMX_STRING) malloc(sizeof(char*) * OMX_MAX_STRINGNAME_SIZE);
   strcpy(full_component_name, COMPONENT_NAME_BASE);
   if(selectedType == MPEG4_TYPE_SEL) {
     strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".mpeg4");
-  } 
+  }
 
   DEBUG(DEFAULT_MESSAGES, "The component selected for encoding is %s\n", full_component_name);
 
@@ -517,9 +517,9 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "Set up Tunnel between video source and encoder Failed\n");
       exit(1);
     }
-    
+
     DEBUG(DEFAULT_MESSAGES, "Set up Tunnel Completed\n");
-  }  
+  }
 
   /** output buffer size calculation based on input dimension speculation */
   buffer_in_size = in_width * in_height * 3/2; //yuv420 format -- bpp = 12
@@ -535,7 +535,7 @@ int main(int argc, char** argv) {
     /** sending command to video source component to go to idle state */
     err = OMX_SendCommand(appPriv->videosrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
   }
-  
+
   if (!flagSetupTunnel) {
     pInBuffer[0] = pInBuffer[1] = NULL;
     if (flagIsCameraRequested) {
@@ -561,7 +561,7 @@ int main(int argc, char** argv) {
   if (flagIsCameraRequested) {
     tsem_down(appPriv->sourceEventSem);
   }
-  
+
   /** sending command to video encoder component to go to executing state */
   err = OMX_SendCommand(appPriv->videoenchandle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
   tsem_down(appPriv->encoderEventSem);
@@ -574,7 +574,7 @@ int main(int argc, char** argv) {
       err = OMX_FillThisBuffer(appPriv->videosrchandle, pSrcOutBuffer[0]);
       err = OMX_FillThisBuffer(appPriv->videosrchandle, pSrcOutBuffer[1]);
     }
-    
+
   }
 
   err = OMX_FillThisBuffer(appPriv->videoenchandle, pOutBuffer[0]);
@@ -590,18 +590,18 @@ int main(int argc, char** argv) {
     data_read = fread(pInBuffer[1]->pBuffer, sizeof(char), buffer_in_size, infile);
     pInBuffer[1]->nFilledLen = data_read;
     pInBuffer[1]->nOffset = 0;
-  
+
     DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %x\n", (int)pInBuffer[0]->pBuffer);
     err = OMX_EmptyThisBuffer(appPriv->videoenchandle, pInBuffer[0]);
     DEBUG(DEB_LEV_PARAMS, "Empty second buffer %x\n", (int)pInBuffer[1]->pBuffer);
     err = OMX_EmptyThisBuffer(appPriv->videoenchandle, pInBuffer[1]);
-  
+
     DEBUG(DEFAULT_MESSAGES,"Waiting for  EOS\n");
 
-    /** in tunneled case, disable the video components ports and then set parameters 
+    /** in tunneled case, disable the video components ports and then set parameters
       * after that, ebnable those ports
       */
-  
+
     tsem_down(appPriv->eofSem);
   } else {
     DEBUG(DEFAULT_MESSAGES,"Enter 'q' or 'Q' to exit\n");
@@ -624,7 +624,7 @@ int main(int argc, char** argv) {
   err = OMX_SendCommand(appPriv->videoenchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
 
   tsem_down(appPriv->encoderEventSem);
-  
+
   if (flagIsCameraRequested) {
     tsem_down(appPriv->sourceEventSem);
   }
@@ -651,7 +651,7 @@ int main(int argc, char** argv) {
       err = OMX_FreeBuffer(appPriv->videosrchandle, 0, pSrcOutBuffer[1]);
     }
   }
-  
+
 
   DEBUG(DEB_LEV_PARAMS, "Free Video enc output ports\n");
   err = OMX_FreeBuffer(appPriv->videoenchandle, 1, pOutBuffer[0]);
@@ -725,14 +725,14 @@ OMX_ERRORTYPE videosrcEventHandler(
         case OMX_StateWaitForResources:
           DEBUG(DEB_LEV_SIMPLE_SEQ, "OMX_StateWaitForResources\n");
           break;
-      }    
+      }
       tsem_up(appPriv->sourceEventSem);
     }
   } else {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param1 is %i\n", (int)Data1);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param2 is %i\n", (int)Data2);
   }
-  return err; 
+  return err;
 }
 
 OMX_ERRORTYPE videosrcFillBufferDone(
@@ -761,14 +761,14 @@ OMX_ERRORTYPE videosrcFillBufferDone(
         } else {
           err = OMX_FillThisBuffer(hComponent, pBuffer);
         }
-      } 
+      }
     } else {
       DEBUG(DEFAULT_MESSAGES, "In %s: eos=%x Dropping Empty This Buffer\n", __func__,(int)pBuffer->nFlags);
     }
   } else {
     DEBUG(DEB_LEV_ERR, "Ouch! In %s: had NULL buffer to output...\n", __func__);
   }
-  return OMX_ErrorNone;  
+  return OMX_ErrorNone;
 }
 /** Callbacks implementation of the video encoder component*/
 OMX_ERRORTYPE videoencEventHandler(
@@ -804,16 +804,16 @@ OMX_ERRORTYPE videoencEventHandler(
         case OMX_StateWaitForResources:
           DEBUG(DEB_LEV_SIMPLE_SEQ, "OMX_StateWaitForResources\n");
           break;
-      }    
+      }
       tsem_up(appPriv->encoderEventSem);
     }
     else if (OMX_CommandPortEnable || OMX_CommandPortDisable) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Enable/Disable Event\n",__func__);
       tsem_up(appPriv->encoderEventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventPortSettingsChanged) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "\n port settings change event handler in %s \n", __func__);
-    
+
   } else if(eEvent == OMX_EventBufferFlag) {
     DEBUG(DEFAULT_MESSAGES, "In %s OMX_BUFFERFLAG_EOS\n", __func__);
     if((int)Data2 == OMX_BUFFERFLAG_EOS) {
@@ -823,7 +823,7 @@ OMX_ERRORTYPE videoencEventHandler(
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param1 is %i\n", (int)Data1);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param2 is %i\n", (int)Data2);
   }
-  return err; 
+  return err;
 }
 
 OMX_ERRORTYPE videoencEmptyBufferDone(
@@ -839,7 +839,7 @@ OMX_ERRORTYPE videoencEmptyBufferDone(
     data_read = fread(pBuffer->pBuffer, sizeof(char), buffer_in_size, infile);
     if (data_read <= 0) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In the %s no more input data available\n", __func__);
-      pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+      pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
       pBuffer->nFilledLen = 0;
       tsem_up(appPriv->eofSem);
       return OMX_ErrorNone;
@@ -869,10 +869,10 @@ OMX_ERRORTYPE videoencFillBufferDone(
   if(pBuffer != NULL){
     if(!bEOS) {
       if((pBuffer->nFilledLen > 0)) {
-          fwrite(pBuffer->pBuffer, sizeof(char),  pBuffer->nFilledLen, outfile);    
+          fwrite(pBuffer->pBuffer, sizeof(char),  pBuffer->nFilledLen, outfile);
           pBuffer->nFilledLen = 0;
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEFAULT_MESSAGES, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }
@@ -885,7 +885,7 @@ OMX_ERRORTYPE videoencFillBufferDone(
   } else {
     DEBUG(DEB_LEV_ERR, "Ouch! In %s: had NULL buffer to output...\n", __func__);
   }
-  return OMX_ErrorNone;  
+  return OMX_ErrorNone;
 }
 
 

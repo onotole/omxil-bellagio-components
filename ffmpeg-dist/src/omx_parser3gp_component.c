@@ -387,7 +387,7 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
              omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata,
              omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size);
       pOutputBuffer->nFilledLen = omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size;
-      pOutputBuffer->nFlags = OMX_BUFFERFLAG_CODECCONFIG;
+      pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_CODECCONFIG;
 
       DEBUG(DEB_ALL_MESS, "In %s Sending Audio First Buffer Extra Data Size=%d\n",__func__,(int)pOutputBuffer->nFilledLen);
 
@@ -403,7 +403,7 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
              omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->extradata,
              omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->extradata_size);
       pOutputBuffer->nFilledLen = omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->extradata_size;
-      pOutputBuffer->nFlags = OMX_BUFFERFLAG_CODECCONFIG;
+      pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_CODECCONFIG;
 
       DEBUG(DEB_ALL_MESS, "In %s Sending Video First Buffer Extra Data Size=%d\n",__func__,(int)pOutputBuffer->nFilledLen);
 
@@ -429,7 +429,7 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
      error = av_read_frame(omx_parser3gp_component_Private->avformatcontext, &omx_parser3gp_component_Private->pkt);
      if(error < 0) {
        DEBUG(DEB_LEV_FULL_SEQ,"In %s EOS - no more packet,state=%x\n",__func__, omx_parser3gp_component_Private->state);
-       pOutputBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+       pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_EOS;
      } else {
        stream_index = omx_parser3gp_component_Private->pkt.stream_index;
        Scale = omx_parser3gp_component_Private->xScale >> 16;
@@ -457,7 +457,7 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
            pOutputBuffer->nTimeStamp = av_rescale_q(omx_parser3gp_component_Private->pkt.pts,
                                                     omx_parser3gp_component_Private->avformatcontext->streams[stream_index]->time_base, bq);
            if(FirstTimeStampFlag[stream_index]==OMX_FALSE){
-              pOutputBuffer->nFlags = OMX_BUFFERFLAG_STARTTIME;
+              pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_STARTTIME;
               FirstTimeStampFlag[stream_index] = OMX_TRUE;
            }
          } else {
@@ -473,7 +473,7 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
                                                    omx_parser3gp_component_Private->avformatcontext->streams[stream_index]->time_base, bq);
            temp_buffer->nOutputPortIndex = omx_parser3gp_component_Private->pkt.stream_index; /* keep the stream_index in OutputPortIndex for identification */
            if(FirstTimeStampFlag[temp_buffer->nOutputPortIndex]==OMX_FALSE){
-             temp_buffer->nFlags = OMX_BUFFERFLAG_STARTTIME;
+             temp_buffer->nFlags = temp_buffer->nFlags | OMX_BUFFERFLAG_STARTTIME;
              FirstTimeStampFlag[temp_buffer->nOutputPortIndex] = OMX_TRUE;
            }
          } else {

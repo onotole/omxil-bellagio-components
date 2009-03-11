@@ -1806,7 +1806,7 @@ static OMX_ERRORTYPE camera_AddTimeStamp(
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s for camera component\n",__func__);
 
   if (omx_camera_source_component_Private->bIsFirstFrame ) {
-    pBufHeader->nFlags = OMX_BUFFERFLAG_STARTTIME;
+    pBufHeader->nFlags = pBufHeader->nFlags | OMX_BUFFERFLAG_STARTTIME;
     omx_camera_source_component_Private->bIsFirstFrame = OMX_FALSE;
     DEBUG(DEB_LEV_SIMPLE_SEQ, "%s: Set StartTime Flag!\n",__func__);
   }

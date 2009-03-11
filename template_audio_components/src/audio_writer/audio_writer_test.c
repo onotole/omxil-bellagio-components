@@ -104,7 +104,7 @@ OMX_ERRORTYPE audiowriterEmptyBufferDone(
     /* Reschedule the empty buffer request */
     pBuffer->nFilledLen = count;
     if(count != DEFAULT_IN_BUFFER_SIZE)
-      pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+      pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
     err = OMX_EmptyThisBuffer(appPriv->handle, pBuffer);
   }
 
@@ -203,7 +203,7 @@ static void test_component(void)
   for(i = 0; i < BUFFER_COUNT_ACTUAL; i++) {
     int count = read(appPriv->ipd, inBuffer[i]->pBuffer, DEFAULT_IN_BUFFER_SIZE);
     if(count != DEFAULT_IN_BUFFER_SIZE) {
-      inBuffer[i]->nFlags = OMX_BUFFERFLAG_EOS;
+      inBuffer[i]->nFlags = inBuffer[i]->nFlags | OMX_BUFFERFLAG_EOS;
     }
     inBuffer[i]->nFilledLen = count;
     err = OMX_EmptyThisBuffer(appPriv->handle, inBuffer[i]);

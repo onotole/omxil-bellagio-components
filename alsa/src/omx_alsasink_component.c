@@ -282,7 +282,7 @@ OMX_ERRORTYPE omx_alsasink_component_port_SendBufferFunction(omx_base_PortType *
   pClockPort  = (omx_base_clock_PortType*)omx_base_component_Private->ports[OMX_BASE_SINK_CLOCKPORT_INDEX];
   if(PORT_IS_TUNNELED(pClockPort) && !PORT_IS_BEING_FLUSHED(openmaxStandPort) &&
       (omx_base_component_Private->transientState != OMX_TransStateExecutingToIdle) &&
-      (pBuffer->nFlags != OMX_BUFFERFLAG_EOS)){
+      ((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) != OMX_BUFFERFLAG_EOS)){
     SendFrame = omx_alsasink_component_ClockPortHandleFunction((omx_alsasink_component_PrivateType*)omx_base_component_Private, pBuffer);
     /* drop the frame */
     if(!SendFrame) pBuffer->nFilledLen=0;
@@ -325,7 +325,7 @@ OMX_BOOL omx_alsasink_component_ClockPortHandleFunction(omx_alsasink_component_P
   setHeader(&pClockPort->sMediaTimeRequest, sizeof(OMX_TIME_CONFIG_MEDIATIMEREQUESTTYPE));
 
   /* if  first time stamp is received then notify the clock component */
-  if(inputbuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+  if((inputbuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
     DEBUG(DEB_LEV_FULL_SEQ,"In %s  first time stamp = %llx \n", __func__,inputbuffer->nTimeStamp);
     inputbuffer->nFlags = 0;
     hclkComponent = pClockPort->hTunneledComponent;
@@ -536,8 +536,8 @@ void omx_alsasink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 
   /* Feed it to ALSA */
   frameSize = (omx_alsasink_component_Private->sPCMModeParam.nChannels * omx_alsasink_component_Private->sPCMModeParam.nBitPerSample) >> 3;
-  DEBUG(DEB_LEV_FULL_SEQ, "Framesize is %u chl=%d sRate=%d bufSize=%d \n", 
-    (int)frameSize, (int)omx_alsasink_component_Private->sPCMModeParam.nChannels, 
+  DEBUG(DEB_LEV_FULL_SEQ, "Framesize is %u chl=%d sRate=%d bufSize=%d \n",
+    (int)frameSize, (int)omx_alsasink_component_Private->sPCMModeParam.nChannels,
     (int)omx_alsasink_component_Private->sPCMModeParam.nSamplingRate , (int)inputbuffer->nFilledLen);
 
   if(inputbuffer->nFilledLen < frameSize){

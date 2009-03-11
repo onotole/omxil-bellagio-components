@@ -1,10 +1,10 @@
 /**
   test/components/audio/omxaudiocapnplay.c
-  
-  Test application that uses a OpenMAX component, a generic audio source. 
+
+  Test application that uses a OpenMAX component, a generic audio source.
   The application receives an audio stream (.m4v or .264) decoded by a multiple format source component.
   The decoded output is seen by a yuv viewer.
-  
+
   Copyright (C) 2007-2008 STMicroelectronics
   Copyright (C) 2007-2008 Nokia Corporation and/or its subsidiary(-ies).
 
@@ -22,7 +22,7 @@
   along with this library; if not, write to the Free Software Foundation, Inc.,
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
-  
+
   $Date$
   Revision $Rev$
   Author $Author$
@@ -149,7 +149,7 @@ OMX_ERRORTYPE test_OMX_RoleEnum(OMX_STRING component_name) {
   DEBUG(DEFAULT_MESSAGES, "The number of roles for the component %s is: %i\n", component_name, (int)no_of_roles);
 
   if(no_of_roles == 0) {
-    DEBUG(DEB_LEV_ERR, "The Number or roles is 0.\nThe component selected is not correct for the purpose of this test.\nExiting...\n");    
+    DEBUG(DEB_LEV_ERR, "The Number or roles is 0.\nThe component selected is not correct for the purpose of this test.\nExiting...\n");
     err = OMX_ErrorInvalidComponentName;
   }  else {
     string_of_roles = malloc(no_of_roles * sizeof(OMX_STRING));
@@ -295,7 +295,7 @@ int main(int argc, char** argv) {
           } else {
             output_file = malloc(strlen(argv[argn_dec]) + 1);
             strcpy(output_file,argv[argn_dec]);
-          }          
+          }
           flagIsOutputExpected = 0;
           flagDecodedOutputReceived = 1;
         } else if(isRate) {
@@ -358,7 +358,7 @@ int main(int argc, char** argv) {
   }
 
   /* Initialize application private data */
-  appPriv = malloc(sizeof(appPrivateType));  
+  appPriv = malloc(sizeof(appPrivateType));
   appPriv->sourceEventSem = malloc(sizeof(tsem_t));
   if(flagIsVolCompRequested == 1) {
     if(flagIsSinkRequested == 1) {
@@ -373,9 +373,9 @@ int main(int argc, char** argv) {
       tsem_init(appPriv->alsasinkEventSem, 0);
     }
      tsem_init(appPriv->volumeEventSem, 0);
-  } 
+  }
   tsem_init(appPriv->eofSem, 0);
-  
+
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Init the Omx core\n");
   err = OMX_Init();
   if (err != OMX_ErrorNone) {
@@ -384,7 +384,7 @@ int main(int argc, char** argv) {
   } else {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Omx core is initialized \n");
   }
-  
+
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
   test_OMX_ComponentNameEnum();
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
@@ -394,7 +394,7 @@ int main(int argc, char** argv) {
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
   test_OpenClose(COMPONENT_NAME_BASE);
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  
+
 
   full_component_name = malloc(OMX_MAX_STRINGNAME_SIZE);
   strcpy(full_component_name, "OMX.st.alsa.alsasrc");
@@ -484,7 +484,7 @@ int main(int argc, char** argv) {
       exit(1);
     }
     DEBUG(DEFAULT_MESSAGES, "Set up Tunnel Completed\n");
-  }  
+  }
 
   /** sending command to audio source component to go to idle state */
   err = OMX_SendCommand(appPriv->audiosrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
@@ -535,7 +535,7 @@ int main(int argc, char** argv) {
       }
 
       /** allocating buffers in the volume componenterter compoennt output port */
-      
+
       err = OMX_AllocateBuffer(appPriv->volume_handle, &pOutBufferVolc[0], 1, NULL, buffer_out_size);
       if(err != OMX_ErrorNone) {
         DEBUG(DEB_LEV_ERR, "Unable to allocate buffer in volume component\n");
@@ -573,7 +573,7 @@ int main(int argc, char** argv) {
     if(flagIsVolCompRequested == 1) {
       err = OMX_SendCommand(appPriv->volume_handle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
       tsem_down(appPriv->volumeEventSem);
-      if(flagIsSinkRequested == 1) {    
+      if(flagIsSinkRequested == 1) {
         err = OMX_SendCommand(appPriv->alsasink_handle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
         tsem_down(appPriv->alsasinkEventSem);
       }
@@ -584,17 +584,17 @@ int main(int argc, char** argv) {
   if(flagIsVolCompRequested == 1 && flagSetupTunnel) {
     err = OMX_SendCommand(appPriv->volume_handle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
     tsem_down(appPriv->volumeEventSem);
-    if(flagIsSinkRequested == 1) {    
+    if(flagIsSinkRequested == 1) {
       err = OMX_SendCommand(appPriv->alsasink_handle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
       tsem_down(appPriv->alsasinkEventSem);
     }
   }
-  
+
   /** sending command to audio source component to go to executing state */
   err = OMX_SendCommand(appPriv->audiosrchandle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
   tsem_down(appPriv->sourceEventSem);
 
-  if(flagIsVolCompRequested == 1 && !flagSetupTunnel) { 
+  if(flagIsVolCompRequested == 1 && !flagSetupTunnel) {
     err = OMX_FillThisBuffer(appPriv->volume_handle, pOutBufferVolc[0]);
     err = OMX_FillThisBuffer(appPriv->volume_handle, pOutBufferVolc[1]);
     DEBUG(DEFAULT_MESSAGES, "---> After fill this buffer function calls to the volume component output buffers\n");
@@ -649,7 +649,7 @@ int main(int argc, char** argv) {
 
   /** freeing buffers of volume component and sink component */
   if(flagIsVolCompRequested == 1 && !flagSetupTunnel) {
-    
+
     DEBUG(DEB_LEV_SIMPLE_SEQ, "volume component to loaded\n");
     err = OMX_FreeBuffer(appPriv->volume_handle, 0, pInBufferVolc[0]);
     err = OMX_FreeBuffer(appPriv->volume_handle, 0, pInBufferVolc[1]);
@@ -702,7 +702,7 @@ int main(int argc, char** argv) {
   }
   free(appPriv->eofSem);
   free(appPriv);
-  
+
   free(full_component_name);
 
   /** closing the output file */
@@ -750,11 +750,11 @@ OMX_ERRORTYPE alsasinkEventHandler(
           break;
       }
       tsem_up(appPriv->alsasinkEventSem);
-    }      
+    }
     else if (OMX_CommandPortEnable || OMX_CommandPortDisable) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Enable/Disable Event\n",__func__);
       tsem_up(appPriv->alsasinkEventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventBufferFlag) {
     DEBUG(DEB_LEV_ERR, "In %s OMX_BUFFERFLAG_EOS\n", __func__);
     if((int)Data2 == OMX_BUFFERFLAG_EOS) {
@@ -842,7 +842,7 @@ OMX_ERRORTYPE volumeEventHandler(
     else if (OMX_CommandPortEnable || OMX_CommandPortDisable) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Enable/Disable Event\n",__func__);
       tsem_up(appPriv->volumeEventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventBufferFlag) {
     DEBUG(DEB_LEV_ERR, "In %s OMX_BUFFERFLAG_EOS\n", __func__);
     if((int)Data2 == OMX_BUFFERFLAG_EOS) {
@@ -890,7 +890,7 @@ OMX_ERRORTYPE volumeEmptyBufferDone(
     DEBUG(DEB_LEV_ERR, "Ouch! In %s: had NULL buffer to output...\n", __func__);
   }
   return OMX_ErrorNone;
-}  
+}
 
 
 OMX_ERRORTYPE volumeFillBufferDone(
@@ -901,7 +901,7 @@ OMX_ERRORTYPE volumeFillBufferDone(
   OMX_ERRORTYPE err;
   if(pBuffer != NULL) {
     if(!bEOS) {
-      /** if there is no sink component then write buffer content in output file, in non tunneled case 
+      /** if there is no sink component then write buffer content in output file, in non tunneled case
         * else in non tunneled case, call the sink comp handle to process this buffer as its input buffer
         */
       if(flagIsSinkRequested && (!flagSetupTunnel)) {
@@ -916,10 +916,10 @@ OMX_ERRORTYPE volumeFillBufferDone(
           DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
         }
       } else if((pBuffer->nFilledLen > 0) && (!flagSetupTunnel)) {
-        fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);    
+        fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);
         pBuffer->nFilledLen = 0;
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_ERR, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }
@@ -932,7 +932,7 @@ OMX_ERRORTYPE volumeFillBufferDone(
   } else {
     DEBUG(DEB_LEV_ERR, "Ouch! In %s: had NULL buffer to output...\n", __func__);
   }
-  return OMX_ErrorNone;  
+  return OMX_ErrorNone;
 }
 
 /** Callbacks implementation of the audio source component*/
@@ -969,13 +969,13 @@ OMX_ERRORTYPE audiosrcEventHandler(
         case OMX_StateWaitForResources:
           DEBUG(DEB_LEV_SIMPLE_SEQ, "OMX_StateWaitForResources\n");
           break;
-      }    
+      }
       tsem_up(appPriv->sourceEventSem);
     }
     else if (OMX_CommandPortEnable || OMX_CommandPortDisable) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Enable/Disable Event\n",__func__);
       tsem_up(appPriv->sourceEventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventPortSettingsChanged) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "\n port settings change event handler in %s \n", __func__);
   } else if(eEvent == OMX_EventBufferFlag) {
@@ -987,7 +987,7 @@ OMX_ERRORTYPE audiosrcEventHandler(
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param1 is %i\n", (int)Data1);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param2 is %i\n", (int)Data2);
   }
-  return err; 
+  return err;
 }
 
 OMX_ERRORTYPE audiosrcFillBufferDone(
@@ -997,10 +997,10 @@ OMX_ERRORTYPE audiosrcFillBufferDone(
 
   OMX_ERRORTYPE err;
   OMX_STATETYPE eState;
-  
+
   if(pBuffer != NULL){
     if(!bEOS) {
-      /** if there is volume component component in processing state then send this buffer, in non tunneled case 
+      /** if there is volume component component in processing state then send this buffer, in non tunneled case
         * else in non tunneled case, write the output buffer contents in the specified output file
         */
       if(flagIsVolCompRequested && (!flagSetupTunnel)) {
@@ -1020,10 +1020,10 @@ OMX_ERRORTYPE audiosrcFillBufferDone(
           err = OMX_FillThisBuffer(hComponent, pBuffer);
         }
       } else if((pBuffer->nFilledLen > 0) && (!flagSetupTunnel)) {
-        fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);    
+        fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);
         pBuffer->nFilledLen = 0;
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_ERR, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }
@@ -1036,7 +1036,7 @@ OMX_ERRORTYPE audiosrcFillBufferDone(
   } else {
     DEBUG(DEB_LEV_ERR, "Ouch! In %s: had NULL buffer to output...\n", __func__);
   }
-  return OMX_ErrorNone;  
+  return OMX_ErrorNone;
 }
 
 

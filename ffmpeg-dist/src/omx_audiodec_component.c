@@ -421,7 +421,7 @@ void omx_audiodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   if(omx_audiodec_component_Private->isFirstBuffer == OMX_TRUE) {
     omx_audiodec_component_Private->isFirstBuffer = OMX_FALSE;
 
-    if(pInputBuffer->nFlags == OMX_BUFFERFLAG_CODECCONFIG) {
+    if((pInputBuffer->nFlags & OMX_BUFFERFLAG_CODECCONFIG) == OMX_BUFFERFLAG_CODECCONFIG) {
       omx_audiodec_component_Private->extradata_size = pInputBuffer->nFilledLen;
       if(omx_audiodec_component_Private->extradata_size > 0) {
         if(omx_audiodec_component_Private->extradata) {

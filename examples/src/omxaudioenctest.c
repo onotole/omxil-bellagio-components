@@ -1,8 +1,8 @@
 /**
   test/components/audio/omxaudioenctest.c
-  
+
   This test application can encode audio pcm stream into mp3/aac/amr format.
-  
+
   Copyright (C) 2008  STMicroelectronics and Nokia
 
   This library is free software; you can redistribute it and/or modify it under
@@ -19,7 +19,7 @@
   along with this library; if not, write to the Free Software Foundation, Inc.,
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
-  
+
   $Date: 2008-02-13 16:26:20 +0530 (Wed, 13 Feb 2008) $
   Revision $Rev: 1301 $
   Author $Author: pankaj_sen $
@@ -38,7 +38,7 @@ OMX_CALLBACKTYPE callbacks = { .EventHandler = audioencEventHandler,
                                .FillBufferDone = audioencFillBufferDone,
 };
 
-OMX_CALLBACKTYPE audiosrccallbacks = { 
+OMX_CALLBACKTYPE audiosrccallbacks = {
   .EventHandler = audiosrcEventHandler,
   .EmptyBufferDone = NULL,
   .FillBufferDone = audiosrcFillBufferDone,
@@ -170,10 +170,10 @@ int main(int argc, char** argv) {
           flagIsRate = 0;
           if(rate < 8000) {
             DEBUG(DEFAULT_MESSAGES, "Rate should be between [8000..48000]\n");
-            rate = 48000; 
+            rate = 48000;
           } else if(rate > 48000) {
             DEBUG(DEFAULT_MESSAGES, "Rate should be between [8000..48000]\n");
-            rate = 48000; 
+            rate = 48000;
           }
         } if (flagIsChannel) {
           channel = (int)atoi(argv[argn_dec]);
@@ -236,8 +236,8 @@ int main(int argc, char** argv) {
       DEBUG(DEFAULT_MESSAGES, " %s\n", output_file);
     }
   }
- 
-  
+
+
 
   if(flagOutputReceived && !flagIsFormatSpecified) {
     if(strstr(output_file,".aac") != NULL) {
@@ -284,9 +284,9 @@ int main(int argc, char** argv) {
     if(outfile == NULL) {
       DEBUG(DEB_LEV_ERR, "Error at opening the output file");
       exit(1);
-    } 
+    }
   }
-   
+
   filesize = getFileSize(fd);
   /* Initialize application private data */
   appPriv = malloc(sizeof(appPrivateType));
@@ -351,7 +351,7 @@ int main(int argc, char** argv) {
     rate = sPCMModeParam.nSamplingRate;
     channel = sPCMModeParam.nChannels;
   }
-  
+
 
   if(rate > 0 || channel >0)  {
     DEBUG(DEFAULT_MESSAGES, "Setting Sample Rate =%d and nChannel=%d\n",rate,channel);
@@ -363,7 +363,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "Err in GetParameter OMX_AUDIO_PARAM_PCMMODETYPE in Audio Encoder. Exiting...\n");
       exit(1);
     }
-    
+
     sPCMModeParam.nChannels = (channel >0 ) ? channel:sPCMModeParam.nChannels;
     sPCMModeParam.nSamplingRate = (rate >0 ) ? rate:sPCMModeParam.nSamplingRate;
 
@@ -372,7 +372,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "Err in SetParameter OMX_AUDIO_PARAM_PCMMODETYPE in Audio Encoder. Exiting...\n");
       exit(1);
     }
-    
+
     switch(eCodingType) {
     case OMX_AUDIO_CodingMP3 : {
         setHeader(&sAudioMp3, sizeof(OMX_AUDIO_PARAM_MP3TYPE));
@@ -417,7 +417,7 @@ int main(int argc, char** argv) {
 
         switch(bandmode) {
         case OMX_AUDIO_AMRBandModeNB0:                 /**< AMRNB Mode 0 =  4750 bps */
-          sAudioAmr.nBitRate = 4750; 
+          sAudioAmr.nBitRate = 4750;
           break;
         case OMX_AUDIO_AMRBandModeNB1:                 /**< AMRNB Mode 1 =  5150 bps */
           sAudioAmr.nBitRate = 5150;
@@ -441,7 +441,7 @@ int main(int argc, char** argv) {
           sAudioAmr.nBitRate = 12200;
           break;
         case OMX_AUDIO_AMRBandModeWB0:                 /**< AMRWB Mode 0 =  6600 bps */
-          sAudioAmr.nBitRate = 6600; 
+          sAudioAmr.nBitRate = 6600;
           break;
         case OMX_AUDIO_AMRBandModeWB1:                 /**< AMRWB Mode 1 =  8840 bps */
           sAudioAmr.nBitRate = 8840;
@@ -468,7 +468,7 @@ int main(int argc, char** argv) {
           sAudioAmr.nBitRate = 23850;
           break;
         default:
-          DEBUG(DEB_LEV_ERR, "In %s AMR Band Mode %x Not Supported\n",__func__,sAudioAmr.eAMRBandMode); 
+          DEBUG(DEB_LEV_ERR, "In %s AMR Band Mode %x Not Supported\n",__func__,sAudioAmr.eAMRBandMode);
           display_help();
         }
         sAudioAmr.eAMRBandMode = bandmode;
@@ -495,7 +495,7 @@ int main(int argc, char** argv) {
       exit(1);
     }
     DEBUG(DEFAULT_MESSAGES, "Set up Tunnel Completed\n");
-  }  
+  }
 
   if(flagIsUseAudioSource) {
     err = OMX_SendCommand(appPriv->audiosrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
@@ -513,7 +513,7 @@ int main(int argc, char** argv) {
     if (err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Error on AllocateBuffer in 2 %i\n", err);
       exit(1);
-    } 
+    }
     err = OMX_UseBuffer(appPriv->audioenchandle, &inBuffer[0], 0, NULL, BUFFER_IN_SIZE, outSrcBuffer[0]->pBuffer);
     if (err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Error on UseBuffer in 1%i\n", err);
@@ -523,7 +523,7 @@ int main(int argc, char** argv) {
     if (err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Error on UseBuffer in 2 %i\n", err);
       exit(1);
-    } 
+    }
   } else {
     err = OMX_AllocateBuffer(appPriv->audioenchandle, &inBuffer[0], 0, NULL, BUFFER_IN_SIZE);
     if (err != OMX_ErrorNone) {
@@ -534,7 +534,7 @@ int main(int argc, char** argv) {
     if (err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Error on AllocateBuffer in 2 %i\n", err);
       exit(1);
-    } 
+    }
   }
 
   err = OMX_AllocateBuffer(appPriv->audioenchandle, &outBuffer[0], 1, NULL, BUFFER_IN_SIZE);
@@ -566,7 +566,7 @@ int main(int argc, char** argv) {
   }
 
   if(!flagSetupTunnel && !flagIsUseAudioSource) {
-    DEBUG(DEB_LEV_PARAMS, "Had buffers at:\n0x%08x\n0x%08x\n0x%08x\n0x%08x\n", 
+    DEBUG(DEB_LEV_PARAMS, "Had buffers at:\n0x%08x\n0x%08x\n0x%08x\n0x%08x\n",
                   (int)inBuffer[0]->pBuffer, (int)inBuffer[1]->pBuffer, (int)outBuffer[0]->pBuffer, (int)outBuffer[1]->pBuffer);
     DEBUG(DEB_LEV_PARAMS, "After switch to executing\n");
 
@@ -583,7 +583,7 @@ int main(int argc, char** argv) {
     DEBUG(DEB_LEV_PARAMS, "Empty second buffer %x\n", (int)inBuffer[1]);
     err = OMX_EmptyThisBuffer(appPriv->audioenchandle, inBuffer[1]);
   }
-  
+
   /** Schedule a couple of buffers to be filled on the output port
     * The callback itself will re-schedule them.
     */
@@ -604,12 +604,12 @@ int main(int argc, char** argv) {
         break;
       }
     }
-  } 
+  }
 
   DEBUG(DEFAULT_MESSAGES,"Waiting for EOS\n");
   tsem_down(appPriv->eofSem);
   DEBUG(DEFAULT_MESSAGES,"Received for EOS\n");
-  
+
 
   if(flagIsUseAudioSource) {
     err = OMX_SendCommand(appPriv->audiosrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
@@ -630,13 +630,13 @@ int main(int argc, char** argv) {
   if(!flagSetupTunnel && flagIsUseAudioSource) {
     err = OMX_FreeBuffer(appPriv->audiosrchandle, 0, outSrcBuffer[0]);
     err = OMX_FreeBuffer(appPriv->audiosrchandle, 0, outSrcBuffer[1]);
-  } 
-  
+  }
+
   if(!flagSetupTunnel) {
     err = OMX_FreeBuffer(appPriv->audioenchandle, 0, inBuffer[0]);
     err = OMX_FreeBuffer(appPriv->audioenchandle, 0, inBuffer[1]);
   }
-  
+
   err = OMX_FreeBuffer(appPriv->audioenchandle, 1, outBuffer[0]);
   err = OMX_FreeBuffer(appPriv->audioenchandle, 1, outBuffer[1]);
 
@@ -647,7 +647,7 @@ int main(int argc, char** argv) {
   }
   DEBUG(DEFAULT_MESSAGES,"All component transitioned to Loaded\n");
 
-  
+
   OMX_FreeHandle(appPriv->audioenchandle);
 
   if(flagIsUseAudioSource) {
@@ -673,7 +673,7 @@ int main(int argc, char** argv) {
       free(output_file);
     }
   }
-  
+
   if(input_file) {
     DEBUG(DEFAULT_MESSAGES,"Freeing input_file\n");
     free(input_file);
@@ -721,7 +721,7 @@ OMX_ERRORTYPE audioencEventHandler(
       tsem_up(appPriv->eventSem);
     } else if (Data1 == OMX_CommandPortDisable){
       tsem_up(appPriv->eventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventBufferFlag) {
     DEBUG(DEB_LEV_ERR, "In %s OMX_BUFFERFLAG_EOS\n", __func__);
     if((int)Data2 == OMX_BUFFERFLAG_EOS) {
@@ -757,7 +757,7 @@ OMX_ERRORTYPE audioencEmptyBufferDone(
         return OMX_ErrorNone;
       }
       pBuffer->nFilledLen=0;
-      pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+      pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
       bEOS=OMX_TRUE;
       err = OMX_EmptyThisBuffer(hComponent, pBuffer);
       return OMX_ErrorNone;
@@ -798,13 +798,13 @@ OMX_ERRORTYPE audioencFillBufferDone(
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
-  int i;  
+  int i;
 
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback. Got buflen %i for buffer at 0x%08x\n",
                           __func__, (int)pBuffer->nFilledLen, (int)pBuffer);
 
   /* Output data to standard output */
-  if(pBuffer->nFlags != OMX_BUFFERFLAG_EOS) {
+  if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) != OMX_BUFFERFLAG_EOS) {
     if(pBuffer != NULL) {
       if (pBuffer->nFilledLen == 0) {
         DEBUG(DEB_LEV_ERR, "Ouch! In %s: no data in the output buffer!\n", __func__);
@@ -825,7 +825,7 @@ OMX_ERRORTYPE audioencFillBufferDone(
     }
   }
   /* Reschedule the fill buffer request */
-  if(pBuffer->nFlags != OMX_BUFFERFLAG_EOS) {
+  if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) != OMX_BUFFERFLAG_EOS) {
     err = OMX_FillThisBuffer(hComponent, pBuffer);
   }
   return OMX_ErrorNone;
@@ -865,13 +865,13 @@ OMX_ERRORTYPE audiosrcEventHandler(
         case OMX_StateWaitForResources:
           DEBUG(DEB_LEV_SIMPLE_SEQ, "OMX_StateWaitForResources\n");
           break;
-      }    
+      }
       tsem_up(appPriv->audiosrcEventSem);
     }
     else if (OMX_CommandPortEnable || OMX_CommandPortDisable) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Enable/Disable Event\n",__func__);
       tsem_up(appPriv->audiosrcEventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventPortSettingsChanged) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "\n port settings change event handler in %s \n", __func__);
   } else if(eEvent == OMX_EventBufferFlag) {
@@ -883,7 +883,7 @@ OMX_ERRORTYPE audiosrcEventHandler(
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param1 is %i\n", (int)Data1);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param2 is %i\n", (int)Data2);
   }
-  return err; 
+  return err;
 }
 
 OMX_ERRORTYPE audiosrcFillBufferDone(
@@ -893,7 +893,7 @@ OMX_ERRORTYPE audiosrcFillBufferDone(
 
   OMX_ERRORTYPE err;
   static int iBufferDropped=0;
-  
+
   if(pBuffer != NULL) {
     if(!bEOS) {
       if(!flagSetupTunnel) {
@@ -908,32 +908,32 @@ OMX_ERRORTYPE audiosrcFillBufferDone(
             DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
           }
       } else if((pBuffer->nFilledLen > 0) && (!flagSetupTunnel)) {
-        fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);    
+        fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);
         pBuffer->nFilledLen = 0;
 
         if(!bEOS && !flagSetupTunnel) {
           err = OMX_FillThisBuffer(hComponent, pBuffer);
         }
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_ERR, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }
-      
+
     } else {
       iBufferDropped++;
       if(iBufferDropped>=2) {
         //tsem_up(appPriv->eofSem);
         return OMX_ErrorNone;
       }
-      pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+      pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
       if(inBuffer[0]->pBuffer == pBuffer->pBuffer) {
         inBuffer[0]->nFilledLen = pBuffer->nFilledLen;
-        inBuffer[0]->nFlags = OMX_BUFFERFLAG_EOS;
+        inBuffer[0]->nFlags = inBuffer[0]->nFlags | OMX_BUFFERFLAG_EOS;
         err = OMX_EmptyThisBuffer(appPriv->audioenchandle, inBuffer[0]);
       } else {
         inBuffer[1]->nFilledLen = pBuffer->nFilledLen;
-        inBuffer[1]->nFlags = OMX_BUFFERFLAG_EOS;
+        inBuffer[1]->nFlags = inBuffer[1]->nFlags | OMX_BUFFERFLAG_EOS;
         err = OMX_EmptyThisBuffer(appPriv->audioenchandle, inBuffer[1]);
       }
       if(err != OMX_ErrorNone) {
@@ -945,7 +945,7 @@ OMX_ERRORTYPE audiosrcFillBufferDone(
   } else {
     DEBUG(DEB_LEV_ERR, "Ouch! In %s: had NULL buffer to output...\n", __func__);
   }
-  return OMX_ErrorNone;  
+  return OMX_ErrorNone;
 }
 
 /** Gets the file descriptor's size

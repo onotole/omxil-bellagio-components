@@ -41,7 +41,7 @@
 #define MPEG4_TYPE_SEL            1
 #define AVC_TYPE_SEL              2
 #define VIDEO_COMPONENT_NAME_BASE "OMX.st.video_decoder"
-#define AUDIO_COMPONENT_NAME_BASE "OMX.st.audio_decoder" 
+#define AUDIO_COMPONENT_NAME_BASE "OMX.st.audio_decoder"
 #define VIDEO_BASE_ROLE           "video_decoder.avc"
 #define AUDIO_BASE_ROLE           "audio_decoder.mp3"
 #define VIDEO_DEC_MPEG4_ROLE      "video_decoder.mpeg4"
@@ -76,7 +76,7 @@ OMX_BUFFERHEADERTYPE *inBufferSinkVideo[2];
 /* used with volume control if selected */
 OMX_BUFFERHEADERTYPE *inBufferVolume[2], *outBufferVolume[2];
 OMX_BUFFERHEADERTYPE *inBufferSinkAudio[2];
-int buffer_in_size = BUFFER_IN_SIZE; 
+int buffer_in_size = BUFFER_IN_SIZE;
 int buffer_out_size = BUFFER_OUT_SIZE;
 static OMX_BOOL bEOS=OMX_FALSE;
 
@@ -84,31 +84,31 @@ static OMX_PARAM_PORTDEFINITIONTYPE paramPortVideo, paramPortAudio;
 OMX_PARAM_PORTDEFINITIONTYPE decparamPortVideo;
 OMX_PARAM_PORTDEFINITIONTYPE decparamPortAudio;
 
-OMX_CALLBACKTYPE videodeccallbacks = { 
+OMX_CALLBACKTYPE videodeccallbacks = {
   .EventHandler = videodecEventHandler,
   .EmptyBufferDone = videodecEmptyBufferDone,
   .FillBufferDone = videodecFillBufferDone
 };
 
-OMX_CALLBACKTYPE colorconv_callbacks = { 
+OMX_CALLBACKTYPE colorconv_callbacks = {
   .EventHandler = colorconvEventHandler,
   .EmptyBufferDone = colorconvEmptyBufferDone,
   .FillBufferDone = colorconvFillBufferDone
 };
 
-OMX_CALLBACKTYPE videoschd_callbacks = { 
+OMX_CALLBACKTYPE videoschd_callbacks = {
   .EventHandler = videoschdEventHandler,
   .EmptyBufferDone = videoschdEmptyBufferDone,
   .FillBufferDone = videoschdFillBufferDone
 };
 
-OMX_CALLBACKTYPE fbdev_sink_callbacks = { 
+OMX_CALLBACKTYPE fbdev_sink_callbacks = {
   .EventHandler = fb_sinkEventHandler,
   .EmptyBufferDone = fb_sinkEmptyBufferDone,
   .FillBufferDone = NULL
 };
 
-OMX_CALLBACKTYPE parser3gpcallbacks = { 
+OMX_CALLBACKTYPE parser3gpcallbacks = {
   .EventHandler    = parser3gpEventHandler,
   .EmptyBufferDone = NULL,
   .FillBufferDone  = parser3gpFillBufferDone
@@ -138,7 +138,7 @@ OMX_CALLBACKTYPE volumecallbacks = {
   .FillBufferDone  = volumeFillBufferDone
 };
 
-OMX_U32 out_width = 0, new_out_width = 0;  
+OMX_U32 out_width = 0, new_out_width = 0;
 OMX_U32 out_height = 0, new_out_height = 0;
 
 appPrivateType* appPriv;
@@ -149,12 +149,12 @@ FILE *outfileAudio, *outfileVideo;
 
 int flagIsAudioOutputFileExpected;       /* to write the audio output to a file */
 int flagIsVideoOutputFileExpected;       /* to write the video output to a file */
-int flagDecodedOutputReceived;  
+int flagDecodedOutputReceived;
 int flagInputReceived;
 int flagIsDisplayRequested;     /* If Display is ON - volume, color & video scheduler components are chosen by default */
 int flagSetupTunnel;
 int flagAVsync;                 /* to select the AVsync option 1 = AV sync ON, clock component selected, 0 = no clock component selected*/
-int flagIsXVideoSinkRequested;   /* requested X-video sink*/ 
+int flagIsXVideoSinkRequested;   /* requested X-video sink*/
 
 static void setHeader(OMX_PTR header, OMX_U32 size) {
   OMX_VERSIONTYPE* ver = (OMX_VERSIONTYPE*)(header + sizeof(OMX_U32));
@@ -166,8 +166,8 @@ static void setHeader(OMX_PTR header, OMX_U32 size) {
   ver->s.nStep = VERSIONSTEP;
 }
 
-/** this function sets the audio deocder, volume and audio sink port characteristics 
-  * based on the parser3gp output port settings 
+/** this function sets the audio deocder, volume and audio sink port characteristics
+  * based on the parser3gp output port settings
   */
 int SetPortParametersAudio() {
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -177,7 +177,7 @@ int SetPortParametersAudio() {
   setHeader(&paramPortAudio, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
   err = OMX_GetParameter(appPriv->parser3gphandle, OMX_IndexParamPortDefinition, &paramPortAudio);
   if(err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR,"\n error in parser3gp port settings get\n");  
+    DEBUG(DEB_LEV_ERR,"\n error in parser3gp port settings get\n");
     exit(1);
   }
 
@@ -187,7 +187,7 @@ int SetPortParametersAudio() {
   setHeader(&decparamPortAudio, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
   err = OMX_GetParameter(appPriv->audiodechandle, OMX_IndexParamPortDefinition, &decparamPortAudio);
   if(err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR,"\n error in audiodechandle settings get\n");  
+    DEBUG(DEB_LEV_ERR,"\n error in audiodechandle settings get\n");
     exit(1);
   }
 
@@ -196,7 +196,7 @@ int SetPortParametersAudio() {
   if(err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR,"Error %08x setting audiodec input port param --- \n",err);
     exit(1);
-  } 
+  }
 
   // output port settings
   decparamPortAudio.nPortIndex = 1;
@@ -217,8 +217,8 @@ int SetPortParametersAudio() {
   return err;
 }
 
-/** this function sets the video deocder, color converter and video sink port characteristics 
-  * based on the parser3gp output port settings 
+/** this function sets the video deocder, color converter and video sink port characteristics
+  * based on the parser3gp output port settings
   */
 int SetPortParametersVideo() {
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -229,7 +229,7 @@ int SetPortParametersVideo() {
   setHeader(&paramPortVideo, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
   err = OMX_GetParameter(appPriv->parser3gphandle, OMX_IndexParamPortDefinition, &paramPortVideo);
   if(err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR,"\n error in parser3gp port settings get\n");  
+    DEBUG(DEB_LEV_ERR,"\n error in parser3gp port settings get\n");
     exit(1);
   }
 
@@ -239,18 +239,18 @@ int SetPortParametersVideo() {
   setHeader(&decparamPortVideo, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
   err = OMX_GetParameter(appPriv->videodechandle, OMX_IndexParamPortDefinition, &decparamPortVideo);
   if(err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR,"\n error in videodechandle settings get\n");  
+    DEBUG(DEB_LEV_ERR,"\n error in videodechandle settings get\n");
     exit(1);
   }
 
   decparamPortVideo.format.video.eCompressionFormat=paramPortVideo.format.video.eCompressionFormat;
   decparamPortVideo.format.video.nFrameWidth=paramPortVideo.format.video.nFrameWidth;
-  decparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight; 
+  decparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight;
   err = OMX_SetParameter(appPriv->videodechandle, OMX_IndexParamPortDefinition, &decparamPortVideo);
   if(err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR,"Error %08x setting videodec input port param --- \n",err);
     exit(1);
-  } 
+  }
 
  // output port settings
   decparamPortVideo.nPortIndex = 1;
@@ -263,23 +263,23 @@ int SetPortParametersVideo() {
 
   decparamPortVideo.format.video.eCompressionFormat=paramPortVideo.format.video.eCompressionFormat;
   decparamPortVideo.format.video.nFrameWidth=paramPortVideo.format.video.nFrameWidth;
-  decparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight; 
+  decparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight;
   err = OMX_SetParameter(appPriv->videodechandle, OMX_IndexParamPortDefinition, &decparamPortVideo);
   if(err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR,"Error %08x setting videodec output port param --- \n",err);
     exit(1);
   }
 
-  new_out_width = paramPortVideo.format.video.nFrameWidth;  
-  new_out_height = paramPortVideo.format.video.nFrameHeight; 
+  new_out_width = paramPortVideo.format.video.nFrameWidth;
+  new_out_height = paramPortVideo.format.video.nFrameHeight;
   DEBUG(DEB_LEV_SIMPLE_SEQ, "input picture width : %d height : %d \n", (int)new_out_width, (int)new_out_height);
 
-  /** setting the color converter and sink component chararacteristics, if selected - 
-    * both in tunneled as well as non tunneled case 
+  /** setting the color converter and sink component chararacteristics, if selected -
+    * both in tunneled as well as non tunneled case
     */
   if(flagIsDisplayRequested == 1) {
-    /** setting the color conv input port width, height 
-      * it will be same as the video decoder output port width, height 
+    /** setting the color conv input port width, height
+      * it will be same as the video decoder output port width, height
       */
     omx_colorconvPortDefinition.nPortIndex = 0;
     setHeader(&omx_colorconvPortDefinition, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
@@ -291,8 +291,8 @@ int SetPortParametersVideo() {
       DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err);
       return err;
     }
-    /** setting the color converter output width height 
-      * it will be same as input dimensions 
+    /** setting the color converter output width height
+      * it will be same as input dimensions
       */
     omx_colorconvPortDefinition.nPortIndex = 1;
     err = OMX_GetParameter(appPriv->colorconv_handle, OMX_IndexParamPortDefinition, &omx_colorconvPortDefinition);
@@ -303,8 +303,8 @@ int SetPortParametersVideo() {
       DEBUG(DEB_LEV_ERR, "In %s Setting Output Port Definition Error=%x\n",__func__,err);
       return err;
     }
-    /** setting the input color format of color converter component 
-      * it will be same as output yuv color format of the decoder component 
+    /** setting the input color format of color converter component
+      * it will be same as output yuv color format of the decoder component
       */
     paramPortVideo.nPortIndex = 1;
     setHeader(&paramPortVideo, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
@@ -312,7 +312,7 @@ int SetPortParametersVideo() {
     omx_colorconvPortDefinition.nPortIndex = 0;
     setHeader(&omx_colorconvPortDefinition, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
     err = OMX_GetParameter(appPriv->colorconv_handle, OMX_IndexParamPortDefinition, &omx_colorconvPortDefinition);
-    omx_colorconvPortDefinition.format.video.eColorFormat = paramPortVideo.format.video.eColorFormat;  
+    omx_colorconvPortDefinition.format.video.eColorFormat = paramPortVideo.format.video.eColorFormat;
     err = OMX_SetParameter(appPriv->colorconv_handle, OMX_IndexParamPortDefinition, &omx_colorconvPortDefinition);
     if(err==OMX_ErrorBadParameter) {
       DEBUG(DEB_LEV_ERR,"\n bad parameter of input color format - exiting\n");
@@ -334,7 +334,7 @@ int SetPortParametersVideo() {
       exit(1);
     }
 
-    /** set the input and output port settings of the video scheduler according to the 
+    /** set the input and output port settings of the video scheduler according to the
       * output port settings of the color converter component if AVsync is used
       */
     if(flagAVsync){
@@ -346,7 +346,7 @@ int SetPortParametersVideo() {
         DEBUG(DEB_LEV_ERR,"\n error in setting the input port param of the video scheduler component- exiting\n");
         exit(1);
       }
-      
+
       omx_colorconvPortDefinition.nPortIndex = 1; //color converter output port index
       err = OMX_GetParameter(appPriv->colorconv_handle, OMX_IndexParamPortDefinition, &omx_colorconvPortDefinition);
       omx_colorconvPortDefinition.nPortIndex = 1; //video scheduler output port index
@@ -357,8 +357,8 @@ int SetPortParametersVideo() {
       }
     }
 
-    /** if video sink component is selected then set its input port settings 
-      *  according to the output port settings of the color converter component  
+    /** if video sink component is selected then set its input port settings
+      *  according to the output port settings of the color converter component
       */
     omx_colorconvPortDefinition.nPortIndex = 1; //color converter output port index
     err = OMX_GetParameter(appPriv->colorconv_handle, OMX_IndexParamPortDefinition, &omx_colorconvPortDefinition);
@@ -376,8 +376,8 @@ void display_help() {
   printf("\n");
   printf("Usage: omxparsertest -vo outfileVideo.yuv -ao outfileAudio.pcm  [-t]  [-h] [-d] [-c] input_filename\n");
   printf("\n");
-  printf("       -ao outfileAudio.pcm \n"); 
-  printf("       -vo outfileVideo.yuv \n"); 
+  printf("       -ao outfileAudio.pcm \n");
+  printf("       -vo outfileVideo.yuv \n");
   printf("                   If this option is specified, the output is written to user specified outfiles\n");
   printf("                   N.B : This option is not needed if you use the sink component\n");
   printf("\n");
@@ -396,7 +396,7 @@ void display_help() {
   printf("           are not specified - the components are tunneled between themselves\n");
   printf("\n");
   exit(1);
-} 
+}
 
 OMX_ERRORTYPE test_OMX_ComponentNameEnum() {
   char * name;
@@ -438,7 +438,7 @@ OMX_ERRORTYPE test_OMX_RoleEnum(OMX_STRING component_name) {
   DEBUG(DEFAULT_MESSAGES, "The number of roles for the component %s is: %i\n", component_name, (int)no_of_roles);
 
   if(no_of_roles == 0) {
-    DEBUG(DEB_LEV_ERR, "The Number or roles is 0.\nThe component selected is not correct for the purpose of this test.\nExiting...\n");    
+    DEBUG(DEB_LEV_ERR, "The Number or roles is 0.\nThe component selected is not correct for the purpose of this test.\nExiting...\n");
     err = OMX_ErrorInvalidComponentName;
   }  else {
     string_of_roles = (OMX_U8**)malloc(no_of_roles * sizeof(OMX_STRING));
@@ -474,7 +474,7 @@ OMX_ERRORTYPE test_OMX_ComponentEnumByRole(OMX_STRING role_name) {
   int index;
 
   DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s\n",__func__);
-  
+
   DEBUG(DEFAULT_MESSAGES, "Getting number of components per role for %s\n", role_name);
 
   err = OMX_GetComponentsOfRole(role_name, &no_of_comp_per_role, NULL);
@@ -562,7 +562,7 @@ int main(int argc, char** argv) {
   int gain                            = -1;
   OMX_ERRORTYPE                       err;
   OMX_INDEXTYPE                       eIndexParamFilename;
-  OMX_PARAM_COMPONENTROLETYPE         sComponentRole; 
+  OMX_PARAM_COMPONENTROLETYPE         sComponentRole;
   OMX_AUDIO_CONFIG_VOLUMETYPE         sVolume;
   OMX_TIME_CONFIG_CLOCKSTATETYPE      sClockState;
   OMX_TIME_CONFIG_SCALETYPE           sConfigScale;
@@ -624,16 +624,16 @@ int main(int argc, char** argv) {
           if(strstr(argv[argn_dec], ".yuv") != NULL) {
             output_file_video = malloc(strlen(argv[argn_dec]) * sizeof(char) + 1);
             strcpy(output_file_video,argv[argn_dec]);
-          }    
+          }
           flagIsVideoOutputFileExpected = 0;
-          flagDecodedOutputReceived = 1; 
+          flagDecodedOutputReceived = 1;
         } else if (flagIsAudioOutputFileExpected){
           if (strstr(argv[argn_dec], ".pcm") != NULL) {
             output_file_audio = malloc(strlen(argv[argn_dec]) * sizeof(char) + 1);
             strcpy(output_file_audio,argv[argn_dec]);
           }
           flagIsAudioOutputFileExpected = 0;
-          flagDecodedOutputReceived = 1; 
+          flagDecodedOutputReceived = 1;
         } else {
           input_file = malloc(strlen(argv[argn_dec]) * sizeof(char) + 1);
           strcpy(input_file,argv[argn_dec]);
@@ -658,11 +658,11 @@ int main(int argc, char** argv) {
 
     if(flagDecodedOutputReceived) {
       if(flagIsDisplayRequested || flagSetupTunnel) {
-        flagDecodedOutputReceived = 0; 
+        flagDecodedOutputReceived = 0;
         DEBUG(DEB_LEV_ERR, "Display Requested or Components are tunneled. No FILE Output will be produced\n");
       }
     }
-   
+
     DEBUG(DEFAULT_MESSAGES, "Options selected:\n");
     if(flagDecodedOutputReceived) {
       DEBUG(DEFAULT_MESSAGES, "Decode file %s to produce audio file %s and video file %s\n", input_file, output_file_audio, output_file_video);
@@ -718,7 +718,7 @@ int main(int argc, char** argv) {
   appPriv->eofSem = malloc(sizeof(tsem_t));
   if(flagAVsync) {
     appPriv->clockEventSem = malloc(sizeof(tsem_t));
-  } 
+  }
 
   tsem_init(appPriv->parser3gpEventSem, 0);
   tsem_init(appPriv->videoDecoderEventSem, 0);
@@ -732,9 +732,9 @@ int main(int argc, char** argv) {
       tsem_init(appPriv->videoschdEventSem, 0);
     }
   }
-  tsem_init(appPriv->eofSem, 0); 
+  tsem_init(appPriv->eofSem, 0);
   if(flagAVsync) {
-    tsem_init(appPriv->clockEventSem, 0); 
+    tsem_init(appPriv->clockEventSem, 0);
   }
 
   /** initialising openmax */
@@ -773,7 +773,7 @@ int main(int argc, char** argv) {
     exit(1);
   } else {
     DEBUG(DEFAULT_MESSAGES, "Parser3gp Component Found\n");
-  } 
+  }
 
  /* getting the handle to the clock src component */
  if(flagAVsync){
@@ -839,7 +839,7 @@ int main(int argc, char** argv) {
     } else {
        DEBUG(DEFAULT_MESSAGES, "Found The video sink component for color converter \n");
     }
-  
+
     /** getting audio sink component handle */
     err = OMX_GetHandle(&appPriv->audiosinkhandle, AUDIO_SINK, NULL , &audiosinkcallbacks);
     if(err != OMX_ErrorNone){
@@ -891,7 +891,7 @@ int main(int argc, char** argv) {
        }
        tsem_down(appPriv->audioSinkEventSem); /* audio sink clock port Enabled */
        DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Audio Sink Clock Port Enabled\n", __func__);
-   
+
       err = OMX_SendCommand(appPriv->videoschd_handle, OMX_CommandPortEnable, 2, NULL);
       if(err != OMX_ErrorNone) {
          DEBUG(DEB_LEV_ERR,"video scheduler clock port Enable failed\n");
@@ -1014,7 +1014,7 @@ int main(int argc, char** argv) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Set up Tunnel Completed\n");
 
     /* The decoder is the buffer supplier and parser is the consumer,
-     not the other way round. This ensures that the first buffer is available when the decoder is in idle state. 
+     not the other way round. This ensures that the first buffer is available when the decoder is in idle state.
      This prevents the loss of the first frame buffer */
     OMX_PARAM_BUFFERSUPPLIERTYPE sBufferSupplier;
     sBufferSupplier.nPortIndex = 0;
@@ -1032,7 +1032,7 @@ int main(int argc, char** argv) {
       return err;
     }
   }
-  
+
 
   /** set the parser3gp component to idle state */
   OMX_SendCommand(appPriv->parser3gphandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
@@ -1057,7 +1057,7 @@ int main(int argc, char** argv) {
     }
   }
 
-  /* In case tunnel is not set up then allocate the output buffers of the parser  
+  /* In case tunnel is not set up then allocate the output buffers of the parser
      two buffers for video port and two buffers for audio port */
   if (!flagSetupTunnel) {
     outBufferParseVideo[0] = outBufferParseVideo[1] = NULL;
@@ -1153,7 +1153,7 @@ int main(int argc, char** argv) {
         DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Volume Component Port Disabled\n", __func__);
         tsem_down(appPriv->audioSinkEventSem); /* sink i/p port disabled */
         DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Audio Sink Port Disabled\n", __func__);
-     }    
+     }
 
    /* Put the audio and video decoder back to Loaded state to set their role*/
     err = OMX_SendCommand(appPriv->videodechandle, OMX_CommandStateSet, OMX_StateLoaded, NULL);
@@ -1164,18 +1164,18 @@ int main(int argc, char** argv) {
    }
 
   /*  setting the port parameters and component role */
-    SetPortParametersVideo(); 
+    SetPortParametersVideo();
     setHeader(&sComponentRole, sizeof(OMX_PARAM_COMPONENTROLETYPE));
-    err = OMX_GetParameter(appPriv->videodechandle,OMX_IndexParamStandardComponentRole,&sComponentRole); 
+    err = OMX_GetParameter(appPriv->videodechandle,OMX_IndexParamStandardComponentRole,&sComponentRole);
     switch(paramPortVideo.format.video.eCompressionFormat){
     case OMX_VIDEO_CodingMPEG4:
-      strcpy((char*)&sComponentRole.cRole[0], VIDEO_DEC_MPEG4_ROLE);  
+      strcpy((char*)&sComponentRole.cRole[0], VIDEO_DEC_MPEG4_ROLE);
       break;
     case OMX_VIDEO_CodingAVC:
       strcpy((char*)&sComponentRole.cRole[0], VIDEO_DEC_H264_ROLE);
       break;
     default :
-      DEBUG(DEB_LEV_ERR,"Error only MPEG4 and AVC(h.264) are supported %08x\n",paramPortVideo.format.video.eCompressionFormat); 
+      DEBUG(DEB_LEV_ERR,"Error only MPEG4 and AVC(h.264) are supported %08x\n",paramPortVideo.format.video.eCompressionFormat);
     }
     err = OMX_SetParameter(appPriv->videodechandle,OMX_IndexParamStandardComponentRole,&sComponentRole);
     if(err != OMX_ErrorNone) {
@@ -1186,16 +1186,16 @@ int main(int argc, char** argv) {
    /* setting the component role for the audio component */
     SetPortParametersAudio();
     setHeader(&sComponentRole, sizeof(OMX_PARAM_COMPONENTROLETYPE));
-    err = OMX_GetParameter(appPriv->audiodechandle, OMX_IndexParamStandardComponentRole,&sComponentRole); 
+    err = OMX_GetParameter(appPriv->audiodechandle, OMX_IndexParamStandardComponentRole,&sComponentRole);
     switch(paramPortAudio.format.audio.eEncoding){
     case OMX_AUDIO_CodingMP3:
-      strcpy((char*)&sComponentRole.cRole[0], AUDIO_DEC_MP3_ROLE);  
+      strcpy((char*)&sComponentRole.cRole[0], AUDIO_DEC_MP3_ROLE);
       break;
     case OMX_AUDIO_CodingAAC:
       strcpy((char*)&sComponentRole.cRole[0],  AUDIO_DEC_AAC_ROLE);
       break;
     default :
-      DEBUG(DEB_LEV_ERR,"Error only MP3 and AAC role are supported %08x\n",paramPortAudio.format.audio.eEncoding); 
+      DEBUG(DEB_LEV_ERR,"Error only MP3 and AAC role are supported %08x\n",paramPortAudio.format.audio.eEncoding);
     }
     err = OMX_SetParameter(appPriv->audiodechandle,OMX_IndexParamStandardComponentRole,&sComponentRole);
     if(err != OMX_ErrorNone) {
@@ -1255,9 +1255,9 @@ int main(int argc, char** argv) {
   if (!flagSetupTunnel) {
     err = OMX_SendCommand(appPriv->videodechandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
 
-    /** the output buffers of parser 3gp component will be used 
-    *  in the video decoder component as input buffers 
-    */ 
+    /** the output buffers of parser 3gp component will be used
+    *  in the video decoder component as input buffers
+    */
     err = OMX_UseBuffer(appPriv->videodechandle, &inBufferVideoDec[0], 0, NULL, buffer_out_size, outBufferParseVideo[0]->pBuffer);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Unable to use the parser3gp comp allocate buffer\n");
@@ -1283,19 +1283,19 @@ int main(int argc, char** argv) {
 
     err = OMX_SendCommand(appPriv->audiodechandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
 
-    /** the output buffers of parser3gp component will be used 
-       in the audio decoder component as input buffers 
-    */ 
+    /** the output buffers of parser3gp component will be used
+       in the audio decoder component as input buffers
+    */
     err = OMX_UseBuffer(appPriv->audiodechandle, &inBufferAudioDec[0], 0, NULL, buffer_out_size, outBufferParseAudio[0]->pBuffer);
     if(err != OMX_ErrorNone) {
      DEBUG(DEB_LEV_ERR, "Unable to use the parser3gp allocate buffer\n");
      exit(1);
-    }    
+    }
     err = OMX_UseBuffer(appPriv->audiodechandle, &inBufferAudioDec[1], 0, NULL, buffer_out_size, outBufferParseAudio[1]->pBuffer);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Unable to use the parser3gp allocate buffer\n");
       exit(1);
-    }    
+    }
 
     /* Allocate the output buffers of the audio decoder */
     err = OMX_AllocateBuffer(appPriv->audiodechandle, &outBufferAudioDec[0], 1, NULL, buffer_out_size);
@@ -1407,7 +1407,7 @@ int main(int argc, char** argv) {
         DEBUG(DEB_LEV_ERR, "Unable to allocate buffer in Video Scheduler 2\n");
         exit(1);
       }
-      
+
       err = OMX_UseBuffer(appPriv->videosinkhandle, &inBufferSinkVideo[0], 0, NULL, buffer_out_size, outBufferVideoSchd[0]->pBuffer);
       if(err != OMX_ErrorNone) {
         DEBUG(DEB_LEV_ERR, "Unable to use the allocated buffer\n");
@@ -1493,7 +1493,7 @@ int main(int argc, char** argv) {
     tsem_down(appPriv->clockEventSem);
     DEBUG(DEFAULT_MESSAGES, "clock src in executing state\n");
 
-    /* set the audio as the master */ 
+    /* set the audio as the master */
     setHeader(&sRefClock, sizeof(OMX_TIME_CONFIG_ACTIVEREFCLOCKTYPE));
     sRefClock.eClock = OMX_TIME_RefClockAudio;
     OMX_SetConfig(appPriv->clocksrchandle, OMX_IndexConfigTimeActiveRefClock,&sRefClock);
@@ -1578,13 +1578,13 @@ int main(int argc, char** argv) {
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Parser3gp \n", __func__,err);
       exit(1);
-    }    
+    }
     DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %x\n", (int)outBufferParseAudio[1]);
     err = OMX_FillThisBuffer(appPriv->parser3gphandle, outBufferParseAudio[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Parser3gp\n", __func__,err);
       exit(1);
-    }    
+    }
 
     err = OMX_FillThisBuffer(appPriv->videodechandle, outBufferVideoDec[0]);
     if(err != OMX_ErrorNone) {
@@ -1622,7 +1622,7 @@ int main(int argc, char** argv) {
          DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Color Converter\n", __func__,err);
          exit(1);
        }
-      
+
        if(flagAVsync){
          err = OMX_FillThisBuffer(appPriv->videoschd_handle, outBufferVideoSchd[0]);
          if(err != OMX_ErrorNone) {
@@ -1689,7 +1689,7 @@ int main(int argc, char** argv) {
             DEBUG(DEFAULT_MESSAGES,"Normal Play ......\n");
             break;
           default:
-            break;        
+            break;
         }
         sConfigScale.xScale = newscale;
        /* send the scale change notification to the clock */
@@ -1710,7 +1710,7 @@ int main(int argc, char** argv) {
   /*Send Idle Command to all components*/
   if (flagAVsync) {
       err = OMX_SendCommand(appPriv->clocksrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
-  }  
+  }
 
 
   DEBUG(DEFAULT_MESSAGES, "The execution of the decoding process is terminated\n");
@@ -1727,7 +1727,7 @@ int main(int argc, char** argv) {
     err = OMX_SendCommand(appPriv->videosinkhandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
     err = OMX_SendCommand(appPriv->volumehandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
     err = OMX_SendCommand(appPriv->audiosinkhandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
-  }  
+  }
 
   tsem_down(appPriv->parser3gpEventSem);
   DEBUG(DEFAULT_MESSAGES,"Parser3gp idle state \n");
@@ -1750,7 +1750,7 @@ int main(int argc, char** argv) {
 
   if (flagAVsync) {
       tsem_down(appPriv->clockEventSem);
-  }  
+  }
 
   DEBUG(DEFAULT_MESSAGES, "All component Transitioned to Idle\n");
   /*Send Loaded Command to all components*/
@@ -1770,7 +1770,7 @@ int main(int argc, char** argv) {
 
   if (flagAVsync) {
     err = OMX_SendCommand(appPriv->clocksrchandle, OMX_CommandStateSet, OMX_StateLoaded, NULL);
-  }  
+  }
 
   DEBUG(DEFAULT_MESSAGES, "All components to loaded\n");
 
@@ -1818,8 +1818,8 @@ int main(int argc, char** argv) {
 
   tsem_down(appPriv->parser3gpEventSem);
   DEBUG(DEFAULT_MESSAGES,"Parser3gp loaded state \n");
-  tsem_down(appPriv->videoDecoderEventSem); 
-  tsem_down(appPriv->audioDecoderEventSem); 
+  tsem_down(appPriv->videoDecoderEventSem);
+  tsem_down(appPriv->audioDecoderEventSem);
 
   if (flagIsDisplayRequested) {
     tsem_down(appPriv->colorconvEventSem);
@@ -1833,7 +1833,7 @@ int main(int argc, char** argv) {
 
   if (flagAVsync) {
     tsem_down(appPriv->clockEventSem);
-  }  
+  }
 
   DEBUG(DEFAULT_MESSAGES, "All components released\n");
 
@@ -1881,7 +1881,7 @@ int main(int argc, char** argv) {
   if (flagIsDisplayRequested) {
     free(appPriv->colorconvEventSem);
     appPriv->colorconvEventSem = NULL;
-  
+
     if (flagAVsync){
       free(appPriv->videoschdEventSem);
       appPriv->videoschdEventSem = NULL;
@@ -1916,7 +1916,7 @@ int main(int argc, char** argv) {
   free(output_file_video);
 
   return 0;
-}  
+}
 
 /* Callbacks implementation */
 OMX_ERRORTYPE parser3gpEventHandler(
@@ -1994,7 +1994,7 @@ OMX_ERRORTYPE parser3gpEventHandler(
             DEBUG(DEB_LEV_ERR,"Color Converter Component port disable failed\n");
             exit(1);
           }
-         
+
           if(flagAVsync){
             DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Video Scheduler Component Port Disabling\n", __func__);
             err = OMX_SendCommand(appPriv->videoschd_handle, OMX_CommandPortDisable, 0, NULL);
@@ -2041,7 +2041,7 @@ OMX_ERRORTYPE parser3gpEventHandler(
             DEBUG(DEB_LEV_ERR,"Volume Component port disable failed\n");
             exit(1);
           }
-  
+
           DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Audio Sink Port Disabling\n", __func__);
           err = OMX_SendCommand(appPriv->audiosinkhandle, OMX_CommandPortDisable, 0, NULL);
           if(err != OMX_ErrorNone) {
@@ -2075,7 +2075,7 @@ OMX_ERRORTYPE parser3gpFillBufferDone(
 {
   OMX_ERRORTYPE err;
   /* Output data to video & audio decoder */
-  
+
   if(pBuffer != NULL){
     switch(pBuffer->nOutputPortIndex) {
     case VIDEO_PORT_INDEX:
@@ -2094,7 +2094,7 @@ OMX_ERRORTYPE parser3gpFillBufferDone(
         if(err != OMX_ErrorNone) {
           DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
         }
-        if(pBuffer->nFlags==OMX_BUFFERFLAG_EOS) {
+        if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
           DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s: eos=%x Calling Empty This Buffer\n", __func__,(int)pBuffer->nFlags);
           bEOS=OMX_TRUE;
         }
@@ -2119,7 +2119,7 @@ OMX_ERRORTYPE parser3gpFillBufferDone(
          if(err != OMX_ErrorNone) {
            DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
          }
-         if(pBuffer->nFlags==OMX_BUFFERFLAG_EOS) {
+         if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
            DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s: eos=%x Calling Empty This Buffer\n", __func__,(int)pBuffer->nFlags);
            bEOS=OMX_TRUE;
          }
@@ -2145,7 +2145,7 @@ OMX_ERRORTYPE videodecEventHandler(
 {
   OMX_ERRORTYPE err;
   OMX_PARAM_PORTDEFINITIONTYPE param;
-  
+
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback\n", __func__);
   if(eEvent == OMX_EventCmdComplete) {
     if (Data1 == OMX_CommandStateSet) {
@@ -2181,7 +2181,7 @@ OMX_ERRORTYPE videodecEventHandler(
     } else if (Data1 == OMX_CommandFlush){
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Flush Event\n",__func__);
       tsem_up(appPriv->videoDecoderEventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventPortSettingsChanged) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Settings Changed Event\n", __func__);
     if (Data2 == 1) {
@@ -2203,7 +2203,7 @@ OMX_ERRORTYPE videodecEventHandler(
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param1 is %i\n", (int)Data1);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param2 is %i\n", (int)Data2);
   }
-  
+
   return OMX_ErrorNone;
 }
 
@@ -2283,7 +2283,7 @@ OMX_ERRORTYPE videodecFillBufferDone(
       if(inBufferColorconv[0]->pBuffer == pBuffer->pBuffer) {
         inBufferColorconv[0]->nFilledLen = pBuffer->nFilledLen;
         inBufferColorconv[0]->nTimeStamp = pBuffer->nTimeStamp;
-        if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+        if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
           inBufferColorconv[0]->nFlags = pBuffer->nFlags;
           pBuffer->nFlags              = 0;
         }
@@ -2291,7 +2291,7 @@ OMX_ERRORTYPE videodecFillBufferDone(
       } else {
         inBufferColorconv[1]->nFilledLen = pBuffer->nFilledLen;
         inBufferColorconv[1]->nTimeStamp = pBuffer->nTimeStamp;
-        if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+        if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
           inBufferColorconv[1]->nFlags = pBuffer->nFlags;
           pBuffer->nFlags              = 0;
         }
@@ -2407,7 +2407,7 @@ OMX_ERRORTYPE colorconvFillBufferDone(
   OMX_ERRORTYPE err;
   if(pBuffer != NULL) {
     if(!bEOS) {
-      /** if there is no sink component then write buffer content in output file, in non tunneled case 
+      /** if there is no sink component then write buffer content in output file, in non tunneled case
         * else in non tunneled case, call the sink comp handle to process this buffer as its input buffer
         */
       if(flagIsDisplayRequested && (!flagSetupTunnel)) {
@@ -2415,7 +2415,7 @@ OMX_ERRORTYPE colorconvFillBufferDone(
           if(inBufferVideoSchd[0]->pBuffer == pBuffer->pBuffer) {
             inBufferVideoSchd[0]->nFilledLen = pBuffer->nFilledLen;
             inBufferVideoSchd[0]->nTimeStamp = pBuffer->nTimeStamp;
-            if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+            if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
               inBufferVideoSchd[0]->nFlags = pBuffer->nFlags;
               pBuffer->nFlags              = 0;
             }
@@ -2423,7 +2423,7 @@ OMX_ERRORTYPE colorconvFillBufferDone(
           } else {
             inBufferVideoSchd[1]->nFilledLen = pBuffer->nFilledLen;
             inBufferVideoSchd[1]->nTimeStamp = pBuffer->nTimeStamp;
-            if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+            if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
               inBufferVideoSchd[1]->nFlags = pBuffer->nFlags;
               pBuffer->nFlags              = 0;
             }
@@ -2436,7 +2436,7 @@ OMX_ERRORTYPE colorconvFillBufferDone(
           if(inBufferSinkVideo[0]->pBuffer == pBuffer->pBuffer) {
             inBufferSinkVideo[0]->nFilledLen = pBuffer->nFilledLen;
             inBufferSinkVideo[0]->nTimeStamp = pBuffer->nTimeStamp;
-            if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+            if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
               inBufferSinkVideo[0]->nFlags = pBuffer->nFlags;
               pBuffer->nFlags              = 0;
             }
@@ -2444,7 +2444,7 @@ OMX_ERRORTYPE colorconvFillBufferDone(
           } else {
             inBufferSinkVideo[1]->nFilledLen = pBuffer->nFilledLen;
             inBufferSinkVideo[1]->nTimeStamp = pBuffer->nTimeStamp;
-            if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+            if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
               inBufferSinkVideo[1]->nFlags = pBuffer->nFlags;
               pBuffer->nFlags              = 0;
             }
@@ -2458,7 +2458,7 @@ OMX_ERRORTYPE colorconvFillBufferDone(
           fwrite(pBuffer->pBuffer, sizeof(char),  pBuffer->nFilledLen, outfileVideo);
           pBuffer->nFilledLen = 0;
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_ERR, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }
@@ -2571,14 +2571,14 @@ OMX_ERRORTYPE videoschdFillBufferDone(
   OMX_ERRORTYPE err;
   if(pBuffer != NULL) {
     if(!bEOS) {
-      /** if there is no sink component then write buffer content in output file, in non tunneled case 
+      /** if there is no sink component then write buffer content in output file, in non tunneled case
         * else in non tunneled case, call the sink comp handle to process this buffer as its input buffer
         */
       if(flagIsDisplayRequested && (!flagSetupTunnel)) {
         if(inBufferSinkVideo[0]->pBuffer == pBuffer->pBuffer) {
           inBufferSinkVideo[0]->nFilledLen = pBuffer->nFilledLen;
           inBufferSinkVideo[0]->nTimeStamp = pBuffer->nTimeStamp;
-          if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+          if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
             inBufferSinkVideo[0]->nFlags = pBuffer->nFlags;
             pBuffer->nFlags              = 0;
           }
@@ -2586,7 +2586,7 @@ OMX_ERRORTYPE videoschdFillBufferDone(
         } else {
           inBufferSinkVideo[1]->nFilledLen = pBuffer->nFilledLen;
           inBufferSinkVideo[1]->nTimeStamp = pBuffer->nTimeStamp;
-          if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+          if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
             inBufferSinkVideo[1]->nFlags = pBuffer->nFlags;
             pBuffer->nFlags              = 0;
           }
@@ -2596,7 +2596,7 @@ OMX_ERRORTYPE videoschdFillBufferDone(
           DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
         }
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_ERR, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }
@@ -2862,7 +2862,7 @@ OMX_ERRORTYPE audiodecFillBufferDone(
       if(inBufferVolume[0]->pBuffer == pBuffer->pBuffer) {
         inBufferVolume[0]->nFilledLen = pBuffer->nFilledLen;
         inBufferVolume[0]->nTimeStamp = pBuffer->nTimeStamp;
-        if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+        if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
           inBufferVolume[0]->nFlags = pBuffer->nFlags;
           pBuffer->nFlags           = 0;
         }
@@ -2870,7 +2870,7 @@ OMX_ERRORTYPE audiodecFillBufferDone(
       } else {
         inBufferVolume[1]->nFilledLen = pBuffer->nFilledLen;
         inBufferVolume[1]->nTimeStamp = pBuffer->nTimeStamp;
-        if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+        if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
           inBufferVolume[1]->nFlags = pBuffer->nFlags;
           pBuffer->nFlags           = 0;
         }
@@ -3022,7 +3022,7 @@ OMX_ERRORTYPE volumeFillBufferDone(
         if(inBufferSinkAudio[0]->pBuffer == pBuffer->pBuffer) {
           inBufferSinkAudio[0]->nFilledLen = pBuffer->nFilledLen;
           inBufferSinkAudio[0]->nTimeStamp = pBuffer->nTimeStamp;
-          if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+          if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
             inBufferSinkAudio[0]->nFlags = pBuffer->nFlags;
             pBuffer->nFlags              = 0;
           }
@@ -3030,7 +3030,7 @@ OMX_ERRORTYPE volumeFillBufferDone(
         } else {
           inBufferSinkAudio[1]->nFilledLen = pBuffer->nFilledLen;
           inBufferSinkAudio[1]->nTimeStamp = pBuffer->nTimeStamp;
-          if(pBuffer->nFlags == OMX_BUFFERFLAG_STARTTIME) {
+          if((pBuffer->nFlags & OMX_BUFFERFLAG_STARTTIME) == OMX_BUFFERFLAG_STARTTIME) {
             inBufferSinkAudio[1]->nFlags = pBuffer->nFlags;
             pBuffer->nFlags              = 0;
           }
@@ -3213,7 +3213,7 @@ OMX_ERRORTYPE clocksrcFillBufferDone(
       if(err != OMX_ErrorNone) {
         DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
       }
-      if(pBuffer->nFlags==OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s: eos=%x Calling Empty This Buffer\n", __func__,(int)pBuffer->nFlags);
         bEOS=OMX_TRUE;
       }

@@ -125,7 +125,7 @@ OMX_ERRORTYPE audioreaderFillBufferDone(
 	  pBuffer->pBuffer + pBuffer->nOffset,
 	  pBuffer->nFilledLen);
 
-  if(pBuffer->nFlags != OMX_BUFFERFLAG_EOS) {
+  if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) != OMX_BUFFERFLAG_EOS) {
     /* Reschedule the fill buffer request */
     pBuffer->nFilledLen = 0;
     err = OMX_FillThisBuffer(appPriv->handle, pBuffer);

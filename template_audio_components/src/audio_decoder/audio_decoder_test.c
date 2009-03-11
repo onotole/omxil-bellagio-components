@@ -117,7 +117,7 @@ OMX_ERRORTYPE audiodecoderEmptyBufferDone(
   pBuffer->nOffset = 0;
   count = read(appPriv->ipd, pBuffer->pBuffer, DEFAULT_IN_BUFFER_SIZE);
   if(count != DEFAULT_IN_BUFFER_SIZE)
-    pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+    pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
   pBuffer->nFilledLen = count;
 
   /* Reschedule the empty buffer request */
@@ -225,7 +225,7 @@ static void test_component(void)
   for(i = 0; i < BUFFER_COUNT_ACTUAL; i++) {
     int count = read(appPriv->ipd, inBuffer[i]->pBuffer, DEFAULT_IN_BUFFER_SIZE);
     if(count != DEFAULT_IN_BUFFER_SIZE) {
-      inBuffer[i]->nFlags = OMX_BUFFERFLAG_EOS;
+      inBuffer[i]->nFlags = inBuffer[i]->nFlags | OMX_BUFFERFLAG_EOS;
     }
     inBuffer[i]->nFilledLen = count;
     err = OMX_EmptyThisBuffer(appPriv->decoderHandle, inBuffer[i]);

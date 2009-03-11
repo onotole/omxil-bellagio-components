@@ -1,11 +1,11 @@
 /**
   test/components/parser/omxparsertest.c
 
-  Test application uses following OpenMAX components, 
+  Test application uses following OpenMAX components,
     mux  -- 3gp file muxer ,
     audio encoder pipeline  - alsa src and audio encoder
     video encoder pipeline  - video src and video encoder
-  
+
   Test application that uses five OpenMAX components, a mux, an audio encoder,
   a video deocder, an alsa src and a video src. The application capture audio and video stream
   using a mic and camera then encode it using audio and video encoders.
@@ -43,7 +43,7 @@
 
 #define MPEG4_TYPE_SEL            1
 #define VIDEO_COMPONENT_NAME_BASE "OMX.st.video_encoder"
-#define AUDIO_COMPONENT_NAME_BASE "OMX.st.audio_encoder" 
+#define AUDIO_COMPONENT_NAME_BASE "OMX.st.audio_encoder"
 #define VIDEO_ENC_MPEG4_ROLE      "video_encoder.mpeg4"
 #define AUDIO_ENC_AMR_ROLE        "audio_encoder.amr"
 #define VIDEO_SRC                 "OMX.st.video_src"
@@ -63,7 +63,7 @@ OMX_BUFFERHEADERTYPE *inBufferVideoEnc[2], *outBufferVideoEnc[2];
 OMX_BUFFERHEADERTYPE *inBufferAudioEnc[2],*outBufferAudioEnc[2];
 OMX_BUFFERHEADERTYPE *outBufferSrcAudio[2],*outBufferSrcVideo[2];
 
-int buffer_in_size = BUFFER_IN_SIZE; 
+int buffer_in_size = BUFFER_IN_SIZE;
 int buffer_out_size = BUFFER_OUT_SIZE;
 static OMX_BOOL bEOS=OMX_FALSE;
 
@@ -71,19 +71,19 @@ static OMX_PARAM_PORTDEFINITIONTYPE paramPortVideo, paramPortAudio;
 OMX_PARAM_PORTDEFINITIONTYPE encparamPortVideo;
 OMX_PARAM_PORTDEFINITIONTYPE encparamPortAudio;
 
-OMX_CALLBACKTYPE videoenccallbacks = { 
+OMX_CALLBACKTYPE videoenccallbacks = {
   .EventHandler = videoencEventHandler,
   .EmptyBufferDone = videoencEmptyBufferDone,
   .FillBufferDone = videoencFillBufferDone
 };
 
-OMX_CALLBACKTYPE videosrc_callbacks = { 
+OMX_CALLBACKTYPE videosrc_callbacks = {
   .EventHandler = videosrcEventHandler,
   .EmptyBufferDone = NULL,
   .FillBufferDone = videosrcFillBufferDone
 };
 
-OMX_CALLBACKTYPE muxcallbacks = { 
+OMX_CALLBACKTYPE muxcallbacks = {
   .EventHandler    = muxEventHandler,
   .EmptyBufferDone = muxEmptyBufferDone,
   .FillBufferDone  = NULL
@@ -107,7 +107,7 @@ OMX_CALLBACKTYPE audiosrccallbacks = {
   .FillBufferDone  = audiosrcFillBufferDone,
 };
 
-OMX_U32 out_width  = 0;  
+OMX_U32 out_width  = 0;
 OMX_U32 out_height = 0;
 OMX_U32 frame_rate = 10, channel = 1, rate = 8000;
 OMX_VIDEO_CODINGTYPE eCompressionFormat = OMX_VIDEO_CodingMPEG4;
@@ -129,8 +129,8 @@ static void setHeader(OMX_PTR header, OMX_U32 size) {
   ver->s.nStep = VERSIONSTEP;
 }
 
-/** this function sets the audio deocder and audio src port characteristics 
-  * based on the mux output port settings 
+/** this function sets the audio deocder and audio src port characteristics
+  * based on the mux output port settings
   */
 int SetPortParametersAudio() {
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -142,28 +142,28 @@ int SetPortParametersAudio() {
   err = OMX_GetParameter(appPriv->audiosrchandle,OMX_IndexParamAudioPcm,&sPCMModeParam);
   if (err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR, "Err in GetParameter OMX_AUDIO_PARAM_PCMMODETYPE in AlsaSrc. Exiting...\n");
-    return err; 
+    return err;
   }
   sPCMModeParam.nChannels = (channel >0 ) ? channel:sPCMModeParam.nChannels;
   sPCMModeParam.nSamplingRate = (rate >0 ) ? rate:sPCMModeParam.nSamplingRate;
   err = OMX_SetParameter(appPriv->audiosrchandle,OMX_IndexParamAudioPcm,&sPCMModeParam);
   if (err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR, "Err in SetParameter OMX_AUDIO_PARAM_PCMMODETYPE in AlsaSrc. Exiting...\n");
-    return err; 
+    return err;
   }
 
   sPCMModeParam.nPortIndex = 0;
   err = OMX_GetParameter(appPriv->audioenchandle,OMX_IndexParamAudioPcm,&sPCMModeParam);
   if (err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR, "Err in GetParameter OMX_AUDIO_PARAM_PCMMODETYPE in AlsaSrc. Exiting...\n");
-    return err; 
+    return err;
   }
   sPCMModeParam.nChannels = (channel >0 ) ? channel:sPCMModeParam.nChannels;
   sPCMModeParam.nSamplingRate = (rate >0 ) ? rate:sPCMModeParam.nSamplingRate;
   err = OMX_SetParameter(appPriv->audioenchandle,OMX_IndexParamAudioPcm,&sPCMModeParam);
   if (err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR, "Err in SetParameter OMX_AUDIO_PARAM_PCMMODETYPE in AlsaSrc. Exiting...\n");
-    return err; 
+    return err;
   }
 
   setHeader(&sAudioAmr, sizeof(OMX_AUDIO_PARAM_AMRTYPE));
@@ -173,7 +173,7 @@ int SetPortParametersAudio() {
 
   switch(bandmode) {
   case OMX_AUDIO_AMRBandModeNB0:                 /**< AMRNB Mode 0 =  4750 bps */
-    sAudioAmr.nBitRate = 4750; 
+    sAudioAmr.nBitRate = 4750;
     break;
   case OMX_AUDIO_AMRBandModeNB1:                 /**< AMRNB Mode 1 =  5150 bps */
     sAudioAmr.nBitRate = 5150;
@@ -197,7 +197,7 @@ int SetPortParametersAudio() {
     sAudioAmr.nBitRate = 12200;
     break;
   case OMX_AUDIO_AMRBandModeWB0:                 /**< AMRWB Mode 0 =  6600 bps */
-    sAudioAmr.nBitRate = 6600; 
+    sAudioAmr.nBitRate = 6600;
     break;
   case OMX_AUDIO_AMRBandModeWB1:                 /**< AMRWB Mode 1 =  8840 bps */
     sAudioAmr.nBitRate = 8840;
@@ -224,8 +224,8 @@ int SetPortParametersAudio() {
     sAudioAmr.nBitRate = 23850;
     break;
   default:
-    DEBUG(DEB_LEV_ERR, "In %s AMR Band Mode %x Not Supported\n",__func__,sAudioAmr.eAMRBandMode); 
-    return err; 
+    DEBUG(DEB_LEV_ERR, "In %s AMR Band Mode %x Not Supported\n",__func__,sAudioAmr.eAMRBandMode);
+    return err;
   }
   sAudioAmr.eAMRBandMode = bandmode;
   err = OMX_SetParameter(appPriv->audioenchandle, OMX_IndexParamAudioAmr, &sAudioAmr);
@@ -239,9 +239,9 @@ int SetPortParametersAudio() {
   paramPortAudio.format.audio.eEncoding = OMX_AUDIO_CodingAMR;
   err = OMX_SetParameter(appPriv->muxhandle, OMX_IndexParamPortDefinition, &paramPortAudio);
   if(err!=OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err); 
-    return err; 
-  } 
+    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err);
+    return err;
+  }
 
   sAudioAmr.nPortIndex=1;
   err = OMX_SetParameter(appPriv->muxhandle, OMX_IndexParamAudioAmr, &sAudioAmr);
@@ -254,7 +254,7 @@ int SetPortParametersAudio() {
 
 int SetPortParametersVideo() {
   OMX_ERRORTYPE err = OMX_ErrorNone;
-  
+
   DEBUG(DEB_ALL_MESS,"In %s Compression format=%x\n",__func__,eCompressionFormat);
 
   paramPortVideo.nPortIndex = 0;
@@ -264,10 +264,10 @@ int SetPortParametersVideo() {
   paramPortVideo.format.video.nFrameHeight = out_height;
   err = OMX_SetParameter(appPriv->videosrchandle, OMX_IndexParamPortDefinition, &paramPortVideo);
   if(err!=OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err); 
-    return err; 
-  } 
-  
+    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err);
+    return err;
+  }
+
   paramPortVideo.nPortIndex = 0;
   setHeader(&paramPortVideo, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
   err = OMX_GetParameter(appPriv->videoenchandle, OMX_IndexParamPortDefinition, &paramPortVideo);
@@ -277,9 +277,9 @@ int SetPortParametersVideo() {
   paramPortVideo.format.video.xFramerate   = frame_rate;
   err = OMX_SetParameter(appPriv->videoenchandle, OMX_IndexParamPortDefinition, &paramPortVideo);
   if(err!=OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err); 
-    return err; 
-  } 
+    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err);
+    return err;
+  }
 
   paramPortVideo.nPortIndex = 0;
   setHeader(&paramPortVideo, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
@@ -290,27 +290,27 @@ int SetPortParametersVideo() {
   paramPortVideo.format.video.xFramerate   = frame_rate;
   err = OMX_SetParameter(appPriv->muxhandle, OMX_IndexParamPortDefinition, &paramPortVideo);
   if(err!=OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err); 
-    return err; 
-  } 
+    DEBUG(DEB_LEV_ERR, "In %s Setting Input Port Definition Error=%x\n",__func__,err);
+    return err;
+  }
   DEBUG(DEB_LEV_SIMPLE_SEQ, "input picture width : %d height : %d \n", (int)out_width, (int)out_height);
   DEBUG(DEB_LEV_SIMPLE_SEQ, "input picture width : %d height : %d \n", (int)out_width, (int)out_height);
 
   return err;
 }
 
-/** this function sets the video deocder and video src port characteristics 
-  * based on the mux output port settings 
+/** this function sets the video deocder and video src port characteristics
+  * based on the mux output port settings
   */
 int SetPortParametersVideo_old() {
   OMX_ERRORTYPE err = OMX_ErrorNone;
-  
+
   // getting port parameters from mux component //
   paramPortVideo.nPortIndex = VIDEO_PORT_INDEX; //video port of the mux
   setHeader(&paramPortVideo, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
   err = OMX_GetParameter(appPriv->muxhandle, OMX_IndexParamPortDefinition, &paramPortVideo);
   if(err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR,"\n error in mux port settings get\n");  
+    DEBUG(DEB_LEV_ERR,"\n error in mux port settings get\n");
     exit(1);
   }
 
@@ -320,18 +320,18 @@ int SetPortParametersVideo_old() {
   setHeader(&encparamPortVideo, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
   err = OMX_GetParameter(appPriv->videoenchandle, OMX_IndexParamPortDefinition, &encparamPortVideo);
   if(err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR,"\n error in videoenchandle settings get\n");  
+    DEBUG(DEB_LEV_ERR,"\n error in videoenchandle settings get\n");
     exit(1);
   }
 
   encparamPortVideo.format.video.eCompressionFormat=paramPortVideo.format.video.eCompressionFormat;
   encparamPortVideo.format.video.nFrameWidth=paramPortVideo.format.video.nFrameWidth;
-  encparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight; 
+  encparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight;
   err = OMX_SetParameter(appPriv->videoenchandle, OMX_IndexParamPortDefinition, &encparamPortVideo);
   if(err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR,"Error %08x setting videoenc input port param --- \n",err);
     exit(1);
-  } 
+  }
 
  // output port settings
   encparamPortVideo.nPortIndex = 1;
@@ -344,7 +344,7 @@ int SetPortParametersVideo_old() {
 
   encparamPortVideo.format.video.eCompressionFormat=paramPortVideo.format.video.eCompressionFormat;
   encparamPortVideo.format.video.nFrameWidth=paramPortVideo.format.video.nFrameWidth;
-  encparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight; 
+  encparamPortVideo.format.video.nFrameHeight=paramPortVideo.format.video.nFrameHeight;
   err = OMX_SetParameter(appPriv->videoenchandle, OMX_IndexParamPortDefinition, &encparamPortVideo);
   if(err != OMX_ErrorNone) {
     DEBUG(DEB_LEV_ERR,"Error %08x setting videoenc output port param --- \n",err);
@@ -374,12 +374,12 @@ void display_help() {
   printf("                              the components are tunneled between themselves\n");
   printf("\n");
   exit(1);
-} 
+}
 
 int flagIsAudioFormatExpected;       /* to write the audio output to a file */
 int flagIsVideoFormatExpected;       /* to write the video output to a file */
-int flagEncodedOutputReceived;  
-int flagEncodedOutputExpected;  
+int flagEncodedOutputReceived;
+int flagEncodedOutputExpected;
 int flagSetupTunnel;
 int flagAVsync;                 /* to select the AVsync option 1 = AV sync ON, clock component selected, 0 = no clock component selected*/
 int flagBandMode;
@@ -389,7 +389,7 @@ int main(int argc, char** argv) {
   int argn_enc;
   OMX_ERRORTYPE                       err;
   OMX_INDEXTYPE                       eIndexParamFilename;
-  OMX_PARAM_COMPONENTROLETYPE         sComponentRole; 
+  OMX_PARAM_COMPONENTROLETYPE         sComponentRole;
   OMX_TIME_CONFIG_CLOCKSTATETYPE      sClockState;
   OMX_TIME_CONFIG_SCALETYPE           sConfigScale;
   OMX_TIME_CONFIG_ACTIVEREFCLOCKTYPE  sRefClock;
@@ -486,12 +486,12 @@ int main(int argc, char** argv) {
           flagIsRate = 0;
           if(rate < 8000) {
             DEBUG(DEFAULT_MESSAGES, "Rate should be between [8000..16000]\n");
-            rate = 8000; 
+            rate = 8000;
           } else if(rate > 16000) {
             DEBUG(DEFAULT_MESSAGES, "Rate should be between [8000..16000]\n");
-            rate = 16000; 
+            rate = 16000;
           }
-        } 
+        }
       }
       argn_enc++;
     }
@@ -532,19 +532,19 @@ int main(int argc, char** argv) {
   appPriv->videosrcEventSem = malloc(sizeof(tsem_t));
   appPriv->audiosrcEventSem = malloc(sizeof(tsem_t));
   appPriv->eofSem = malloc(sizeof(tsem_t));
-  
+
   if(flagAVsync) {
     appPriv->clockEventSem = malloc(sizeof(tsem_t));
-  } 
+  }
 
   tsem_init(appPriv->muxEventSem, 0);
   tsem_init(appPriv->videoencEventSem, 0);
   tsem_init(appPriv->audioencEventSem, 0);
   tsem_init(appPriv->videosrcEventSem, 0);
   tsem_init(appPriv->audiosrcEventSem, 0);
-  tsem_init(appPriv->eofSem, 0); 
+  tsem_init(appPriv->eofSem, 0);
   if(flagAVsync) {
-    tsem_init(appPriv->clockEventSem, 0); 
+    tsem_init(appPriv->clockEventSem, 0);
   }
 
   /** initialising openmax */
@@ -568,7 +568,7 @@ int main(int argc, char** argv) {
     exit(1);
   } else {
     DEBUG(DEFAULT_MESSAGES, "Mux Component %s Found\n",MUX_3GP);
-  } 
+  }
 
   /* getting the handle to the clock src component */
   if(flagAVsync){
@@ -638,7 +638,7 @@ int main(int argc, char** argv) {
        }
        tsem_down(appPriv->audiosrcEventSem); /* audio src clock port Enabled */
        DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Audio Sink Clock Port Enabled\n", __func__);
-   
+
       err = OMX_SendCommand(appPriv->videosrchandle, OMX_CommandPortEnable, 1, NULL);
       if(err != OMX_ErrorNone) {
          DEBUG(DEB_LEV_ERR,"videosrc clock port Enable failed\n");
@@ -734,11 +734,11 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "Set up Tunnel audio encoder to mux Failed\n");
       exit(1);
     }
-    
+
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Set up Tunnel Completed\n");
 
     /* The encoder is the buffer supplier and parser is the consumer,
-     not the other way round. This ensures that the first buffer is available when the encoder is in idle state. 
+     not the other way round. This ensures that the first buffer is available when the encoder is in idle state.
      This prevents the loss of the first frame buffer */
     /*
     OMX_PARAM_BUFFERSUPPLIERTYPE sBufferSupplier;
@@ -764,13 +764,13 @@ int main(int argc, char** argv) {
     exit(1);
   }
   setHeader(&sComponentRole, sizeof(OMX_PARAM_COMPONENTROLETYPE));
-  err = OMX_GetParameter(appPriv->videoenchandle,OMX_IndexParamStandardComponentRole,&sComponentRole); 
+  err = OMX_GetParameter(appPriv->videoenchandle,OMX_IndexParamStandardComponentRole,&sComponentRole);
   switch(eCompressionFormat){
   case OMX_VIDEO_CodingMPEG4:
-    strcpy((char*)&sComponentRole.cRole[0], VIDEO_ENC_MPEG4_ROLE);  
+    strcpy((char*)&sComponentRole.cRole[0], VIDEO_ENC_MPEG4_ROLE);
     break;
   default :
-    DEBUG(DEB_LEV_ERR,"Error only MPEG4 is supported %08x\n", eCompressionFormat); 
+    DEBUG(DEB_LEV_ERR,"Error only MPEG4 is supported %08x\n", eCompressionFormat);
   }
   err = OMX_SetParameter(appPriv->videoenchandle,OMX_IndexParamStandardComponentRole,&sComponentRole);
   if(err != OMX_ErrorNone) {
@@ -784,16 +784,16 @@ int main(int argc, char** argv) {
   }
   /*
   setHeader(&sComponentRole, sizeof(OMX_PARAM_COMPONENTROLETYPE));
-  err = OMX_GetParameter(appPriv->audioenchandle, OMX_IndexParamStandardComponentRole,&sComponentRole); 
+  err = OMX_GetParameter(appPriv->audioenchandle, OMX_IndexParamStandardComponentRole,&sComponentRole);
   switch(paramPortAudio.format.audio.eEncoding) {
   case OMX_AUDIO_CodingMP3:
-    strcpy((char*)&sComponentRole.cRole[0], AUDIO_ENC_MP3_ROLE);  
+    strcpy((char*)&sComponentRole.cRole[0], AUDIO_ENC_MP3_ROLE);
     break;
   case OMX_AUDIO_CodingAAC:
     strcpy((char*)&sComponentRole.cRole[0],  AUDIO_ENC_AAC_ROLE);
     break;
   default :
-    DEBUG(DEB_LEV_ERR,"Error only MP3 and AAC role are supported %08x\n",paramPortAudio.format.audio.eEncoding); 
+    DEBUG(DEB_LEV_ERR,"Error only MP3 and AAC role are supported %08x\n",paramPortAudio.format.audio.eEncoding);
   }
   err = OMX_SetParameter(appPriv->audioenchandle,OMX_IndexParamStandardComponentRole,&sComponentRole);
   if(err != OMX_ErrorNone) {
@@ -818,7 +818,7 @@ int main(int argc, char** argv) {
   err = OMX_SendCommand(appPriv->audiosrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
   //}
 
-  /* In case tunnel is not set up then allocate the output buffers of the parser  
+  /* In case tunnel is not set up then allocate the output buffers of the parser
      two buffers for video port and two buffers for audio port */
   if (!flagSetupTunnel) {
 
@@ -834,9 +834,9 @@ int main(int argc, char** argv) {
       exit(1);
     }
 
-    /** the output buffers of video src component will be used 
-      *  in the video encoder component as input buffers 
-      */ 
+    /** the output buffers of video src component will be used
+      *  in the video encoder component as input buffers
+      */
     err = OMX_UseBuffer(appPriv->videoenchandle, &inBufferVideoEnc[0], 0, NULL, buffer_out_size, outBufferSrcVideo[0]->pBuffer);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Unable to use the mux comp allocate buffer\n");
@@ -872,19 +872,19 @@ int main(int argc, char** argv) {
       exit(1);
     }
 
-    /** the output buffers of audio src component will be used 
-       in the audio encoder component as input buffers 
-    */ 
+    /** the output buffers of audio src component will be used
+       in the audio encoder component as input buffers
+    */
     err = OMX_UseBuffer(appPriv->audioenchandle, &inBufferAudioEnc[0], 0, NULL, BUFFER_OUT_SIZE_AUDIO, outBufferSrcAudio[0]->pBuffer);
     if(err != OMX_ErrorNone) {
      DEBUG(DEB_LEV_ERR, "Unable to use the mux allocate buffer\n");
      exit(1);
-    }    
+    }
     err = OMX_UseBuffer(appPriv->audioenchandle, &inBufferAudioEnc[1], 0, NULL, BUFFER_OUT_SIZE_AUDIO, outBufferSrcAudio[1]->pBuffer);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Unable to use the mux allocate buffer\n");
       exit(1);
-    }    
+    }
 
     /* Allocate the output buffers of the audio encoder */
     err = OMX_AllocateBuffer(appPriv->audioenchandle, &outBufferAudioEnc[0], 1, NULL, BUFFER_OUT_SIZE_AUDIO);
@@ -897,8 +897,8 @@ int main(int argc, char** argv) {
      DEBUG(DEB_LEV_ERR, "Unable to allocate buffer in audio enc\n");
      exit(1);
     }
-    
-  
+
+
     inBufferMuxVideo[0] = inBufferMuxVideo[1] = NULL;
     inBufferMuxAudio[0] = inBufferMuxAudio[1] = NULL;
     /** allocation of mux component's output buffers for video encoder component */
@@ -968,7 +968,7 @@ int main(int argc, char** argv) {
     DEBUG(DEB_LEV_ERR,"audio src state executing failed\n");
     exit(1);
   }
-  
+
   /*Wait for encoder state change to executing*/
   tsem_down(appPriv->videoencEventSem);
   tsem_down(appPriv->audioencEventSem);
@@ -980,7 +980,7 @@ int main(int argc, char** argv) {
   /*Wait for Mux state change to executing*/
   tsem_down(appPriv->muxEventSem);
   DEBUG(DEFAULT_MESSAGES,"All component are in executing state \n");
-  
+
   if(flagAVsync && !flagSetupTunnel){
     /* enabling the clock port of the clocksrc connected to the parser and parser's clock port */
     err = OMX_SendCommand(appPriv->muxhandle, OMX_CommandPortEnable, 2, NULL);
@@ -989,7 +989,7 @@ int main(int argc, char** argv) {
     tsem_down(appPriv->muxEventSem);
     tsem_down(appPriv->clockEventSem);
   }
-  
+
   /* putting the clock src in Executing state */
   if(flagAVsync){
     err = OMX_SendCommand(appPriv->clocksrchandle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
@@ -1002,7 +1002,7 @@ int main(int argc, char** argv) {
     tsem_down(appPriv->clockEventSem);
     DEBUG(DEFAULT_MESSAGES, "clock src in executing state\n");
 
-    /* set the audio as the master */ 
+    /* set the audio as the master */
     setHeader(&sRefClock, sizeof(OMX_TIME_CONFIG_ACTIVEREFCLOCKTYPE));
     sRefClock.eClock = OMX_TIME_RefClockAudio;
     OMX_SetConfig(appPriv->clocksrchandle, OMX_IndexConfigTimeActiveRefClock,&sRefClock);
@@ -1020,7 +1020,7 @@ int main(int argc, char** argv) {
     err = OMX_GetConfig(appPriv->clocksrchandle, OMX_IndexConfigTimeClockState, &sClockState);
   }
 
-  
+
   DEBUG(DEFAULT_MESSAGES,"All Component state changed to Executing\n");
 
   if (!flagSetupTunnel)  {
@@ -1040,13 +1040,13 @@ int main(int argc, char** argv) {
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Src \n", __func__,err);
       exit(1);
-    }    
+    }
     DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %x\n", (int)outBufferSrcAudio[1]);
     err = OMX_FillThisBuffer(appPriv->audiosrchandle, outBufferSrcAudio[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Src\n", __func__,err);
       exit(1);
-    }    
+    }
 
     err = OMX_FillThisBuffer(appPriv->videoenchandle, outBufferVideoEnc[0]);
     if(err != OMX_ErrorNone) {
@@ -1111,7 +1111,7 @@ int main(int argc, char** argv) {
             DEBUG(DEFAULT_MESSAGES,"Normal Play ......\n");
             break;
           default:
-            break;        
+            break;
         }
         sConfigScale.xScale = newscale;
        /* send the scale change notification to the clock */
@@ -1128,7 +1128,7 @@ int main(int argc, char** argv) {
         break;
       }
     }
-  }  
+  }
 
   DEBUG(DEFAULT_MESSAGES,"Received EOS \n");
 
@@ -1151,7 +1151,7 @@ int main(int argc, char** argv) {
 
   if (flagAVsync) {
     err = OMX_SendCommand(appPriv->clocksrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
-  } 
+  }
 
   DEBUG(DEFAULT_MESSAGES, "The execution of the encoding process is terminated\n");
   err = OMX_SendCommand(appPriv->muxhandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
@@ -1160,7 +1160,7 @@ int main(int argc, char** argv) {
 
   err = OMX_SendCommand(appPriv->videosrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
   err = OMX_SendCommand(appPriv->audiosrchandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
-  
+
   tsem_down(appPriv->muxEventSem);
   DEBUG(DEFAULT_MESSAGES,"Mux idle state \n");
   tsem_down(appPriv->videoencEventSem);
@@ -1168,10 +1168,10 @@ int main(int argc, char** argv) {
 
   tsem_down(appPriv->videosrcEventSem);
   tsem_down(appPriv->audiosrcEventSem);
-  
+
   if (flagAVsync) {
     tsem_down(appPriv->clockEventSem);
-  }  
+  }
 
   DEBUG(DEFAULT_MESSAGES, "All component Transitioned to Idle\n");
   /*Send Loaded Command to all components*/
@@ -1180,10 +1180,10 @@ int main(int argc, char** argv) {
   err = OMX_SendCommand(appPriv->audioenchandle, OMX_CommandStateSet, OMX_StateLoaded, NULL);
   err = OMX_SendCommand(appPriv->videosrchandle, OMX_CommandStateSet, OMX_StateLoaded, NULL);
   err = OMX_SendCommand(appPriv->audiosrchandle, OMX_CommandStateSet, OMX_StateLoaded, NULL);
-  
+
   if (flagAVsync) {
     err = OMX_SendCommand(appPriv->clocksrchandle, OMX_CommandStateSet, OMX_StateLoaded, NULL);
-  }  
+  }
 
   DEBUG(DEFAULT_MESSAGES, "All components to loaded\n");
 
@@ -1210,18 +1210,18 @@ int main(int argc, char** argv) {
     err = OMX_FreeBuffer(appPriv->audiosrchandle, 0, outBufferSrcAudio[1]);
   }
 
-  
+
   tsem_down(appPriv->muxEventSem);
   DEBUG(DEFAULT_MESSAGES,"Mux loaded state \n");
-  tsem_down(appPriv->videoencEventSem); 
-  tsem_down(appPriv->audioencEventSem); 
+  tsem_down(appPriv->videoencEventSem);
+  tsem_down(appPriv->audioencEventSem);
 
   tsem_down(appPriv->videosrcEventSem);
   tsem_down(appPriv->audiosrcEventSem);
-  
+
   if (flagAVsync) {
     tsem_down(appPriv->clockEventSem);
-  }  
+  }
 
   DEBUG(DEFAULT_MESSAGES, "All components released\n");
 
@@ -1236,7 +1236,7 @@ int main(int argc, char** argv) {
   DEBUG(DEB_LEV_SIMPLE_SEQ, "videosrc freed\n");
   OMX_FreeHandle(appPriv->audiosrchandle);
   DEBUG(DEB_LEV_SIMPLE_SEQ, "audiosrc freed\n");
-  
+
   if (flagAVsync) {
     OMX_FreeHandle(appPriv->clocksrchandle);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "clock src freed\n");
@@ -1257,7 +1257,7 @@ int main(int argc, char** argv) {
   appPriv->videosrcEventSem = NULL;
   free(appPriv->audiosrcEventSem);
   appPriv->audiosrcEventSem = NULL;
-  
+
   if(flagAVsync) {
     free(appPriv->clockEventSem);
   }
@@ -1268,9 +1268,9 @@ int main(int argc, char** argv) {
   appPriv = NULL;
 
   free(output_file);
-  
+
   return 0;
-}  
+}
 
 /* Callbacks implementation */
 OMX_ERRORTYPE muxEventHandler(
@@ -1343,7 +1343,7 @@ OMX_ERRORTYPE muxEmptyBufferDone(
 {
   OMX_ERRORTYPE err;
   /* Output data to video & audio encoder */
-  
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
 
   if(pBuffer != NULL){
@@ -1360,7 +1360,7 @@ OMX_ERRORTYPE muxEmptyBufferDone(
         if(err != OMX_ErrorNone) {
           DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
         }
-        if(pBuffer->nFlags==OMX_BUFFERFLAG_EOS) {
+        if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
           DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s: eos=%x Calling Empty This Buffer\n", __func__,(int)pBuffer->nFlags);
           bEOS=OMX_TRUE;
         }
@@ -1380,7 +1380,7 @@ OMX_ERRORTYPE muxEmptyBufferDone(
          if(err != OMX_ErrorNone) {
            DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
          }
-         if(pBuffer->nFlags==OMX_BUFFERFLAG_EOS) {
+         if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
            DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s: eos=%x Calling Empty This Buffer\n", __func__,(int)pBuffer->nFlags);
            bEOS=OMX_TRUE;
          }
@@ -1405,7 +1405,7 @@ OMX_ERRORTYPE videoencEventHandler(
 {
   OMX_ERRORTYPE err;
   OMX_PARAM_PORTDEFINITIONTYPE param;
-  
+
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback\n", __func__);
   if(eEvent == OMX_EventCmdComplete) {
     if (Data1 == OMX_CommandStateSet) {
@@ -1441,7 +1441,7 @@ OMX_ERRORTYPE videoencEventHandler(
     } else if (Data1 == OMX_CommandFlush){
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Flush Event\n",__func__);
       tsem_up(appPriv->videoencEventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventPortSettingsChanged) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Settings Changed Event\n", __func__);
     if (Data2 == 1) {
@@ -1463,7 +1463,7 @@ OMX_ERRORTYPE videoencEventHandler(
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param1 is %i\n", (int)Data1);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param2 is %i\n", (int)Data2);
   }
-  
+
   return OMX_ErrorNone;
 }
 
@@ -1474,7 +1474,7 @@ OMX_ERRORTYPE videoencFillBufferDone(
 {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   static int iBufferDropped=0;
-  
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
 
   if(pBuffer != NULL){
@@ -1514,9 +1514,9 @@ OMX_ERRORTYPE videoencEmptyBufferDone(
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
-  
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
-  
+
   /* Output data to alsa src */
   if(pBuffer != NULL){
    if(!bEOS) {
@@ -1709,7 +1709,7 @@ OMX_ERRORTYPE audioencEmptyBufferDone(
 {
   OMX_ERRORTYPE err;
   static int iBufferDropped=0;
-  
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
 
   if(pBuffer != NULL){
@@ -1748,7 +1748,7 @@ OMX_ERRORTYPE audioencFillBufferDone(
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
-  
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
 
   /* Output data to alsa src */
@@ -1837,7 +1837,7 @@ OMX_ERRORTYPE audiosrcFillBufferDone(
 {
   OMX_ERRORTYPE err;
   static int alsaSinkBufferDropped=0;
-  
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n", __func__);
 
   if(!bEOS) {
@@ -1937,7 +1937,7 @@ OMX_ERRORTYPE clocksrcFillBufferDone(
       if(err != OMX_ErrorNone) {
         DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer\n", __func__,err);
       }
-      if(pBuffer->nFlags==OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s: eos=%x Calling Empty This Buffer\n", __func__,(int)pBuffer->nFlags);
         bEOS=OMX_TRUE;
       }

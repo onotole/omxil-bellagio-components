@@ -53,7 +53,7 @@ void omx_audio_reader_component_BufferMgmtCallback(
     pOutBuffer->nFilledLen = BUFFER_LEN;
   } else {
     /* EOS or ERROR? */
-    pOutBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+    pOutBuffer->nFlags = pOutBuffer->nFlags | OMX_BUFFERFLAG_EOS;
   }
 }
 

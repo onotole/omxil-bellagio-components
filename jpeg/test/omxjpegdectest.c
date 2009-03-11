@@ -324,7 +324,7 @@ OMX_ERRORTYPE jpegDecEmptyBufferDone(
       return OMX_ErrorNone;
     }
     pBuffer->nFilledLen=0;
-    pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+    pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
     bEOS=OMX_TRUE;
     err = OMX_EmptyThisBuffer(hComponent, pBuffer);
     return OMX_ErrorNone;

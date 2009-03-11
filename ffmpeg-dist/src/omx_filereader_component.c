@@ -282,7 +282,7 @@ void omx_filereader_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
              omx_filereader_component_Private->avformatcontext->streams[0]->codec->extradata,
              omx_filereader_component_Private->avformatcontext->streams[0]->codec->extradata_size);
       pOutputBuffer->nFilledLen = omx_filereader_component_Private->avformatcontext->streams[0]->codec->extradata_size;
-      pOutputBuffer->nFlags = OMX_BUFFERFLAG_CODECCONFIG;
+      pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_CODECCONFIG;
 
       DEBUG(DEB_LEV_ERR, "In %s Sending First Buffer Extra Data Size=%d\n",__func__,(int)pOutputBuffer->nFilledLen);
 
@@ -305,7 +305,7 @@ void omx_filereader_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
     DEBUG(DEB_LEV_FULL_SEQ,"In %s EOS - no more packet,state=%x\n",__func__, omx_filereader_component_Private->state);
     if(omx_filereader_component_Private->bIsEOSReached == OMX_FALSE) {
       DEBUG(DEB_LEV_FULL_SEQ, "In %s Sending EOS\n", __func__);
-      pOutputBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+      pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_EOS;
       omx_filereader_component_Private->bIsEOSReached = OMX_TRUE;
     }
   } else {

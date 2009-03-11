@@ -1045,7 +1045,7 @@ OMX_ERRORTYPE colorconvFillBufferDone(
           fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);
           pBuffer->nFilledLen = 0;
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_ERR, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }
@@ -1149,7 +1149,7 @@ OMX_ERRORTYPE videosrcFillBufferDone(
           fwrite(pBuffer->pBuffer, 1,  pBuffer->nFilledLen, outfile);
           pBuffer->nFilledLen = 0;
       }
-      if(pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
+      if((pBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
         DEBUG(DEB_LEV_ERR, "In %s: eos=%x Calling Empty This Buffer\n", __func__, (int)pBuffer->nFlags);
         bEOS = OMX_TRUE;
       }

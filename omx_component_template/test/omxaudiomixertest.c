@@ -1,10 +1,10 @@
 /**
   test/components/audio_effects/omxaudiomixertest.c
-  
+
   This simple test application take one or more input stream/s. passes
-  these streams to an audio mixer component and stores the mixed output in another 
+  these streams to an audio mixer component and stores the mixed output in another
   output file.
-  
+
   Copyright (C) 2007-2009 STMicroelectronics
   Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
@@ -22,7 +22,7 @@
   along with this library; if not, write to the Free Software Foundation, Inc.,
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
-  
+
   $Date$
   Revision $Rev$
   Author $Author$
@@ -40,7 +40,7 @@ OMX_CALLBACKTYPE callbacks = { .EventHandler = audiomixerEventHandler,
                                .FillBufferDone = audiomixerFillBufferDone,
 };
 
-OMX_CALLBACKTYPE audiosinkcallbacks = { 
+OMX_CALLBACKTYPE audiosinkcallbacks = {
                               .EventHandler    = audiosinkEventHandler,
                               .EmptyBufferDone = audiosinkEmptyBufferDone,
                               .FillBufferDone  = NULL
@@ -164,7 +164,7 @@ int main(int argc, char** argv) {
           flagIsGain[i] = 0;
           if(gain[i] > 100) {
             DEBUG(DEFAULT_MESSAGES, "Gain of stream %i should be between [0..100]\n",i);
-            gain[i] = 100; 
+            gain[i] = 100;
           }
           i = 0;
         } else if (flagIsOutputExpected) {
@@ -205,7 +205,7 @@ int main(int argc, char** argv) {
       DEBUG(DEFAULT_MESSAGES, " Audio Sink\n");
     }
   }
- 
+
   if(input_file[0]== NULL || input_file[1]==NULL)  {
     DEBUG(DEFAULT_MESSAGES, "Please Supply 2 input files\n");
     exit(1);
@@ -227,7 +227,7 @@ int main(int argc, char** argv) {
     if(outfile == NULL) {
       DEBUG(DEB_LEV_ERR, "Error at opening the output file");
       exit(1);
-    } 
+    }
   }
 
   filesize = getFileSize(fd);
@@ -407,10 +407,10 @@ int main(int argc, char** argv) {
     tsem_down(appPriv->sinkEventSem);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "audio sink state executing successful\n");
   }
-  DEBUG(DEB_LEV_PARAMS, "Had buffers at:\n0x%08x\n0x%08x\n0x%08x\n0x%08x\n", 
+  DEBUG(DEB_LEV_PARAMS, "Had buffers at:\n0x%08x\n0x%08x\n0x%08x\n0x%08x\n",
                 (int)inBuffer[0]->pBuffer, (int)inBuffer[1]->pBuffer, (int)outBuffer[0]->pBuffer, (int)outBuffer[1]->pBuffer);
   DEBUG(DEB_LEV_PARAMS, "After switch to executing\n");
-  
+
   for(j=0;j<BUFFER_COUNT_ACTUAL;j++) {
     data_read = read(fd, inBuffer[j]->pBuffer, FRAME_SIZE);
     inBuffer[0]->nFilledLen = data_read;
@@ -465,7 +465,7 @@ int main(int argc, char** argv) {
               err = OMX_FreeBuffer(appPriv->handle, 1, inBuffer[j+2]);
             }
           }
-        
+
           tsem_down(appPriv->eventSem);
           iBufferDropped[i] = 0;
           break;
@@ -475,7 +475,7 @@ int main(int argc, char** argv) {
       }
     }
   }
-  
+
   /* If user want to enable previously disabled port*/
   if(isPortDisabled[0] == OMX_TRUE || isPortDisabled[1] == OMX_TRUE) {
     DEBUG(DEFAULT_MESSAGES, "\nIf you want to re-enable port %i enter 'y' else 'n' \n\n",i);
@@ -491,7 +491,7 @@ int main(int argc, char** argv) {
       } else if(toupper(c) == 'Y') {
         DEBUG(DEFAULT_MESSAGES,"Re-Enabling Port %i\n",i);
         err = OMX_SendCommand(appPriv->handle, OMX_CommandPortEnable, i, NULL);
-      
+
         /*Buffer 0..1 for Port 0 and 2..3 for Port 1*/
         j = (i==0)?0:2;
 
@@ -505,7 +505,7 @@ int main(int argc, char** argv) {
           DEBUG(DEB_LEV_ERR, "Error on Re-AllocateBuffer in %i %i\n",(int)j+1, err);
           exit(1);
         }
-    
+
         tsem_down(appPriv->eventSem);
         isPortDisabled[i] = OMX_FALSE;
 
@@ -522,7 +522,7 @@ int main(int argc, char** argv) {
         err = OMX_EmptyThisBuffer(appPriv->handle, inBuffer[j+1]);
         break;
       }
-      
+
     }
   }
 
@@ -540,7 +540,7 @@ int main(int argc, char** argv) {
   err = OMX_SendCommand(appPriv->handle, OMX_CommandStateSet, OMX_StateIdle, NULL);
   if (flagPlaybackOn) {
     err = OMX_SendCommand(appPriv->audiosinkhandle, OMX_CommandStateSet, OMX_StateIdle, NULL);
-  }  
+  }
   if (flagPlaybackOn) {
     tsem_down(appPriv->sinkEventSem);
   }
@@ -575,10 +575,10 @@ int main(int argc, char** argv) {
   if (flagPlaybackOn) {
     tsem_down(appPriv->sinkEventSem);
   }
-  
+
   /* Wait for commands to complete */
   tsem_down(appPriv->eventSem);
-  
+
   OMX_FreeHandle(appPriv->handle);
 
   free(appPriv->eventSem);
@@ -642,7 +642,7 @@ OMX_ERRORTYPE audiomixerEventHandler(
       tsem_up(appPriv->eventSem);
     } else if (Data1 == OMX_CommandPortDisable){
       tsem_up(appPriv->eventSem);
-    } 
+    }
   } else if(eEvent == OMX_EventBufferFlag) {
     if((int)Data2 == OMX_BUFFERFLAG_EOS) {
       tsem_up(appPriv->eofSem);
@@ -662,11 +662,11 @@ OMX_ERRORTYPE audiomixerEmptyBufferDone(
 
   OMX_ERRORTYPE err;
   int data_read;
-  
+
 
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback.\n", __func__);
   if(pBuffer->nInputPortIndex==0) {
-    
+
     if(isPortDisabled[0] == OMX_FALSE) {
       data_read = read(fd, pBuffer->pBuffer, FRAME_SIZE);
       pBuffer->nFilledLen = data_read;
@@ -680,12 +680,12 @@ OMX_ERRORTYPE audiomixerEmptyBufferDone(
           DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Dropping Empty This buffer to Audio Mixer Stream 1\n", __func__);
           tsem_up(appPriv->eofSem);
           return OMX_ErrorNone;
-        } else if(iBufferDropped[0]>2) { 
+        } else if(iBufferDropped[0]>2) {
           DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Dropping Empty This buffer to Audio Mixer Stream 1\n", __func__);
           return OMX_ErrorNone;
         }
         pBuffer->nFilledLen=0;
-        pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+        pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
         bEOS1=OMX_TRUE;
         DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Sending EOS for Stream 1\n", __func__);
         err = OMX_EmptyThisBuffer(hComponent, pBuffer);
@@ -696,7 +696,7 @@ OMX_ERRORTYPE audiomixerEmptyBufferDone(
       return OMX_ErrorNone;
     }
   } else if(pBuffer->nInputPortIndex==1) {
-    
+
     if(isPortDisabled[1] == OMX_FALSE) {
       data_read = read(fd1, pBuffer->pBuffer, FRAME_SIZE);
       pBuffer->nFilledLen = data_read;
@@ -710,12 +710,12 @@ OMX_ERRORTYPE audiomixerEmptyBufferDone(
           DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Dropping Empty This buffer to Audio Mixer Stream 2\n", __func__);
           tsem_up(appPriv->eofSem);
           return OMX_ErrorNone;
-        } else if(iBufferDropped[1]>2) { 
+        } else if(iBufferDropped[1]>2) {
           DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Dropping Empty This buffer to Audio Mixer Stream 2\n", __func__);
           return OMX_ErrorNone;
         }
         pBuffer->nFilledLen=0;
-        pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+        pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
         bEOS2=OMX_TRUE;
         DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Sending EOS for Stream 2\n", __func__);
         err = OMX_EmptyThisBuffer(hComponent, pBuffer);
@@ -742,7 +742,7 @@ OMX_ERRORTYPE audiomixerFillBufferDone(
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
-  int i;  
+  int i;
 
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback. Got buflen %i for buffer at 0x%08x\n",
                           __func__, (int)pBuffer->nFilledLen, (int)pBuffer);
@@ -790,7 +790,7 @@ OMX_ERRORTYPE audiomixerFillBufferDone(
   } else {
     DEBUG(DEB_LEV_ERR, "Ouch! In %s: had NULL buffer to output...\n", __func__);
   }
-  
+
   return OMX_ErrorNone;
 }
 
@@ -835,7 +835,7 @@ OMX_ERRORTYPE audiosinkEventHandler(
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param1 is %i\n", (int)Data1);
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Param2 is %i\n", (int)Data2);
   }
-  
+
   return OMX_ErrorNone;
 }
 

@@ -757,9 +757,9 @@ void* omx_jpegdec_component_BufferMgmtFunction(void* param)
     }
 
 
-    if(omx_jpegdec_component_Private->nFlags==OMX_BUFFERFLAG_EOS) {
+    if((omx_jpegdec_component_Private->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS) {
       DEBUG(DEB_LEV_FULL_SEQ, "Detected EOS flags in input buffer filled\n");
-      pOutputBuffer->nFlags=omx_jpegdec_component_Private->nFlags;
+      pOutputBuffer->nFlags = omx_jpegdec_component_Private->nFlags;
       (*(omx_jpegdec_component_Private->callbacks->EventHandler))
         (openmaxStandComp,
         omx_jpegdec_component_Private->callbackData,
@@ -771,7 +771,7 @@ void* omx_jpegdec_component_BufferMgmtFunction(void* param)
 
     /* We are done with output buffer */
     /*If EOS and Input buffer Filled Len Zero then Return output buffer immediately*/
-    if(pOutputBuffer->nFilledLen!=0 || pOutputBuffer->nFlags==OMX_BUFFERFLAG_EOS){
+    if(pOutputBuffer->nFilledLen!=0 || (pOutputBuffer->nFlags & OMX_BUFFERFLAG_EOS) == OMX_BUFFERFLAG_EOS){
       pOutPort->ReturnBufferFunction(pOutPort,pOutputBuffer);
       outBufExchanged--;
       pOutputBuffer=NULL;

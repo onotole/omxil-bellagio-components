@@ -121,7 +121,7 @@ OMX_ERRORTYPE audiorendererEmptyBufferDone(
 	       pBuffer->pBuffer + pBuffer->nOffset,
 	       size);
   if(count != size) {
-    pBuffer->nFlags = OMX_BUFFERFLAG_EOS;
+    pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
   }
 
   if(count > 0) {
@@ -205,7 +205,7 @@ static void test_component(void)
   for(i = 0; i < BUFFER_COUNT_ACTUAL; i++) {
     int count = read(appPriv->ipd, inBuffer[i]->pBuffer, DEFAULT_IN_BUFFER_SIZE);
     if(count != DEFAULT_IN_BUFFER_SIZE) {
-      inBuffer[i]->nFlags = OMX_BUFFERFLAG_EOS;
+      inBuffer[i]->nFlags = inBuffer[i]->nFlags | OMX_BUFFERFLAG_EOS;
     }
     inBuffer[i]->nFilledLen = count;
     err = OMX_EmptyThisBuffer(appPriv->rendererHandle, inBuffer[i]);
