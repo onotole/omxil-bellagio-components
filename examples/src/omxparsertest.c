@@ -374,7 +374,7 @@ int SetPortParametersVideo() {
 
 void display_help() {
   printf("\n");
-  printf("Usage: omxparsertest -vo outfileVideo.yuv -ao outfileAudio.pcm  [-t]  [-h] [-d] [-c] input_filename\n");
+  printf("Usage: omxparsertest -vo outfileVideo.yuv -ao outfileAudio.pcm  [-t]  [-h] [-d] [-c] [-x] input_filename\n");
   printf("\n");
   printf("       -ao outfileAudio.pcm \n");
   printf("       -vo outfileVideo.yuv \n");
