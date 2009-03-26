@@ -650,7 +650,9 @@ OMX_ERRORTYPE videosrc_port_FreeBuffer(
   return OMX_ErrorInsufficientResources;
 }
 
-OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(omx_base_PortType *openmaxStandPort,OMX_IN OMX_U32 nPortIndex,OMX_IN OMX_U32 nSizeBytes)
+OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(
+		omx_base_PortType *openmaxStandPort,
+		OMX_U32 nPortIndex)
 {
   int i;
   OMX_COMPONENTTYPE* omxComponent = openmaxStandPort->standCompContainer;
@@ -658,7 +660,11 @@ OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(omx_base_PortType *openmaxStand
   omx_videosrc_component_PrivateType* omx_videosrc_component_Private = (omx_videosrc_component_PrivateType*)omx_base_component_Private;
   OMX_U8* pBuffer=NULL;
   OMX_ERRORTYPE eError=OMX_ErrorNone;
-  OMX_U32 numRetry=0;
+  OMX_U32 numRetry=0,nBufferSize;
+  OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+  OMX_U32 nLocalBufferCountActual;
+  OMX_ERRORTYPE err;
+
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (nPortIndex != openmaxStandPort->sPortParam.nPortIndex) {
@@ -676,6 +682,31 @@ OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(omx_base_PortType *openmaxStand
       return OMX_ErrorIncorrectStateTransition;
     }
   }
+  /*Get nBufferSize of the peer port and allocate which one is bigger*/
+  setHeader(&sPortDef, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
+  sPortDef.nPortIndex = openmaxStandPort->nTunneledPort;
+  err = OMX_GetParameter(openmaxStandPort->hTunneledComponent, OMX_IndexParamPortDefinition, &sPortDef);
+  if(err == OMX_ErrorNone) {
+    nBufferSize = (sPortDef.nBufferSize > openmaxStandPort->sPortParam.nBufferSize) ? sPortDef.nBufferSize: openmaxStandPort->sPortParam.nBufferSize;
+  }
+
+  /* set the number of buffer needed getting the max nBufferCountActual of the two components
+   * On the one with the minor nBufferCountActual a setParam should be called to normalize the value,
+   * if possible.
+   */
+  nLocalBufferCountActual = openmaxStandPort->sPortParam.nBufferCountActual;
+  if (nLocalBufferCountActual < sPortDef.nBufferCountActual) {
+	  nLocalBufferCountActual = sPortDef.nBufferCountActual;
+	  openmaxStandPort->sPortParam.nBufferCountActual = nLocalBufferCountActual;
+  } else if (sPortDef.nBufferCountActual < nLocalBufferCountActual){
+	  sPortDef.nBufferCountActual = nLocalBufferCountActual;
+	  err = OMX_SetParameter(openmaxStandPort->hTunneledComponent, OMX_IndexParamPortDefinition, &sPortDef);
+	  if(err != OMX_ErrorNone) {
+		  /* for some reasons undetected during negotiation the tunnel cannot be established.
+		   */
+		  return OMX_ErrorPortsNotCompatible;
+	  }
+  }
 
   for(i=0; i < openmaxStandPort->sPortParam.nBufferCountActual; i++){
     if (openmaxStandPort->bBufferStateAllocated[i] == BUFFER_FREE) {
@@ -690,7 +721,7 @@ OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(omx_base_PortType *openmaxStand
       /*Retry more than once, if the tunneled component is not in Loaded->Idle State*/
       while(numRetry <TUNNEL_USE_BUFFER_RETRY) {
         eError=OMX_UseBuffer(openmaxStandPort->hTunneledComponent,&openmaxStandPort->pInternalBufferStorage[i],
-                             openmaxStandPort->nTunneledPort,NULL,nSizeBytes,pBuffer);
+                             openmaxStandPort->nTunneledPort,NULL,nBufferSize,pBuffer);
         if(eError!=OMX_ErrorNone) {
           DEBUG(DEB_LEV_FULL_SEQ,"Tunneled Component Couldn't Use buffer %i From Comp=%s Retry=%d\n",
           i,omx_base_component_Private->name,(int)numRetry);

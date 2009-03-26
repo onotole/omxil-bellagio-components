@@ -122,8 +122,7 @@ OMX_ERRORTYPE videosrc_port_FreeBuffer(
 
 OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(
   omx_base_PortType *openmaxStandPort,
-  OMX_IN OMX_U32 nPortIndex,
-  OMX_IN OMX_U32 nSizeBytes);
+  OMX_U32 nPortIndex);
 
 OMX_ERRORTYPE videosrc_port_FreeTunnelBuffer(
   omx_base_PortType *openmaxStandPort,
