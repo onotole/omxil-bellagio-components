@@ -6,7 +6,7 @@
   The output video/image data of the capture port and thumbnail port of the
   camera are saved in disk files, respectively.
 
-  Copyright (C) 2007-2008  Motorola and STMicroelectronics
+  Copyright (C) 2007-2009  Motorola and STMicroelectronics
 
   This code is licensed under LGPL see README for full LGPL notice.
 

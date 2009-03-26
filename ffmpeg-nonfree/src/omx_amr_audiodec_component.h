@@ -126,10 +126,4 @@ OMX_ERRORTYPE omx_amr_audiodec_component_SetConfig(
   OMX_INDEXTYPE nIndex,
   OMX_PTR pComponentConfigStructure);
 
-OMX_ERRORTYPE omx_amr_audiodec_component_GetExtensionIndex(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_STRING cParameterName,
-  OMX_OUT OMX_INDEXTYPE* pIndexType);
-
-
 #endif
