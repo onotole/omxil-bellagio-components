@@ -5,7 +5,7 @@
   This component uses a content_pipe to read audio data
   and produces a single output stream.
 
-  Copyright (C) 2007, 2009  STMicroelectronics
+  Copyright (C) 2007-2009  STMicroelectronics
   Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
