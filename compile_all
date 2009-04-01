@@ -36,12 +36,6 @@ autoreconf -i -f
 make
 make install
 cd ..
-cd gsent_branch
-autoreconf -i -f
-./configure --prefix=$1
-make
-make install
-cd ..
 cd jpeg
 autoreconf -i -f
 ./configure --prefix=$1

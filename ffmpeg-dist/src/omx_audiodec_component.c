@@ -132,12 +132,6 @@ OMX_ERRORTYPE omx_audiodec_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
   else  // IL client specified an invalid component name
     return OMX_ErrorInvalidComponentName;
 
-  if(!omx_audiodec_component_Private->avCodecSyncSem) {
-    omx_audiodec_component_Private->avCodecSyncSem = calloc(1,sizeof(tsem_t));
-    if(omx_audiodec_component_Private->avCodecSyncSem == NULL) return OMX_ErrorInsufficientResources;
-    tsem_init(omx_audiodec_component_Private->avCodecSyncSem, 0);
-  }
-
   //set internal port parameters
   omx_audiodec_component_SetInternalParameters(openmaxStandComp);
 
@@ -184,12 +178,6 @@ OMX_ERRORTYPE omx_audiodec_component_Destructor(OMX_COMPONENTTYPE *openmaxStandC
 
   /*Free Codec Context*/
   av_free (omx_audiodec_component_Private->avCodecContext);
-
-  if(omx_audiodec_component_Private->avCodecSyncSem) {
-    tsem_deinit(omx_audiodec_component_Private->avCodecSyncSem);
-    free(omx_audiodec_component_Private->avCodecSyncSem);
-    omx_audiodec_component_Private->avCodecSyncSem=NULL;
-  }
 
   /* frees port/s */
   if (omx_audiodec_component_Private->ports) {

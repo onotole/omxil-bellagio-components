@@ -67,12 +67,10 @@ DERIVEDCLASS(omx_videoenc_component_PrivateType, omx_base_filter_PrivateType)
   AVCodecContext *avCodecContext;  \
   /** @param picture pointer to FFmpeg AVFrame  */ \
   AVFrame *picture; \
-  /** @param semaphore for avcodec access syncrhonization */\
-  tsem_t* avCodecSyncSem; \
-  /** @param pVideoMpeg4 Referece to OMX_VIDEO_PARAM_MPEG4TYPE structure*/  \
+  /** @param pVideoMpeg4 Reference to OMX_VIDEO_PARAM_MPEG4TYPE structure*/  \
   OMX_VIDEO_PARAM_MPEG4TYPE pVideoMpeg4;  \
   OMX_BOOL avcodecReady;  \
-  /** @param minBufferLength Field that stores the minimun allowed size for FFmpeg encoder */ \
+  /** @param minBufferLength Field that stores the minimum allowed size for FFmpeg encoder */ \
   OMX_U16 minBufferLength; \
   /** @param isFirstBuffer Field that the buffer is the first buffer */ \
   OMX_S32 isFirstBuffer;\

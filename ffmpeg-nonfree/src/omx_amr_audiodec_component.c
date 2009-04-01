@@ -107,12 +107,6 @@ OMX_ERRORTYPE omx_amr_audiodec_component_Constructor(OMX_COMPONENTTYPE *openmaxS
   else  // IL client specified an invalid component name
     return OMX_ErrorInvalidComponentName;
 
-  if(!omx_amr_audiodec_component_Private->avCodecSyncSem) {
-    omx_amr_audiodec_component_Private->avCodecSyncSem = calloc(1,sizeof(tsem_t));
-    if(omx_amr_audiodec_component_Private->avCodecSyncSem == NULL) return OMX_ErrorInsufficientResources;
-    tsem_init(omx_amr_audiodec_component_Private->avCodecSyncSem, 0);
-  }
-
   //set internal port parameters
   omx_amr_audiodec_component_SetInternalParameters(openmaxStandComp);
 
@@ -159,12 +153,6 @@ OMX_ERRORTYPE omx_amr_audiodec_component_Destructor(OMX_COMPONENTTYPE *openmaxSt
 
   /*Free Codec Context*/
   av_free (omx_amr_audiodec_component_Private->avCodecContext);
-
-  if(omx_amr_audiodec_component_Private->avCodecSyncSem) {
-    tsem_deinit(omx_amr_audiodec_component_Private->avCodecSyncSem);
-    free(omx_amr_audiodec_component_Private->avCodecSyncSem);
-    omx_amr_audiodec_component_Private->avCodecSyncSem=NULL;
-  }
 
   /* frees port/s */
   if (omx_amr_audiodec_component_Private->ports) {
@@ -231,11 +219,9 @@ OMX_ERRORTYPE omx_amr_audiodec_component_ffmpegLibInit(omx_amr_audiodec_componen
   }
 
   /* apply flags */
-  //omx_amr_audiodec_component_Private->avCodecContext->flags |= CODEC_FLAG_TRUNCATED;
   omx_amr_audiodec_component_Private->avCodecContext->flags |= CODEC_FLAG_EMU_EDGE;
   omx_amr_audiodec_component_Private->avCodecContext->workaround_bugs |= FF_BUG_AUTODETECT;
 
-  tsem_up(omx_amr_audiodec_component_Private->avCodecSyncSem);
   DEBUG(DEB_LEV_SIMPLE_SEQ, "done\n");
   return OMX_ErrorNone;
 }

@@ -126,14 +126,6 @@ OMX_ERRORTYPE omx_videodec_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
     return OMX_ErrorInvalidComponentName;
   }
 
-  if(!omx_videodec_component_Private->avCodecSyncSem) {
-    omx_videodec_component_Private->avCodecSyncSem = calloc(1,sizeof(tsem_t));
-    if(omx_videodec_component_Private->avCodecSyncSem == NULL) {
-      return OMX_ErrorInsufficientResources;
-    }
-    tsem_init(omx_videodec_component_Private->avCodecSyncSem, 0);
-  }
-
   SetInternalVideoParameters(openmaxStandComp);
 
   omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_YUV420P;
@@ -179,12 +171,6 @@ OMX_ERRORTYPE omx_videodec_component_Destructor(OMX_COMPONENTTYPE *openmaxStandC
   if(omx_videodec_component_Private->extradata) {
     free(omx_videodec_component_Private->extradata);
     omx_videodec_component_Private->extradata=NULL;
-  }
-
-  if(omx_videodec_component_Private->avCodecSyncSem) {
-    tsem_deinit(omx_videodec_component_Private->avCodecSyncSem);
-    free(omx_videodec_component_Private->avCodecSyncSem);
-    omx_videodec_component_Private->avCodecSyncSem = NULL;
   }
 
   /* frees port/s */

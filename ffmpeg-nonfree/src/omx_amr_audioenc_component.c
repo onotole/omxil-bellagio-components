@@ -101,12 +101,6 @@ OMX_ERRORTYPE omx_amr_audioenc_component_Constructor(OMX_COMPONENTTYPE *openmaxS
   else  // IL client specified an invalid component name
     return OMX_ErrorInvalidComponentName;
 
-  if(!omx_amr_audioenc_component_Private->avCodecSyncSem) {
-    omx_amr_audioenc_component_Private->avCodecSyncSem = calloc(1,sizeof(tsem_t));
-    if(omx_amr_audioenc_component_Private->avCodecSyncSem == NULL) return OMX_ErrorInsufficientResources;
-    tsem_init(omx_amr_audioenc_component_Private->avCodecSyncSem, 0);
-  }
-
   omx_amr_audioenc_component_SetInternalParameters(openmaxStandComp);
 
   //general configuration irrespective of any audio formats
@@ -145,12 +139,6 @@ OMX_ERRORTYPE omx_amr_audioenc_component_Destructor(OMX_COMPONENTTYPE *openmaxSt
 
   /*Free Codec Context*/
   av_free (omx_amr_audioenc_component_Private->avCodecContext);
-
-  if(omx_amr_audioenc_component_Private->avCodecSyncSem) {
-    tsem_deinit(omx_amr_audioenc_component_Private->avCodecSyncSem);
-    free(omx_amr_audioenc_component_Private->avCodecSyncSem);
-    omx_amr_audioenc_component_Private->avCodecSyncSem=NULL;
-  }
 
   /* frees port/s */
   if (omx_amr_audioenc_component_Private->ports) {
@@ -248,8 +236,6 @@ OMX_ERRORTYPE omx_amr_audioenc_component_ffmpegLibInit(omx_amr_audioenc_componen
   omx_amr_audioenc_component_Private->frame_length = omx_amr_audioenc_component_Private->avCodecContext->frame_size*
                                                  (omx_amr_audioenc_component_Private->pAudioPcmMode.nBitPerSample/8)*
                                                  omx_amr_audioenc_component_Private->avCodecContext->channels;
-
-  tsem_up(omx_amr_audioenc_component_Private->avCodecSyncSem);
 
   return OMX_ErrorNone;
 }
@@ -354,11 +340,12 @@ void omx_amr_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxSta
   OMX_S32 nOutputFilled = 0;
   static OMX_U8* data;
   unsigned char *pBuffer = NULL;
+  OMX_ERRORTYPE err;
   AVRational  bq = { 1, 1000000 };
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n",__func__);
 
-  if((omx_amr_audioenc_component_Private->isFirstBuffer == 1) && (omx_amr_audioenc_component_Private->audio_coding_type == OMX_AUDIO_CodingAMR)) {
+  if((omx_amr_audioenc_component_Private->isFirstBuffer) && (omx_amr_audioenc_component_Private->audio_coding_type == OMX_AUDIO_CodingAMR)) {
     if(omx_amr_audioenc_component_Private->pAudioAmr.eAMRBandMode <= OMX_AUDIO_AMRBandModeNB7) {
       memcpy(pOutputBuffer->pBuffer,AMR_header,6);
       pBuffer = pOutputBuffer->pBuffer + 6;
@@ -367,6 +354,14 @@ void omx_amr_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxSta
       memcpy(pOutputBuffer->pBuffer,AMRWB_header,9);
       pBuffer = pOutputBuffer->pBuffer + 9;
       pOutputBuffer->nFilledLen = 9;
+    }
+    if (!omx_amr_audioenc_component_Private->avcodecReady) {
+      err = omx_amr_audioenc_component_ffmpegLibInit(omx_amr_audioenc_component_Private);
+      if (err != OMX_ErrorNone) {
+        DEBUG(DEB_LEV_ERR, "In %s omx_audioenc_component_ffmpegLibInit Failed\n",__func__);
+        return;
+      }
+      omx_amr_audioenc_component_Private->avcodecReady = OMX_TRUE;
     }
 
     omx_amr_audioenc_component_Private->isFirstBuffer = 0;
@@ -436,7 +431,14 @@ void omx_amr_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxSta
 
     while (!nOutputFilled) {
       if (!omx_amr_audioenc_component_Private->avcodecReady) {
-        tsem_down(omx_amr_audioenc_component_Private->avCodecSyncSem);
+    	    if (!omx_amr_audioenc_component_Private->avcodecReady) {
+    	      err = omx_amr_audioenc_component_ffmpegLibInit(omx_amr_audioenc_component_Private);
+    	      if (err != OMX_ErrorNone) {
+    	        DEBUG(DEB_LEV_ERR, "In %s omx_amr_audioenc_component_ffmpegLibInit Failed\n",__func__);
+    	        return;
+    	      }
+    	      omx_amr_audioenc_component_Private->avcodecReady = OMX_TRUE;
+    	    }
       }
       omx_amr_audioenc_component_Private->avCodecContext->frame_number++;
 
@@ -749,13 +751,13 @@ OMX_ERRORTYPE omx_amr_audioenc_component_MessageHandler(OMX_COMPONENTTYPE* openm
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateExecuting ) && (omx_amr_audioenc_component_Private->state == OMX_StateIdle)) {
-      if (!omx_amr_audioenc_component_Private->avcodecReady) {
+      /*if (!omx_amr_audioenc_component_Private->avcodecReady) {
         err = omx_amr_audioenc_component_ffmpegLibInit(omx_amr_audioenc_component_Private);
         if (err != OMX_ErrorNone) {
           return OMX_ErrorNotReady;
         }
         omx_amr_audioenc_component_Private->avcodecReady = OMX_TRUE;
-      }
+      }*/
     }
     else if ((message->messageParam == OMX_StateIdle ) && (omx_amr_audioenc_component_Private->state == OMX_StateLoaded)) {
       err = omx_amr_audioenc_component_Init(openmaxStandComp);

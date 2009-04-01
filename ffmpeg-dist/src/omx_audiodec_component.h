@@ -68,9 +68,7 @@ DERIVEDCLASS(omx_audiodec_component_PrivateType, omx_base_filter_PrivateType)
   AVCodec *avCodec;  \
   /** @param avCodecContext pointer to FFmpeg decoder context  */ \
   AVCodecContext *avCodecContext;  \
-  /** @param semaphore for avcodec access syncrhonization */\
-  tsem_t* avCodecSyncSem; \
-  /** @param pAudioMp3 Referece to OMX_AUDIO_PARAM_MP3TYPE structure*/  \
+  /** @param pAudioMp3 Reference to OMX_AUDIO_PARAM_MP3TYPE structure*/  \
   OMX_AUDIO_PARAM_MP3TYPE pAudioMp3;  \
   /** @param pAudioVorbis Reference to OMX_AUDIO_PARAM_VORBISTYPE structure */ \
   OMX_AUDIO_PARAM_VORBISTYPE pAudioVorbis;  \
@@ -78,11 +76,11 @@ DERIVEDCLASS(omx_audiodec_component_PrivateType, omx_base_filter_PrivateType)
   OMX_AUDIO_PARAM_AACPROFILETYPE  pAudioAac;  \
   /** @param pAudioG726 Reference to  OMX_AUDIO_PARAM_G726TYPE structure */ \
   OMX_AUDIO_PARAM_G726TYPE pAudioG726; \
-  /** @param pAudioPcmMode Referece to OMX_AUDIO_PARAM_PCMMODETYPE structure*/  \
+  /** @param pAudioPcmMode Reference to OMX_AUDIO_PARAM_PCMMODETYPE structure*/  \
   OMX_AUDIO_PARAM_PCMMODETYPE pAudioPcmMode;  \
   /** @param avcodecReady boolean flag that is true when the audio coded has been initialized */ \
   OMX_BOOL avcodecReady;  \
-  /** @param minBufferLength Field that stores the minimun allowed size for FFmpeg decoder */ \
+  /** @param minBufferLength Field that stores the minimum allowed size for FFmpeg decoder */ \
   OMX_U16 minBufferLength; \
   /** @param inputCurrBuffer Field that stores pointer of the current input buffer position */ \
   OMX_U8* inputCurrBuffer;\
