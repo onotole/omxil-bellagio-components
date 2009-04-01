@@ -1,6 +1,7 @@
 cd alsa
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
@@ -9,72 +10,84 @@ cd ..
 cd camera
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd examples
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd fbvideo
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd ffmpeg-dist
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd ffmpeg-nonfree
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd jpeg
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd mad
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd videosrc
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd vorbis
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd xvideo
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd template_audio_components
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
 cd omx_component_template
 autoreconf -i -f
 ./configure --prefix=$1
+make clean
 make
 make install
 cd ..
