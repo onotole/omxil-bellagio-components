@@ -225,6 +225,7 @@ OMX_ERRORTYPE omx_alsasink_component_port_SendBufferFunction(omx_base_PortType *
   omx_base_component_PrivateType* omx_base_component_Private = (omx_base_component_PrivateType*)omxComponent->pComponentPrivate;
   OMX_BOOL                        SendFrame;
   omx_base_clock_PortType*        pClockPort;
+  int                             errQue;
 #if NO_GST_OMX_PATCH
   unsigned int i;
 #endif
@@ -290,14 +291,28 @@ OMX_ERRORTYPE omx_alsasink_component_port_SendBufferFunction(omx_base_PortType *
 
   /* And notify the buffer management thread we have a fresh new buffer to manage */
   if(!PORT_IS_BEING_FLUSHED(openmaxStandPort) && !(PORT_IS_BEING_DISABLED(openmaxStandPort) && PORT_IS_TUNNELED_N_BUFFER_SUPPLIER(openmaxStandPort))){
-      queue(openmaxStandPort->pBufferQueue, pBuffer);
+      errQue = queue(openmaxStandPort->pBufferQueue, pBuffer);
+      if (errQue) {
+    	  /* /TODO the queue is full. This can be handled in a fine way with
+    	   * some retrials, or other checking. For the moment this is a critical error
+    	   * and simply causes the failure of this call
+    	   */
+    	  return OMX_ErrorInsufficientResources;
+      }
       tsem_up(openmaxStandPort->pBufferSem);
       DEBUG(DEB_LEV_PARAMS, "In %s Signalling bMgmtSem Port Index=%d\n",__func__, (int)portIndex);
       tsem_up(omx_base_component_Private->bMgmtSem);
   }else if(PORT_IS_BUFFER_SUPPLIER(openmaxStandPort)){
       DEBUG(DEB_LEV_FULL_SEQ, "In %s: Comp %s received io:%d buffer\n",
         __func__,omx_base_component_Private->name,(int)openmaxStandPort->sPortParam.nPortIndex);
-      queue(openmaxStandPort->pBufferQueue, pBuffer);
+      errQue = queue(openmaxStandPort->pBufferQueue, pBuffer);
+      if (errQue) {
+    	  /* /TODO the queue is full. This can be handled in a fine way with
+    	   * some retrials, or other checking. For the moment this is a critical error
+    	   * and simply causes the failure of this call
+    	   */
+    	  return OMX_ErrorInsufficientResources;
+      }
       tsem_up(openmaxStandPort->pBufferSem);
   }
   else { // If port being flushed and not tunneled then return error
@@ -435,6 +450,7 @@ OMX_ERRORTYPE omx_alsasink_component_port_FlushProcessingBuffers(omx_base_PortTy
   omx_alsasink_component_PrivateType* omx_alsasink_component_Private;
   OMX_BUFFERHEADERTYPE* pBuffer;
   omx_base_clock_PortType               *pClockPort;
+  int errQue;
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
   omx_base_component_Private        = (omx_base_component_PrivateType*)openmaxStandPort->standCompContainer->pComponentPrivate;
@@ -485,7 +501,14 @@ OMX_ERRORTYPE omx_alsasink_component_port_FlushProcessingBuffers(omx_base_PortTy
         ((OMX_COMPONENTTYPE*)(openmaxStandPort->hTunneledComponent))->EmptyThisBuffer(openmaxStandPort->hTunneledComponent, pBuffer);
       }
     } else if (PORT_IS_TUNNELED_N_BUFFER_SUPPLIER(openmaxStandPort)) {
-      queue(openmaxStandPort->pBufferQueue,pBuffer);
+        errQue = queue(openmaxStandPort->pBufferQueue,pBuffer);
+        if (errQue) {
+      	  /* /TODO the queue is full. This can be handled in a fine way with
+      	   * some retrials, or other checking. For the moment this is a critical error
+      	   * and simply causes the failure of this call
+      	   */
+      	  return OMX_ErrorInsufficientResources;
+        }
     } else {
       (*(openmaxStandPort->BufferProcessedCallback))(
         openmaxStandPort->standCompContainer,

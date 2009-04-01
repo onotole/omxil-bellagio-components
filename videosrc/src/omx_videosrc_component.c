@@ -664,6 +664,7 @@ OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(
   OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
   OMX_U32 nLocalBufferCountActual;
   OMX_ERRORTYPE err;
+  int errQue;
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
@@ -747,7 +748,10 @@ OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(
         openmaxStandPort->bIsFullOfBuffers = OMX_TRUE;
         DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s nPortIndex=%d\n",__func__, (int)nPortIndex);
       }
-      queue(openmaxStandPort->pBufferQueue, openmaxStandPort->pInternalBufferStorage[i]);
+      errQue = queue(openmaxStandPort->pBufferQueue, openmaxStandPort->pInternalBufferStorage[i]);
+      if (errQue) {
+    	  return OMX_ErrorInsufficientResources;
+      }
     }
   }
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s Allocated all buffers\n",__func__);
