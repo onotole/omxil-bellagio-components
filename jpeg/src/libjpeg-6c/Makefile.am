@@ -16,3 +16,6 @@ noinst_LTLIBRARIES = libjpeg.la
 libjpeg_la_SOURCES = $(LIBSOURCES) $(SYSDEPSOURCES)
 
 include_extradir = $(includedir)
+
+noninst_HEADERS = jconfig.h  jdct.h  jerror.h  jmemsys.h  jmorecfg.h  \
+                  jpegint.h  jpeglib.h  jversion.h transupp.h
