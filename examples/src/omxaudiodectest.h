@@ -70,66 +70,66 @@ typedef struct appPrivateType{
 
 /* Callback prototypes */
 OMX_ERRORTYPE audiodecEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData);
 
 OMX_ERRORTYPE audiodecEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 OMX_ERRORTYPE audiodecFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 OMX_ERRORTYPE audiosinkEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData);
 
 OMX_ERRORTYPE audiosinkEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 OMX_ERRORTYPE filereaderEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData);
 
 OMX_ERRORTYPE filereaderFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 OMX_ERRORTYPE volumeEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData);
 
 OMX_ERRORTYPE volumeEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 OMX_ERRORTYPE volumeFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 #endif
 

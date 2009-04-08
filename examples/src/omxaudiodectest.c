@@ -972,12 +972,12 @@ int main(int argc, char** argv) {
 /* Callbacks implementation */
 
 OMX_ERRORTYPE filereaderEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData)
 {
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Hi there, I am in the %s callback\n", __func__);
 
@@ -1087,9 +1087,9 @@ OMX_ERRORTYPE filereaderEventHandler(
 }
 
 OMX_ERRORTYPE filereaderFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
   /* Output data to audio decoder */
@@ -1122,12 +1122,12 @@ OMX_ERRORTYPE filereaderFillBufferDone(
 }
 
 OMX_ERRORTYPE audiodecEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData)
 {
   OMX_ERRORTYPE err;
   OMX_PARAM_PORTDEFINITIONTYPE param;
@@ -1281,9 +1281,9 @@ OMX_ERRORTYPE audiodecEventHandler(
 }
 
 OMX_ERRORTYPE audiodecEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
   int data_read;
@@ -1348,9 +1348,9 @@ OMX_ERRORTYPE audiodecEmptyBufferDone(
 }
 
 OMX_ERRORTYPE audiodecFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
   int i;
@@ -1398,12 +1398,12 @@ OMX_ERRORTYPE audiodecFillBufferDone(
 }
 
 OMX_ERRORTYPE volumeEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData)
 {
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Hi there, I am in the %s callback\n", __func__);
@@ -1452,9 +1452,9 @@ OMX_ERRORTYPE volumeEventHandler(
 }
 
 OMX_ERRORTYPE volumeEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
   static int iBufferDropped=0;
@@ -1490,9 +1490,9 @@ OMX_ERRORTYPE volumeEmptyBufferDone(
 }
 
 OMX_ERRORTYPE volumeFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
   int i;
@@ -1551,12 +1551,12 @@ OMX_ERRORTYPE volumeFillBufferDone(
 
 
 OMX_ERRORTYPE audiosinkEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Hi there, I am in the %s callback\n", __func__);
   if (Data1 == OMX_CommandStateSet) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Audio Sink State changed in ");
@@ -1596,9 +1596,9 @@ OMX_ERRORTYPE audiosinkEventHandler(
 }
 
 OMX_ERRORTYPE audiosinkEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
   static int alsaSinkBufferDropped=0;

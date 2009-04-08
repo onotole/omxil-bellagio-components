@@ -71,16 +71,16 @@ typedef struct appPrivateType{
 }appPrivateType;
 
 OMX_ERRORTYPE audiorendererEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData);
 
 OMX_ERRORTYPE audiorendererEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 #endif

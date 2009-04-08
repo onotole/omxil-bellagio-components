@@ -843,12 +843,12 @@ int main(int argc, char** argv) {
 
 /** callbacks implementation of video sink component */
 OMX_ERRORTYPE fb_sinkEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Hi there, I am in the %s callback\n", __func__);
   if(eEvent == OMX_EventCmdComplete) {
@@ -894,9 +894,9 @@ OMX_ERRORTYPE fb_sinkEventHandler(
 
 
 OMX_ERRORTYPE fb_sinkEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
   static int inputBufferDropped = 0;
@@ -931,12 +931,12 @@ OMX_ERRORTYPE fb_sinkEmptyBufferDone(
 
 /* Callbacks implementation of the color conv component */
 OMX_ERRORTYPE colorconvEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "\nHi there, I am in the %s callback\n", __func__);
   if(eEvent == OMX_EventCmdComplete) {
@@ -982,9 +982,9 @@ OMX_ERRORTYPE colorconvEventHandler(
 
 
 OMX_ERRORTYPE colorconvEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
   static int iBufferDropped = 0;
@@ -1019,9 +1019,9 @@ OMX_ERRORTYPE colorconvEmptyBufferDone(
 
 
 OMX_ERRORTYPE colorconvFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
   if(pBuffer != NULL) {
@@ -1063,12 +1063,12 @@ OMX_ERRORTYPE colorconvFillBufferDone(
 
 /** Callbacks implementation of the video source component*/
 OMX_ERRORTYPE videosrcEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
 
@@ -1117,9 +1117,9 @@ OMX_ERRORTYPE videosrcEventHandler(
 }
 
 OMX_ERRORTYPE videosrcFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
   OMX_STATETYPE eState;

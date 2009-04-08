@@ -173,24 +173,24 @@ static int xioctl(int fd, int request, void *arg)
 }
 
 static OMX_ERRORTYPE omx_camera_source_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT  OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 static OMX_ERRORTYPE omx_camera_source_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 static OMX_ERRORTYPE omx_camera_source_component_GetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nConfigIndex,
-  OMX_INOUT OMX_PTR pComponentConfigStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nConfigIndex,
+  OMX_PTR pComponentConfigStructure);
 
 static OMX_ERRORTYPE omx_camera_source_component_SetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nConfigIndex,
-  OMX_IN OMX_PTR pComponentConfigStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nConfigIndex,
+  OMX_PTR pComponentConfigStructure);
 
 /** This is the central function for buffer processing.
   * It is executed in a separate thread.
@@ -204,60 +204,60 @@ static void* omx_camera_source_component_BufferMgmtFunction (void* param);
  */
 static OMX_ERRORTYPE omx_camera_source_component_DoStateSet(OMX_COMPONENTTYPE *openmaxStandComp, OMX_U32 destinationState);
 
-static OMX_ERRORTYPE camera_CheckSupportedColorFormat(OMX_IN OMX_COLOR_FORMATTYPE eColorFormat);
+static OMX_ERRORTYPE camera_CheckSupportedColorFormat(OMX_COLOR_FORMATTYPE eColorFormat);
 static OMX_ERRORTYPE camera_CheckSupportedFramesize(
-  OMX_IN OMX_U32 nFrameWidth,
-  OMX_IN  OMX_U32 nFrameHeight);
+  OMX_U32 nFrameWidth,
+  OMX_U32 nFrameHeight);
 static OMX_ERRORTYPE camera_MapColorFormatOmxToV4l(
-  OMX_IN OMX_COLOR_FORMATTYPE eOmxColorFormat,
-  OMX_INOUT V4L2_COLOR_FORMATTYPE* pV4lColorFormat );
+  OMX_COLOR_FORMATTYPE eOmxColorFormat,
+  V4L2_COLOR_FORMATTYPE* pV4lColorFormat );
 
 static OMX_ERRORTYPE camera_MapColorFormatV4lToOmx(
-  OMX_IN V4L2_COLOR_FORMATTYPE* pV4lColorFormat,
-  OMX_INOUT OMX_COLOR_FORMATTYPE* pOmxColorFormat );
+  V4L2_COLOR_FORMATTYPE* pV4lColorFormat,
+  OMX_COLOR_FORMATTYPE* pOmxColorFormat );
 
 static OMX_U32 camera_CalculateBufferSize(
-  OMX_IN OMX_U32 nWidth,
-  OMX_IN OMX_U32 nHeight,
-  OMX_IN OMX_COLOR_FORMATTYPE eOmxColorFormat);
+  OMX_U32 nWidth,
+  OMX_U32 nHeight,
+  OMX_COLOR_FORMATTYPE eOmxColorFormat);
 
 static OMX_ERRORTYPE camera_SetConfigCapturing(
-  OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
-  OMX_IN OMX_CONFIG_BOOLEANTYPE *pCapturing );
+  omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
+  OMX_CONFIG_BOOLEANTYPE *pCapturing );
 
 
-static OMX_ERRORTYPE camera_InitCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_DeinitCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_StartCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_StopCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_HandleThreadBufferCapture(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_GenerateTimeStamp(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_SendCapturedBuffers(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_SendLastCapturedBuffer(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_UpdateCapturedBufferQueue(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_ProcessPortOneBuffer(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private,  OMX_IN OMX_U32 nPortIndex );
-static OMX_ERRORTYPE camera_DropLastCapturedBuffer(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_InitCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_DeinitCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_StartCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_StopCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_HandleThreadBufferCapture(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_GenerateTimeStamp(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_SendCapturedBuffers(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_SendLastCapturedBuffer(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_UpdateCapturedBufferQueue(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_ProcessPortOneBuffer(omx_camera_source_component_PrivateType *omx_camera_source_component_Private,  OMX_U32 nPortIndex );
+static OMX_ERRORTYPE camera_DropLastCapturedBuffer(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
 static OMX_ERRORTYPE camera_ReformatVideoFrame(
-  OMX_IN OMX_PTR              pSrcFrameAddr,
-  OMX_IN OMX_U32              nSrcFrameWidth,
-  OMX_IN OMX_U32              nSrcFrameHeight,
-  OMX_IN V4L2_COLOR_FORMATTYPE sSrcV4l2ColorFormat,
-  OMX_IN OMX_PTR              pDstFrameAddr,
-  OMX_IN OMX_U32              nDstFrameWidth,
-  OMX_IN OMX_U32              nDstFrameHeight,
-  OMX_IN OMX_S32              nDstFrameStride,
-  OMX_IN OMX_COLOR_FORMATTYPE eDstOmxColorFormat,
-  OMX_IN OMX_BOOL bStrideAlign );
+  OMX_PTR              pSrcFrameAddr,
+  OMX_U32              nSrcFrameWidth,
+  OMX_U32              nSrcFrameHeight,
+  V4L2_COLOR_FORMATTYPE sSrcV4l2ColorFormat,
+  OMX_PTR              pDstFrameAddr,
+  OMX_U32              nDstFrameWidth,
+  OMX_U32              nDstFrameHeight,
+  OMX_S32              nDstFrameStride,
+  OMX_COLOR_FORMATTYPE eDstOmxColorFormat,
+  OMX_BOOL bStrideAlign );
 static OMX_ERRORTYPE camera_AddTimeStamp(
-  OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
-  OMX_IN OMX_BUFFERHEADERTYPE *pBufHeader);
-static OMX_ERRORTYPE camera_UpdateThumbnailCondition(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_HandleStillImageCapture(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
-static OMX_ERRORTYPE camera_HandleThumbnailCapture(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+  omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
+  OMX_BUFFERHEADERTYPE *pBufHeader);
+static OMX_ERRORTYPE camera_UpdateThumbnailCondition(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_HandleStillImageCapture(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
+static OMX_ERRORTYPE camera_HandleThumbnailCapture(omx_camera_source_component_PrivateType *omx_camera_source_component_Private);
 
 
 /* Check whether eColorFormat is supported */
-static OMX_ERRORTYPE camera_CheckSupportedColorFormat(OMX_IN OMX_COLOR_FORMATTYPE eColorFormat) {
+static OMX_ERRORTYPE camera_CheckSupportedColorFormat(OMX_COLOR_FORMATTYPE eColorFormat) {
   OMX_U32 i;
 
   for (i = 0; i < sizeof(g_SupportedColorTable)/sizeof(g_SupportedColorTable[0]); i++)
@@ -275,8 +275,8 @@ static OMX_ERRORTYPE camera_CheckSupportedColorFormat(OMX_IN OMX_COLOR_FORMATTYP
 
 /* Check whether the frame size (nFrameWidth, nFrameHeight) is supported */
 static OMX_ERRORTYPE camera_CheckSupportedFramesize(
-  OMX_IN OMX_U32 nFrameWidth,
-  OMX_IN  OMX_U32 nFrameHeight) {
+  OMX_U32 nFrameWidth,
+  OMX_U32 nFrameHeight) {
   OMX_U32 i;
 
   for (i = 0; i < sizeof(g_SupportedFramesizeTable)/sizeof(g_SupportedFramesizeTable[0]); i++)
@@ -294,8 +294,8 @@ static OMX_ERRORTYPE camera_CheckSupportedFramesize(
 
 /* Map OMX color format to V4L2 color format */
 static OMX_ERRORTYPE camera_MapColorFormatOmxToV4l(
-  OMX_IN OMX_COLOR_FORMATTYPE eOmxColorFormat,
-  OMX_INOUT V4L2_COLOR_FORMATTYPE* pV4lColorFormat ) {
+  OMX_COLOR_FORMATTYPE eOmxColorFormat,
+  V4L2_COLOR_FORMATTYPE* pV4lColorFormat ) {
   OMX_U32 i;
 
   for (i = 0; i < sizeof(g_SupportedColorTable)/sizeof(g_SupportedColorTable[0]); i++) {
@@ -311,8 +311,8 @@ static OMX_ERRORTYPE camera_MapColorFormatOmxToV4l(
 
 /* Map V4L2 color format to OMX color format */
 static OMX_ERRORTYPE camera_MapColorFormatV4lToOmx(
-  OMX_IN V4L2_COLOR_FORMATTYPE* pV4lColorFormat,
-  OMX_INOUT OMX_COLOR_FORMATTYPE* pOmxColorFormat ) {
+  V4L2_COLOR_FORMATTYPE* pV4lColorFormat,
+  OMX_COLOR_FORMATTYPE* pOmxColorFormat ) {
   OMX_U32 i;
 
   for (i = 0; i < sizeof(g_SupportedColorTable)/sizeof(g_SupportedColorTable[0]); i++) {
@@ -329,9 +329,9 @@ static OMX_ERRORTYPE camera_MapColorFormatV4lToOmx(
 
 /* Calculate buffer size according to (width,height,color format) */
 static OMX_U32 camera_CalculateBufferSize(
-  OMX_IN OMX_U32 nWidth,
-  OMX_IN OMX_U32 nHeight,
-  OMX_IN OMX_COLOR_FORMATTYPE eOmxColorFormat) {
+  OMX_U32 nWidth,
+  OMX_U32 nHeight,
+  OMX_COLOR_FORMATTYPE eOmxColorFormat) {
   OMX_U32 i;
 
   for (i = 0; i < sizeof(g_SupportedColorTable)/sizeof(g_SupportedColorTable[0]); i++) {
@@ -346,8 +346,8 @@ static OMX_U32 camera_CalculateBufferSize(
 
 /* Set capturing configuration in OMX_SetConfig */
 static OMX_ERRORTYPE camera_SetConfigCapturing(
-  OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
-  OMX_IN OMX_CONFIG_BOOLEANTYPE *pCapturing ) {
+  omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
+  OMX_CONFIG_BOOLEANTYPE *pCapturing ) {
   omx_camera_source_component_PortType *pCapturePort;
   struct timeval now;
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -381,7 +381,7 @@ EXIT:
 }
 
 /* Initialize the camera device */
-static OMX_ERRORTYPE camera_InitCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_InitCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *pPreviewPort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_VF];
   omx_camera_source_component_PortType *pCapturePort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_CP];
   omx_camera_source_component_PortType *pThumbnailPort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_CP_T];
@@ -543,7 +543,7 @@ ERR_HANDLE:
 }
 
 /* Deinitialize the camera device */
-static OMX_ERRORTYPE camera_DeinitCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_DeinitCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_U32 i;
 
@@ -583,7 +583,7 @@ static OMX_ERRORTYPE camera_DeinitCameraDevice(OMX_IN omx_camera_source_componen
 }
 
 /* Start the camera device */
-static OMX_ERRORTYPE camera_StartCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_StartCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   struct timeval now;
   struct timespec sleepTime;
   OMX_U32 i = 0;
@@ -645,7 +645,7 @@ EXIT:
 }
 
 /* Stop the camera device */
-static OMX_ERRORTYPE camera_StopCameraDevice(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_StopCameraDevice(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   OMX_U32 i = 0;
   omx_camera_source_component_PortType *port;
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -958,9 +958,9 @@ EXIT:
   * @param ComponentParameterStructure inout parameter, a pointer to the structure that receives parameters
   */
 static OMX_ERRORTYPE omx_camera_source_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT  OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *openmaxStandComp;
@@ -1039,9 +1039,9 @@ static OMX_ERRORTYPE omx_camera_source_component_GetParameter(
   * @param ComponentParameterStructure input parameter, a pointer to the parameter structure
   */
 static OMX_ERRORTYPE omx_camera_source_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *openmaxStandComp;
@@ -1162,9 +1162,9 @@ static OMX_ERRORTYPE omx_camera_source_component_SetParameter(
   * @param pComponentConfigStructure inout parameter, a pointer to the structure that receives configurations
   */
 static OMX_ERRORTYPE omx_camera_source_component_GetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nConfigIndex,
-  OMX_INOUT OMX_PTR pComponentConfigStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nConfigIndex,
+  OMX_PTR pComponentConfigStructure) {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *openmaxStandComp;
   omx_camera_source_component_PrivateType* omx_camera_source_component_Private;
@@ -1214,9 +1214,9 @@ static OMX_ERRORTYPE omx_camera_source_component_GetConfig(
   * @param pComponentConfigStructure input parameter, a pointer to the configuration structure
   */
 static OMX_ERRORTYPE omx_camera_source_component_SetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nConfigIndex,
-  OMX_IN OMX_PTR pComponentConfigStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nConfigIndex,
+  OMX_PTR pComponentConfigStructure) {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *openmaxStandComp;
   omx_camera_source_component_PrivateType* omx_camera_source_component_Private;
@@ -1383,7 +1383,7 @@ static void* omx_camera_source_component_BufferMgmtFunction (void* param) {
 }
 
 /* Buffer capture routine for the buffer management thread */
-static OMX_ERRORTYPE camera_HandleThreadBufferCapture(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_HandleThreadBufferCapture(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   OMX_U32 nCurTimeInMilliSec;
   OMX_S32 nTimeToWaitInMilliSec;
   struct timeval now;
@@ -1491,7 +1491,7 @@ EXIT:
 }
 
 /* Generate time stamp for the new captured buffer */
-static OMX_ERRORTYPE camera_GenerateTimeStamp(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_GenerateTimeStamp(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_U32 nBufferIndex;
   struct timeval now;
@@ -1519,7 +1519,7 @@ static OMX_ERRORTYPE camera_GenerateTimeStamp(OMX_IN omx_camera_source_component
 /* Try to send captured buffers in mapbuf queue to each port.
  * Note: In this function, multiple buffers may be sent.
  */
-static OMX_ERRORTYPE camera_SendCapturedBuffers(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_SendCapturedBuffers(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *port;
   OMX_U32 nBufferCountCur = 0;
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -1571,7 +1571,7 @@ static OMX_ERRORTYPE camera_SendCapturedBuffers(OMX_IN omx_camera_source_compone
 /* Try to send the last captured buffer in mapbuf queue to each port.
  * Note: In this function, only ONE buffer be sent.
  */
-static OMX_ERRORTYPE camera_SendLastCapturedBuffer(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_SendLastCapturedBuffer(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *port;
   OMX_U32 nBufferCountCur = 0;
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -1616,7 +1616,7 @@ static OMX_ERRORTYPE camera_SendLastCapturedBuffer(OMX_IN omx_camera_source_comp
 
 
 /* Update captured buffer queue in mapbuf queue */
-static OMX_ERRORTYPE camera_UpdateCapturedBufferQueue(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_UpdateCapturedBufferQueue(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *pPreviewPort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_VF];
   omx_camera_source_component_PortType *pCapturePort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_CP];
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -1642,7 +1642,7 @@ static OMX_ERRORTYPE camera_UpdateCapturedBufferQueue(OMX_IN omx_camera_source_c
 }
 
 /* Process one buffer on the specified port */
-static OMX_ERRORTYPE camera_ProcessPortOneBuffer(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private,  OMX_IN OMX_U32 nPortIndex ) {
+static OMX_ERRORTYPE camera_ProcessPortOneBuffer(omx_camera_source_component_PrivateType *omx_camera_source_component_Private,  OMX_U32 nPortIndex ) {
   omx_camera_source_component_PortType *port = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[nPortIndex];
   OMX_BUFFERHEADERTYPE* pBufHeader = NULL;
   OMX_BOOL bStrideAlign = OMX_FALSE;
@@ -1725,7 +1725,7 @@ EXIT:
 }
 
 /* Drop the last captured buffer in mapbuf queue */
-static OMX_ERRORTYPE camera_DropLastCapturedBuffer(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_DropLastCapturedBuffer(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *port;
   OMX_U32 i = 0;
   OMX_ERRORTYPE err = OMX_ErrorNone;
@@ -1756,16 +1756,16 @@ static OMX_ERRORTYPE camera_DropLastCapturedBuffer(OMX_IN omx_camera_source_comp
  * camera component.
  */
 static OMX_ERRORTYPE camera_ReformatVideoFrame(
-                                                    OMX_IN OMX_PTR pSrcFrameAddr,
-                                                    OMX_IN OMX_U32 nSrcFrameWidth,
-                                                    OMX_IN OMX_U32 nSrcFrameHeight,
-                                                    OMX_IN V4L2_COLOR_FORMATTYPE sSrcV4l2ColorFormat,
-                                                    OMX_IN OMX_PTR pDstFrameAddr,
-                                                    OMX_IN OMX_U32 nDstFrameWidth,
-                                                    OMX_IN OMX_U32 nDstFrameHeight,
-                                                    OMX_IN OMX_S32 nDstFrameStride,
-                                                    OMX_IN OMX_COLOR_FORMATTYPE eDstOmxColorFormat,
-                                                    OMX_IN OMX_BOOL bStrideAlign ) {
+                                                    OMX_PTR pSrcFrameAddr,
+                                                    OMX_U32 nSrcFrameWidth,
+                                                    OMX_U32 nSrcFrameHeight,
+                                                    V4L2_COLOR_FORMATTYPE sSrcV4l2ColorFormat,
+                                                    OMX_PTR pDstFrameAddr,
+                                                    OMX_U32 nDstFrameWidth,
+                                                    OMX_U32 nDstFrameHeight,
+                                                    OMX_S32 nDstFrameStride,
+                                                    OMX_COLOR_FORMATTYPE eDstOmxColorFormat,
+                                                    OMX_BOOL bStrideAlign ) {
   OMX_COLOR_FORMATTYPE eSrcOmxColorFormat;
   OMX_ERRORTYPE err = OMX_ErrorNone;
 
@@ -1798,8 +1798,8 @@ EXIT:
 
 /* Add time stamp to a buffer header */
 static OMX_ERRORTYPE camera_AddTimeStamp(
-  OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
-  OMX_IN OMX_BUFFERHEADERTYPE *pBufHeader) {
+  omx_camera_source_component_PrivateType *omx_camera_source_component_Private,
+  OMX_BUFFERHEADERTYPE *pBufHeader) {
   omx_camera_source_component_PortType *pCapturePort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_CP];
   OMX_ERRORTYPE err = OMX_ErrorNone;
 
@@ -1821,7 +1821,7 @@ static OMX_ERRORTYPE camera_AddTimeStamp(
 }
 
 /* Update the condition for thumbnail to occur */
-static OMX_ERRORTYPE camera_UpdateThumbnailCondition(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_UpdateThumbnailCondition(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *pThumbnailPort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_CP_T];
   OMX_ERRORTYPE err = OMX_ErrorNone;
 
@@ -1843,7 +1843,7 @@ static OMX_ERRORTYPE camera_UpdateThumbnailCondition(OMX_IN omx_camera_source_co
 }
 
 /* Handle still image capture use case */
-static OMX_ERRORTYPE camera_HandleStillImageCapture(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_HandleStillImageCapture(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *pThumbnailPort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_CP_T];
   OMX_ERRORTYPE err = OMX_ErrorNone;
 
@@ -1871,7 +1871,7 @@ EXIT:
 }
 
 /* Handle thumbnail image capture */
-static OMX_ERRORTYPE camera_HandleThumbnailCapture(OMX_IN omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
+static OMX_ERRORTYPE camera_HandleThumbnailCapture(omx_camera_source_component_PrivateType *omx_camera_source_component_Private) {
   omx_camera_source_component_PortType *pThumbnailPort = (omx_camera_source_component_PortType *)omx_camera_source_component_Private->ports[OMX_CAMPORT_INDEX_CP_T];
   OMX_BUFFERHEADERTYPE* pBufHeader = NULL;
   OMX_ERRORTYPE err = OMX_ErrorNone;

@@ -30,7 +30,7 @@
 
 #include <bellagio/omxcore.h>
 #include <bellagio/omx_base_video_port.h>
-#include <bellagio/omx_base_audio_port.h>  
+#include <bellagio/omx_base_audio_port.h>
 #include <omx_mux_component.h>
 
 #define MAX_COMPONENT_MUX_3GP 1
@@ -52,13 +52,13 @@ static OMX_U32 noMuxInstance=0;
 static AVStream *add_audio_stream(OMX_COMPONENTTYPE* openmaxStandComp,AVFormatContext *oc, int codec_id);
 static AVStream *add_video_stream(OMX_COMPONENTTYPE* openmaxStandComp,AVFormatContext *oc, int codec_id);
 
-/** The Constructor 
+/** The Constructor
  */
 OMX_ERRORTYPE omx_mux_component_Constructor(OMX_COMPONENTTYPE *openmaxStandComp,OMX_STRING cComponentName) {
- 
+
   OMX_ERRORTYPE err = OMX_ErrorNone;
   omx_base_video_PortType *pPortVideo;
-  omx_base_audio_PortType *pPortAudio;  
+  omx_base_audio_PortType *pPortAudio;
   omx_mux_component_PrivateType* omx_mux_component_Private;
   DEBUG(DEB_LEV_FUNCTION_NAME,"In %s \n",__func__);
 
@@ -96,28 +96,28 @@ OMX_ERRORTYPE omx_mux_component_Constructor(OMX_COMPONENTTYPE *openmaxStandComp,
     }
 
     /* allocate video port*/
-    omx_mux_component_Private->ports[VIDEO_PORT_INDEX] = calloc(1, sizeof(omx_base_video_PortType)); 
-    if (!omx_mux_component_Private->ports[VIDEO_PORT_INDEX]) 
+    omx_mux_component_Private->ports[VIDEO_PORT_INDEX] = calloc(1, sizeof(omx_base_video_PortType));
+    if (!omx_mux_component_Private->ports[VIDEO_PORT_INDEX])
        return OMX_ErrorInsufficientResources;
     /* allocate audio port*/
-    omx_mux_component_Private->ports[AUDIO_PORT_INDEX] = calloc(1, sizeof(omx_base_audio_PortType)); 
-    if (!omx_mux_component_Private->ports[AUDIO_PORT_INDEX]) 
+    omx_mux_component_Private->ports[AUDIO_PORT_INDEX] = calloc(1, sizeof(omx_base_audio_PortType));
+    if (!omx_mux_component_Private->ports[AUDIO_PORT_INDEX])
        return OMX_ErrorInsufficientResources;
-       
+
   }
 
   base_video_port_Constructor(openmaxStandComp, &omx_mux_component_Private->ports[VIDEO_PORT_INDEX], VIDEO_PORT_INDEX, OMX_TRUE);
-  base_audio_port_Constructor(openmaxStandComp, &omx_mux_component_Private->ports[AUDIO_PORT_INDEX], AUDIO_PORT_INDEX, OMX_TRUE); 
+  base_audio_port_Constructor(openmaxStandComp, &omx_mux_component_Private->ports[AUDIO_PORT_INDEX], AUDIO_PORT_INDEX, OMX_TRUE);
 
   pPortVideo = (omx_base_video_PortType *) omx_mux_component_Private->ports[VIDEO_PORT_INDEX];
-  pPortAudio = (omx_base_audio_PortType *) omx_mux_component_Private->ports[AUDIO_PORT_INDEX]; 
+  pPortAudio = (omx_base_audio_PortType *) omx_mux_component_Private->ports[AUDIO_PORT_INDEX];
 
   /*Input pPort buffer size is equal to the size of the input buffer of the previous component*/
   pPortVideo->sPortParam.nBufferSize = DEFAULT_OUT_BUFFER_SIZE;
   pPortAudio->sPortParam.nBufferSize = DEFAULT_IN_BUFFER_SIZE;
 
   omx_mux_component_Private->BufferMgmtCallback = omx_mux_component_BufferMgmtCallback;
-  omx_mux_component_Private->BufferMgmtFunction = omx_base_sink_twoport_BufferMgmtFunction; 
+  omx_mux_component_Private->BufferMgmtFunction = omx_base_sink_twoport_BufferMgmtFunction;
 
   setHeader(&omx_mux_component_Private->sTimeStamp, sizeof(OMX_TIME_CONFIG_TIMESTAMPTYPE));
   omx_mux_component_Private->sTimeStamp.nPortIndex=0;
@@ -143,7 +143,7 @@ OMX_ERRORTYPE omx_mux_component_Constructor(OMX_COMPONENTTYPE *openmaxStandComp,
   omx_mux_component_Private->pTmpInputBuffer->nFilledLen=0;
   omx_mux_component_Private->pTmpInputBuffer->nAllocLen=DEFAULT_OUT_BUFFER_SIZE;
   omx_mux_component_Private->pTmpInputBuffer->nOffset=0;
- 
+
   omx_mux_component_Private->avformatReady = OMX_FALSE;
   if(!omx_mux_component_Private->avformatSyncSem) {
     omx_mux_component_Private->avformatSyncSem = calloc(1,sizeof(tsem_t));
@@ -153,7 +153,7 @@ OMX_ERRORTYPE omx_mux_component_Constructor(OMX_COMPONENTTYPE *openmaxStandComp,
   omx_mux_component_Private->sOutputFileName = malloc(DEFAULT_FILENAME_LENGTH);
   /*Default Coding type*/
   omx_mux_component_Private->video_coding_type = OMX_VIDEO_CodingAVC;
-  omx_mux_component_Private->audio_coding_type = OMX_AUDIO_CodingMP3; 
+  omx_mux_component_Private->audio_coding_type = OMX_AUDIO_CodingMP3;
   av_register_all();  /* without this file opening gives an error */
 
   SetInternalVideoParameters(openmaxStandComp);
@@ -181,7 +181,7 @@ OMX_ERRORTYPE omx_mux_component_Destructor(OMX_COMPONENTTYPE *openmaxStandComp) 
   if(omx_mux_component_Private->pTmpInputBuffer) {
     free(omx_mux_component_Private->pTmpInputBuffer);
   }
-  
+
   /* frees port/s */
   if (omx_mux_component_Private->ports) {
     for (i=0; i < (omx_mux_component_Private->sPortTypesParam[OMX_PortDomainAudio].nPorts  +
@@ -193,20 +193,20 @@ OMX_ERRORTYPE omx_mux_component_Destructor(OMX_COMPONENTTYPE *openmaxStandComp) 
     free(omx_mux_component_Private->ports);
     omx_mux_component_Private->ports=NULL;
   }
-  
+
   noMuxInstance--;
   DEBUG(DEB_LEV_FUNCTION_NAME,"In %s \n",__func__);
   return omx_base_sink_Destructor(openmaxStandComp);
 }
 
-/** The Initialization function 
+/** The Initialization function
  */
 OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
 
   omx_mux_component_PrivateType* omx_mux_component_Private = openmaxStandComp->pComponentPrivate;
   omx_base_video_PortType *pPortVideo = (omx_base_video_PortType *)omx_mux_component_Private->ports[VIDEO_PORT_INDEX];
   //omx_base_audio_PortType *pPortAudio = (omx_base_audio_PortType *) omx_mux_component_Private->ports[AUDIO_PORT_INDEX];
-  
+
   DEBUG(DEB_LEV_FUNCTION_NAME,"In %s \n",__func__);
 
   /* auto detect the output format from the name. default is 3gp. */
@@ -221,7 +221,11 @@ OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
   }
 
   /* allocate the output media context */
+#ifdef FFMPEG_0_5
+  omx_mux_component_Private->avformatcontext = avformat_alloc_context();
+#else
   omx_mux_component_Private->avformatcontext = av_alloc_format_context();
+#endif
   if (!omx_mux_component_Private->avformatcontext) {
       DEBUG(DEB_LEV_ERR, "Memory error\n");
       return OMX_ErrorBadParameter;
@@ -241,7 +245,7 @@ OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
       omx_mux_component_Private->audio_st = add_audio_stream(openmaxStandComp,omx_mux_component_Private->avformatcontext, CODEC_ID_AMR_NB);
     } else if(omx_mux_component_Private->pAudioAmr.eAMRBandMode <= OMX_AUDIO_AMRBandModeWB8) {
       omx_mux_component_Private->audio_st = add_audio_stream(openmaxStandComp,omx_mux_component_Private->avformatcontext, CODEC_ID_AMR_WB);
-    } 
+    }
   }
 
   /* set the output parameters (must be done even if no
@@ -253,7 +257,7 @@ OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
   omx_mux_component_Private->video_st->pts.den         = pPortVideo->sPortParam.format.video.xFramerate;
   omx_mux_component_Private->video_st->pts.num         = 0;
   omx_mux_component_Private->video_st->pts.val         = 0;
-  
+
 
   if(omx_mux_component_Private->pAudioAmr.eAMRBandMode <= OMX_AUDIO_AMRBandModeNB7) {
     omx_mux_component_Private->audio_st->codec->codec_id   = CODEC_ID_AMR_NB;
@@ -278,7 +282,7 @@ OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
       omx_mux_component_Private->audio_st->time_base.num,
       omx_mux_component_Private->audio_st->time_base.den,
       omx_mux_component_Private->audio_st->codec->frame_size);
-  
+
   omx_mux_component_Private->audio_st->codec->time_base.den = 1;
   omx_mux_component_Private->audio_st->codec->time_base.num = 0;
   omx_mux_component_Private->audio_st->pts.num              = 0;
@@ -300,7 +304,7 @@ OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
       return OMX_ErrorBadParameter;
     }
   }
-  
+
   /* write the stream header, if any */
   av_write_header(omx_mux_component_Private->avformatcontext);
 
@@ -313,7 +317,7 @@ OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
 
 static int total_video_frame = 0 , total_audio_frame = 0;
 
-/** The DeInitialization function 
+/** The DeInitialization function
  */
 OMX_ERRORTYPE omx_mux_component_Deinit(OMX_COMPONENTTYPE *openmaxStandComp) {
 
@@ -344,14 +348,14 @@ OMX_ERRORTYPE omx_mux_component_Deinit(OMX_COMPONENTTYPE *openmaxStandComp) {
 
   /* free the stream */
   av_free(omx_mux_component_Private->avformatcontext);
-  
+
   omx_mux_component_Private->avformatReady = OMX_FALSE;
   tsem_reset(omx_mux_component_Private->avformatSyncSem);
 
   return OMX_ErrorNone;
 }
 
-/** 
+/**
  * This function processes the input file and returns packet by packet as an output data
  * this packet is used in audio/video decoder component for decoding
  */
@@ -360,8 +364,8 @@ void omx_mux_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandComp, O
   int error;
   static int first_amr_packet = 1;
   static double video_pts = 0.0,audio_pts = 0.0;
-  
-  
+
+
   if (omx_mux_component_Private->avformatReady == OMX_FALSE) {
     if(omx_mux_component_Private->state == OMX_StateExecuting) {
       /*wait for avformat to be ready*/
@@ -370,25 +374,25 @@ void omx_mux_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandComp, O
       return;
     }
   }
-  
+
   if (pInputBuffer->nInputPortIndex == 0) {
-    video_pts = (double)(omx_mux_component_Private->video_st->pts.val) * 
-                         omx_mux_component_Private->video_st->time_base.num / 
+    video_pts = (double)(omx_mux_component_Private->video_st->pts.val) *
+                         omx_mux_component_Private->video_st->time_base.num /
                          omx_mux_component_Private->video_st->time_base.den;
   }
 
   if (pInputBuffer->nInputPortIndex == 1) {
-    audio_pts = (double)(omx_mux_component_Private->audio_st->pts.val) * 
-                         omx_mux_component_Private->audio_st->time_base.num / 
+    audio_pts = (double)(omx_mux_component_Private->audio_st->pts.val) *
+                         omx_mux_component_Private->audio_st->time_base.num /
                          omx_mux_component_Private->audio_st->time_base.den;
-    
+
     DEBUG(DEB_LEV_FULL_SEQ, "In val=%lld, num=%d, den=%d apts =%f frame_size=%d\n",
       omx_mux_component_Private->audio_st->pts.val,
       omx_mux_component_Private->audio_st->time_base.num,
       omx_mux_component_Private->audio_st->time_base.den,
       audio_pts,
       omx_mux_component_Private->audio_st->codec->frame_size);
-      
+
   }
 
   /* write interleaved audio and video frames */
@@ -396,7 +400,7 @@ void omx_mux_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandComp, O
     DEBUG(DEB_LEV_FULL_SEQ, "In %s Dropping video pts audio=%f video=%f\n",__func__, audio_pts, video_pts);
     return;
   }
- 
+
   if((audio_pts > video_pts) && ((audio_pts - video_pts) > 0.08) && (pInputBuffer->nInputPortIndex == 1)) {
     DEBUG(DEB_LEV_FULL_SEQ, "In %s Dropping audio pts audio=%f video=%f diff = %f \n",__func__, audio_pts, video_pts,(audio_pts - video_pts));
     return;
@@ -443,29 +447,29 @@ void omx_mux_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandComp, O
     }
     //Sample Audio Str den=8000,num=1,codec den=1,num=0 pkt->pts=0 dts=8000000000000000 st pts den=8000 num=0
   }
-  
+
   DEBUG(DEB_LEV_FULL_SEQ,"In %s Video Str den=%d,num=%d,codec den=%d,num=%d\n",__func__,
     omx_mux_component_Private->video_st->time_base.den,
     omx_mux_component_Private->video_st->time_base.num,
     omx_mux_component_Private->video_st->codec->time_base.den,
     omx_mux_component_Private->video_st->codec->time_base.num);
-  
+
   //DEBUG(DEB_LEV_ERR, "In %s pts audio=%f video=%f writing for port=%d Video Frame=%d, Audio Frame=%d \n",__func__, audio_pts,video_pts,(int)pInputBuffer->nInputPortIndex,total_video_frame, total_audio_frame);
   error = av_write_frame(omx_mux_component_Private->avformatcontext, &pkt);
-  
+
   av_free_packet(&pkt);
 
   pInputBuffer->nFilledLen = 0;
   pInputBuffer->nOffset = 0;
-    
+
   /** return the current input buffer */
   DEBUG(DEB_LEV_FULL_SEQ, "One input buffer %x len=%d is full returning\n", (int)pInputBuffer->pBuffer, (int)pInputBuffer->nFilledLen);
 }
 
 OMX_ERRORTYPE omx_mux_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE                   err = OMX_ErrorNone;
   OMX_VIDEO_PARAM_PORTFORMATTYPE *pVideoPortFormat;
@@ -493,8 +497,8 @@ OMX_ERRORTYPE omx_mux_component_SetParameter(
     portIndex = pVideoPortFormat->nPortIndex;
     /*Check Structure Header and verify component state*/
     err = omx_base_component_ParameterSanityCheck(hComponent, portIndex, pVideoPortFormat, sizeof(OMX_VIDEO_PARAM_PORTFORMATTYPE));
-    if(err!=OMX_ErrorNone) { 
-      DEBUG(DEB_LEV_ERR, "In %s Parameter Check Error=%x\n",__func__,err); 
+    if(err!=OMX_ErrorNone) {
+      DEBUG(DEB_LEV_ERR, "In %s Parameter Check Error=%x\n",__func__,err);
       break;
     }
     if (portIndex < 1) {
@@ -518,7 +522,7 @@ OMX_ERRORTYPE omx_mux_component_SetParameter(
       err = OMX_ErrorBadPortIndex;
     }
     break;
-  case OMX_IndexVendorOutputFilename : 
+  case OMX_IndexVendorOutputFilename :
     nFileNameLength = strlen((char *)ComponentParameterStructure) * sizeof(char) + 1;
     if(nFileNameLength > DEFAULT_FILENAME_LENGTH) {
       free(omx_mux_component_Private->sOutputFileName);
@@ -526,18 +530,18 @@ OMX_ERRORTYPE omx_mux_component_SetParameter(
     }
     strcpy(omx_mux_component_Private->sOutputFileName, (char *)ComponentParameterStructure);
     break;
-  case OMX_IndexParamAudioAmr:  
+  case OMX_IndexParamAudioAmr:
     pAudioAmr = (OMX_AUDIO_PARAM_AMRTYPE*) ComponentParameterStructure;
     portIndex = pAudioAmr->nPortIndex;
     err = omx_base_component_ParameterSanityCheck(hComponent,portIndex,pAudioAmr,sizeof(OMX_AUDIO_PARAM_AMRTYPE));
-    if(err!=OMX_ErrorNone) { 
-      DEBUG(DEB_LEV_ERR, "In %s Parameter Check Error=%x\n",__func__,err); 
+    if(err!=OMX_ErrorNone) {
+      DEBUG(DEB_LEV_ERR, "In %s Parameter Check Error=%x\n",__func__,err);
       break;
-    } 
+    }
     if (pAudioAmr->nPortIndex == 1) {
       switch(pAudioAmr->eAMRBandMode) {
       case OMX_AUDIO_AMRBandModeNB0:                 /**< AMRNB Mode 0 =  4750 bps */
-        pAudioAmr->nBitRate = 4750; 
+        pAudioAmr->nBitRate = 4750;
         break;
       case OMX_AUDIO_AMRBandModeNB1:                 /**< AMRNB Mode 1 =  5150 bps */
         pAudioAmr->nBitRate = 5150;
@@ -561,7 +565,7 @@ OMX_ERRORTYPE omx_mux_component_SetParameter(
         pAudioAmr->nBitRate = 12200;
         break;
       case OMX_AUDIO_AMRBandModeWB0:                 /**< AMRWB Mode 0 =  6600 bps */
-        pAudioAmr->nBitRate = 6600; 
+        pAudioAmr->nBitRate = 6600;
         break;
       case OMX_AUDIO_AMRBandModeWB1:                 /**< AMRWB Mode 1 =  8840 bps */
         pAudioAmr->nBitRate = 8840;
@@ -588,7 +592,7 @@ OMX_ERRORTYPE omx_mux_component_SetParameter(
         pAudioAmr->nBitRate = 23850;
         break;
       default:
-        DEBUG(DEB_LEV_ERR, "In %s AMR Band Mode %x Not Supported\n",__func__,pAudioAmr->eAMRBandMode); 
+        DEBUG(DEB_LEV_ERR, "In %s AMR Band Mode %x Not Supported\n",__func__,pAudioAmr->eAMRBandMode);
         err = OMX_ErrorBadParameter;
         break;
       }
@@ -602,10 +606,10 @@ OMX_ERRORTYPE omx_mux_component_SetParameter(
     pVideoMpeg4 = ComponentParameterStructure;
     portIndex = pVideoMpeg4->nPortIndex;
     err = omx_base_component_ParameterSanityCheck(hComponent, portIndex, pVideoMpeg4, sizeof(OMX_VIDEO_PARAM_MPEG4TYPE));
-    if(err != OMX_ErrorNone) { 
-      DEBUG(DEB_LEV_ERR, "In %s Parameter Check Error=%x\n",__func__,err); 
+    if(err != OMX_ErrorNone) {
+      DEBUG(DEB_LEV_ERR, "In %s Parameter Check Error=%x\n",__func__,err);
       break;
-    } 
+    }
     if (pVideoMpeg4->nPortIndex == 0) {
       memcpy(&omx_mux_component_Private->pVideoMpeg4, pVideoMpeg4, sizeof(OMX_VIDEO_PARAM_MPEG4TYPE));
     } else {
@@ -619,9 +623,9 @@ OMX_ERRORTYPE omx_mux_component_SetParameter(
 }
 
 OMX_ERRORTYPE omx_mux_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE                   err = OMX_ErrorNone;
   OMX_PORT_PARAM_TYPE            *pVideoPortParam, *pAudioPortParam;
@@ -629,7 +633,7 @@ OMX_ERRORTYPE omx_mux_component_GetParameter(
   OMX_AUDIO_PARAM_PORTFORMATTYPE *pAudioPortFormat;
   OMX_AUDIO_PARAM_AMRTYPE        *pAudioAmr;
   OMX_VIDEO_PARAM_MPEG4TYPE      *pVideoMpeg4;
-  
+
   OMX_COMPONENTTYPE *openmaxStandComp = (OMX_COMPONENTTYPE*)hComponent;
   omx_mux_component_PrivateType* omx_mux_component_Private = openmaxStandComp->pComponentPrivate;
   omx_base_video_PortType *pVideoPort = (omx_base_video_PortType *) omx_mux_component_Private->ports[OMX_BASE_SINK_INPUTPORT_INDEX];
@@ -646,7 +650,7 @@ OMX_ERRORTYPE omx_mux_component_GetParameter(
   switch(nParamIndex) {
   case OMX_IndexParamVideoInit:
     pVideoPortParam = (OMX_PORT_PARAM_TYPE*)  ComponentParameterStructure;
-    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_PORT_PARAM_TYPE))) != OMX_ErrorNone) { 
+    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_PORT_PARAM_TYPE))) != OMX_ErrorNone) {
       break;
     }
     pVideoPortParam->nStartPortNumber = 0;
@@ -654,7 +658,7 @@ OMX_ERRORTYPE omx_mux_component_GetParameter(
     break;
   case OMX_IndexParamVideoPortFormat:
     pVideoPortFormat = (OMX_VIDEO_PARAM_PORTFORMATTYPE*)ComponentParameterStructure;
-    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_VIDEO_PARAM_PORTFORMATTYPE))) != OMX_ErrorNone) { 
+    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_VIDEO_PARAM_PORTFORMATTYPE))) != OMX_ErrorNone) {
       break;
     }
     if (pVideoPortFormat->nPortIndex < 1) {
@@ -682,13 +686,13 @@ OMX_ERRORTYPE omx_mux_component_GetParameter(
       err = OMX_ErrorBadPortIndex;
     }
     break;
-  case OMX_IndexParamAudioAmr:  
+  case OMX_IndexParamAudioAmr:
     pAudioAmr = (OMX_AUDIO_PARAM_AMRTYPE*)ComponentParameterStructure;
     if (pAudioAmr->nPortIndex != 1) {
       err = OMX_ErrorBadPortIndex;
       break;
     }
-    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_AUDIO_PARAM_AMRTYPE))) != OMX_ErrorNone) { 
+    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_AUDIO_PARAM_AMRTYPE))) != OMX_ErrorNone) {
       break;
     }
     memcpy(pAudioAmr,&omx_mux_component_Private->pAudioAmr,sizeof(OMX_AUDIO_PARAM_AMRTYPE));
@@ -699,7 +703,7 @@ OMX_ERRORTYPE omx_mux_component_GetParameter(
       err = OMX_ErrorBadPortIndex;
       break;
     }
-    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_VIDEO_PARAM_MPEG4TYPE))) != OMX_ErrorNone) { 
+    if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_VIDEO_PARAM_MPEG4TYPE))) != OMX_ErrorNone) {
       break;
     }
     memcpy(pVideoMpeg4, &omx_mux_component_Private->pVideoMpeg4, sizeof(OMX_VIDEO_PARAM_MPEG4TYPE));
@@ -726,17 +730,17 @@ OMX_ERRORTYPE omx_mux_component_MessageHandler(OMX_COMPONENTTYPE* openmaxStandCo
   /* Execute the base message handling */
   err = omx_base_component_MessageHandler(openmaxStandComp,message);
 
-  if (message->messageType == OMX_CommandStateSet){ 
+  if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateExecuting) && (oldState == OMX_StateIdle)) {
       err = omx_mux_component_Init(openmaxStandComp);
-      if(err!=OMX_ErrorNone) { 
-        DEBUG(DEB_LEV_ERR, "In %s  mux Init Failed Error=%x\n",__func__,err); 
+      if(err!=OMX_ErrorNone) {
+        DEBUG(DEB_LEV_ERR, "In %s  mux Init Failed Error=%x\n",__func__,err);
         return err;
       }
     } else if ((message->messageParam == OMX_StateIdle) && (oldState == OMX_StateExecuting)) {
       err = omx_mux_component_Deinit(openmaxStandComp);
-      if(err!=OMX_ErrorNone) { 
-        DEBUG(DEB_LEV_ERR, "In %s mux Deinit Failed Error=%x\n",__func__,err); 
+      if(err!=OMX_ErrorNone) {
+        DEBUG(DEB_LEV_ERR, "In %s mux Deinit Failed Error=%x\n",__func__,err);
         return err;
       }
     }
@@ -747,9 +751,9 @@ OMX_ERRORTYPE omx_mux_component_MessageHandler(OMX_COMPONENTTYPE* openmaxStandCo
 
 /** setting configurations */
 OMX_ERRORTYPE omx_mux_component_SetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nIndex,
-  OMX_IN  OMX_PTR pComponentConfigStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nIndex,
+  OMX_PTR pComponentConfigStructure) {
 
   OMX_TIME_CONFIG_TIMESTAMPTYPE* sTimeStamp;
   OMX_COMPONENTTYPE *openmaxStandComp = (OMX_COMPONENTTYPE *)hComponent;
@@ -789,9 +793,9 @@ OMX_ERRORTYPE omx_mux_component_SetConfig(
 }
 
 OMX_ERRORTYPE omx_mux_component_GetExtensionIndex(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_STRING cParameterName,
-  OMX_OUT OMX_INDEXTYPE* pIndexType) {
+  OMX_HANDLETYPE hComponent,
+  OMX_STRING cParameterName,
+  OMX_INDEXTYPE* pIndexType) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME,"In  %s \n",__func__);
 
@@ -808,7 +812,7 @@ OMX_ERRORTYPE omx_mux_component_GetExtensionIndex(
 static AVStream *add_video_stream(OMX_COMPONENTTYPE* openmaxStandComp,AVFormatContext *oc, int codec_id)
 {
   omx_mux_component_PrivateType* omx_mux_component_Private = openmaxStandComp->pComponentPrivate;
-  omx_base_video_PortType *pPortVideo = (omx_base_video_PortType *)omx_mux_component_Private->ports[VIDEO_PORT_INDEX]; 
+  omx_base_video_PortType *pPortVideo = (omx_base_video_PortType *)omx_mux_component_Private->ports[VIDEO_PORT_INDEX];
   AVCodecContext *c;
   AVStream *st;
 
@@ -887,7 +891,7 @@ static AVStream *add_audio_stream(OMX_COMPONENTTYPE* openmaxStandComp,AVFormatCo
 void SetInternalVideoParameters(OMX_COMPONENTTYPE *openmaxStandComp) {
 
   omx_mux_component_PrivateType* omx_mux_component_Private = openmaxStandComp->pComponentPrivate;
-  omx_base_video_PortType *pPortVideo = (omx_base_video_PortType *)omx_mux_component_Private->ports[VIDEO_PORT_INDEX]; 
+  omx_base_video_PortType *pPortVideo = (omx_base_video_PortType *)omx_mux_component_Private->ports[VIDEO_PORT_INDEX];
 
   strcpy(pPortVideo->sPortParam.format.video.cMIMEType,"video/mpeg4");
   pPortVideo->sPortParam.format.video.eCompressionFormat = OMX_VIDEO_CodingMPEG4;
@@ -895,9 +899,9 @@ void SetInternalVideoParameters(OMX_COMPONENTTYPE *openmaxStandComp) {
   pPortVideo->sPortParam.format.video.nFrameWidth   = 320;
   pPortVideo->sPortParam.format.video.nFrameHeight  = 240;
   pPortVideo->sPortParam.format.video.xFramerate    = 10;
-  
-  setHeader(&omx_mux_component_Private->pVideoMpeg4, sizeof(OMX_VIDEO_PARAM_MPEG4TYPE));    
-  omx_mux_component_Private->pVideoMpeg4.nPortIndex           = 0; 
+
+  setHeader(&omx_mux_component_Private->pVideoMpeg4, sizeof(OMX_VIDEO_PARAM_MPEG4TYPE));
+  omx_mux_component_Private->pVideoMpeg4.nPortIndex           = 0;
   omx_mux_component_Private->pVideoMpeg4.nSliceHeaderSpacing  = 0;
   omx_mux_component_Private->pVideoMpeg4.bSVH                 = OMX_FALSE;
   omx_mux_component_Private->pVideoMpeg4.bGov                 = OMX_TRUE;
@@ -923,10 +927,10 @@ void SetInternalAudioParameters(OMX_COMPONENTTYPE *openmaxStandComp) {
   pPortAudio->sPortParam.format.audio.eEncoding  = OMX_AUDIO_CodingAMR;
   pPortAudio->sAudioParam.nIndex                 = OMX_IndexParamAudioAmr;
   pPortAudio->sAudioParam.eEncoding              = OMX_AUDIO_CodingAMR;
-                                                                                                                           
-  setHeader(&omx_mux_component_Private->pAudioAmr,sizeof(OMX_AUDIO_PARAM_AMRTYPE)); 
+
+  setHeader(&omx_mux_component_Private->pAudioAmr,sizeof(OMX_AUDIO_PARAM_AMRTYPE));
   omx_mux_component_Private->pAudioAmr.nPortIndex      = 1;
-  omx_mux_component_Private->pAudioAmr.nChannels       = 1;    
+  omx_mux_component_Private->pAudioAmr.nChannels       = 1;
   omx_mux_component_Private->pAudioAmr.nBitRate        = 12200;
   omx_mux_component_Private->pAudioAmr.eAMRBandMode    = OMX_AUDIO_AMRBandModeNB7;
   omx_mux_component_Private->pAudioAmr.eAMRDTXMode     = OMX_AUDIO_AMRDTXModeOff;

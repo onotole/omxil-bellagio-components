@@ -358,9 +358,9 @@ void omx_videosrc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 }
 
 OMX_ERRORTYPE omx_videosrc_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_VIDEO_PARAM_PORTFORMATTYPE *pVideoPortFormat;
@@ -434,9 +434,9 @@ OMX_ERRORTYPE omx_videosrc_component_SetParameter(
 }
 
 OMX_ERRORTYPE omx_videosrc_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_VIDEO_PARAM_PORTFORMATTYPE *pVideoPortFormat;

@@ -218,9 +218,9 @@ void omx_alsasrc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCom
 }
 
 OMX_ERRORTYPE omx_alsasrc_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)
 {
   int err;
   int omxErr = OMX_ErrorNone;
@@ -433,9 +433,9 @@ OMX_ERRORTYPE omx_alsasrc_component_SetParameter(
 }
 
 OMX_ERRORTYPE omx_alsasrc_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)
 {
   OMX_AUDIO_PARAM_PORTFORMATTYPE *pAudioPortFormat;
   OMX_ERRORTYPE err = OMX_ErrorNone;

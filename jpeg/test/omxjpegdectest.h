@@ -80,22 +80,22 @@ typedef struct appPrivateType{
 
 /* Callback prototypes */
 OMX_ERRORTYPE jpegDecEventHandler(
-  OMX_IN OMX_HANDLETYPE hComponent,
-  OMX_IN OMX_PTR pAppData,
-  OMX_IN OMX_EVENTTYPE eEvent,
-  OMX_IN OMX_U32 nData1,
-  OMX_IN OMX_U32 nData2,
-  OMX_IN OMX_PTR pEventData);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 nData1,
+  OMX_U32 nData2,
+  OMX_PTR pEventData);
 
 OMX_ERRORTYPE jpegDecEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 OMX_ERRORTYPE jpegDecFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer);
 
 /** Helper functions */
 static void setHeader(OMX_PTR header, OMX_U32 size);

@@ -398,9 +398,9 @@ void omx_xvideo_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStan
 
 
 OMX_ERRORTYPE omx_xvideo_sink_component_SetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nIndex,
-  OMX_IN  OMX_PTR pComponentConfigStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nIndex,
+  OMX_PTR pComponentConfigStructure) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_U32 portIndex;
@@ -512,9 +512,9 @@ OMX_ERRORTYPE omx_xvideo_sink_component_SetConfig(
 
 
 OMX_ERRORTYPE omx_xvideo_sink_component_GetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nIndex,
-  OMX_INOUT OMX_PTR pComponentConfigStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nIndex,
+  OMX_PTR pComponentConfigStructure) {
 
   OMX_CONFIG_RECTTYPE *omxConfigCrop;
   OMX_CONFIG_ROTATIONTYPE *omxConfigRotate;
@@ -590,9 +590,9 @@ OMX_ERRORTYPE omx_xvideo_sink_component_GetConfig(
 
 
 OMX_ERRORTYPE omx_xvideo_sink_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_PARAM_PORTDEFINITIONTYPE *pPortDef;
@@ -690,9 +690,9 @@ OMX_ERRORTYPE omx_xvideo_sink_component_SetParameter(
 
 
 OMX_ERRORTYPE omx_xvideo_sink_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   OMX_VIDEO_PARAM_PORTFORMATTYPE *pVideoPortFormat;
   OMX_ERRORTYPE err = OMX_ErrorNone;

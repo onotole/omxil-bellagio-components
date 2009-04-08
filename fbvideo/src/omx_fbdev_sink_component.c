@@ -1164,9 +1164,9 @@ void omx_fbdev_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
 
 
 OMX_ERRORTYPE omx_fbdev_sink_component_SetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nIndex,
-  OMX_IN  OMX_PTR pComponentConfigStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nIndex,
+  OMX_PTR pComponentConfigStructure) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_U32 portIndex;
@@ -1278,9 +1278,9 @@ OMX_ERRORTYPE omx_fbdev_sink_component_SetConfig(
 
 
 OMX_ERRORTYPE omx_fbdev_sink_component_GetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nIndex,
-  OMX_INOUT OMX_PTR pComponentConfigStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nIndex,
+  OMX_PTR pComponentConfigStructure) {
 
   OMX_CONFIG_RECTTYPE *omxConfigCrop;
   OMX_CONFIG_ROTATIONTYPE *omxConfigRotate;

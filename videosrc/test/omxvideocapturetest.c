@@ -252,12 +252,12 @@ int main(int argc, char** argv) {
 
 /** Callbacks implementation of the video videosrc component*/
 OMX_ERRORTYPE videosrcEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
 
@@ -303,9 +303,9 @@ OMX_ERRORTYPE videosrcEventHandler(
 }
 
 OMX_ERRORTYPE videosrcFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
 

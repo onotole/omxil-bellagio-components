@@ -103,17 +103,17 @@ void omx_jpegdec_component_BufferMgmtCallback(
   OMX_BUFFERHEADERTYPE* outputbuffer);
 
 OMX_ERRORTYPE omx_jpegdec_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 OMX_ERRORTYPE omx_jpegdec_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 void jpeg_data_src (
-  j_decompress_ptr cinfo, 
+  j_decompress_ptr cinfo,
   omx_jpegdec_component_PrivateType *omx_jpegdec_component_Private);
 
 #endif

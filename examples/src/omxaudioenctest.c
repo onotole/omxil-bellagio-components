@@ -685,12 +685,12 @@ int main(int argc, char** argv) {
 
 /* Callbacks implementation */
 OMX_ERRORTYPE audioencEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_IN OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Hi there, I am in the %s callback\n", __func__);
   if(eEvent == OMX_EventCmdComplete) {
@@ -736,9 +736,9 @@ OMX_ERRORTYPE audioencEventHandler(
 }
 
 OMX_ERRORTYPE audioencEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   int data_read;
   static int iBufferDropped=0;
@@ -793,9 +793,9 @@ OMX_ERRORTYPE audioencEmptyBufferDone(
 }
 
 OMX_ERRORTYPE audioencFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
   int i;
@@ -833,12 +833,12 @@ OMX_ERRORTYPE audioencFillBufferDone(
 
 /** Callbacks implementation of the audio source component*/
 OMX_ERRORTYPE audiosrcEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
 
@@ -887,9 +887,9 @@ OMX_ERRORTYPE audiosrcEventHandler(
 }
 
 OMX_ERRORTYPE audiosrcFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
   static int iBufferDropped=0;

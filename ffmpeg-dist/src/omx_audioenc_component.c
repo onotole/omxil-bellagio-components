@@ -521,9 +521,9 @@ void omx_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 }
 
 OMX_ERRORTYPE omx_audioenc_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)
 {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_AUDIO_PARAM_PORTFORMATTYPE *pAudioPortFormat;
@@ -640,9 +640,9 @@ OMX_ERRORTYPE omx_audioenc_component_SetParameter(
 }
 
 OMX_ERRORTYPE omx_audioenc_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)
 {
   OMX_AUDIO_PARAM_PORTFORMATTYPE *pAudioPortFormat;
   OMX_AUDIO_PARAM_PCMMODETYPE *pAudioPcmMode;
@@ -786,9 +786,9 @@ OMX_ERRORTYPE omx_audioenc_component_MessageHandler(OMX_COMPONENTTYPE* openmaxSt
 }
 
 OMX_ERRORTYPE omx_audioenc_component_ComponentRoleEnum(
-  OMX_IN OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_U8 *cRole,
-  OMX_IN OMX_U32 nIndex)
+  OMX_HANDLETYPE hComponent,
+  OMX_U8 *cRole,
+  OMX_U32 nIndex)
 {
   if (nIndex == 0) {
     strcpy((char*)cRole, AUDIO_ENC_MP3_ROLE);

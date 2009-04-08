@@ -59,16 +59,16 @@
  * see the define above
  * @param sTimeStamp Store Time Stamp to be set
  * @param avformatcontext is the ffmpeg video format context
- * @param avformatparameters is the ffmpeg video format related parameters 
- * @param avinputformat is the ffmpeg video format related settings 
- * @param pTmpInputBuffer is a temporary buffer to hold the data from av_read_frame 
- * @param sOutputFileName is the output filename provided by client 
- * @param video_coding_type is the coding type determined by input file 
- * @param audio_coding_type is the coding type determined by input file 
- * @param semaphore for avformat syncrhonization 
- * @param avformatReady boolean flag that is true when the video format has been initialized 
+ * @param avformatparameters is the ffmpeg video format related parameters
+ * @param avinputformat is the ffmpeg video format related settings
+ * @param pTmpInputBuffer is a temporary buffer to hold the data from av_read_frame
+ * @param sOutputFileName is the output filename provided by client
+ * @param video_coding_type is the coding type determined by input file
+ * @param audio_coding_type is the coding type determined by input file
+ * @param semaphore for avformat syncrhonization
+ * @param avformatReady boolean flag that is true when the video format has been initialized
  * @param xScale the scale of the media clock
- * @param pkt is the ffmpeg packet structure for data delivery 
+ * @param pkt is the ffmpeg packet structure for data delivery
  * @param pAudioAmr Reference to  OMX_AUDIO_PARAM_AMRTYPE structure
  * @param pVideoMpeg4 Referece to OMX_VIDEO_PARAM_MPEG4TYPE structure
  */
@@ -105,29 +105,29 @@ void omx_mux_component_BufferMgmtCallback(
   OMX_BUFFERHEADERTYPE* outputbuffer);
 
 OMX_ERRORTYPE omx_mux_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 OMX_ERRORTYPE omx_mux_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 OMX_ERRORTYPE omx_mux_component_SetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nIndex,
-  OMX_IN  OMX_PTR pComponentConfigStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nIndex,
+  OMX_PTR pComponentConfigStructure);
 
 OMX_ERRORTYPE omx_mux_component_GetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nIndex,
-  OMX_IN  OMX_PTR pComponentConfigStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nIndex,
+  OMX_PTR pComponentConfigStructure);
 
 OMX_ERRORTYPE omx_mux_component_GetExtensionIndex(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_STRING cParameterName,
-  OMX_OUT OMX_INDEXTYPE* pIndexType);
+  OMX_HANDLETYPE hComponent,
+  OMX_STRING cParameterName,
+  OMX_INDEXTYPE* pIndexType);
 
 void SetInternalVideoParameters(OMX_COMPONENTTYPE *openmaxStandComp);
 void SetInternalAudioParameters(OMX_COMPONENTTYPE *openmaxStandComp);

@@ -266,12 +266,12 @@ int main(int argc, char** argv){
 /* Callbacks implementation */
 
 OMX_ERRORTYPE jpegDecEventHandler(
-        OMX_IN OMX_HANDLETYPE hComponent,
-        OMX_IN OMX_PTR pAppData,
-        OMX_IN OMX_EVENTTYPE eEvent,
-        OMX_IN OMX_U32 nData1,
-        OMX_IN OMX_U32 nData2,
-        OMX_IN OMX_PTR pEventData)
+        OMX_HANDLETYPE hComponent,
+        OMX_PTR pAppData,
+        OMX_EVENTTYPE eEvent,
+        OMX_U32 nData1,
+        OMX_U32 nData2,
+        OMX_PTR pEventData)
 {
   if(eEvent==OMX_EventCmdComplete) {
     DEBUG(DEB_LEV_SIMPLE_SEQ,"Event handler has been called \n");
@@ -304,9 +304,9 @@ OMX_ERRORTYPE jpegDecEventHandler(
 
 
 OMX_ERRORTYPE jpegDecEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
 
   OMX_ERRORTYPE err;
@@ -340,9 +340,9 @@ OMX_ERRORTYPE jpegDecEmptyBufferDone(
 }
 
 OMX_ERRORTYPE jpegDecFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_S32 buffer_ts;
   buffer_ts = (OMX_S32)pBuffer->nTickCount;

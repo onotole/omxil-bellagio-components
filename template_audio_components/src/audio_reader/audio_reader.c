@@ -58,9 +58,9 @@ void omx_audio_reader_component_BufferMgmtCallback(
 }
 
 OMX_ERRORTYPE omx_audio_reader_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR pParameter)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR pParameter)
 {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *pComponent = (OMX_COMPONENTTYPE*) hComponent;
@@ -95,9 +95,9 @@ OMX_ERRORTYPE omx_audio_reader_component_SetParameter(
 }
 
 OMX_ERRORTYPE omx_audio_reader_component_SetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nConfigIndex,
-  OMX_IN  OMX_PTR pConfig)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nConfigIndex,
+  OMX_PTR pConfig)
 {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *pComponent = (OMX_COMPONENTTYPE*) hComponent;
@@ -132,9 +132,9 @@ OMX_ERRORTYPE omx_audio_reader_component_SetConfig(
 }
 
 OMX_ERRORTYPE omx_audio_reader_component_GetConfig(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nConfigIndex,
-  OMX_OUT OMX_PTR pConfig)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nConfigIndex,
+  OMX_PTR pConfig)
 {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *pComponent = (OMX_COMPONENTTYPE*) hComponent;

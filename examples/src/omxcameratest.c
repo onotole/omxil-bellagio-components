@@ -79,12 +79,12 @@ char g_DefaultThumbnailFileName[] = "thumbnail.yuv";
 
 /** callbacks implementation of camera component */
 OMX_ERRORTYPE camera_sourceEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s for camera component\n",__func__);
 
@@ -112,7 +112,7 @@ OMX_ERRORTYPE camera_sourceEventHandler(
         case OMX_StateWaitForResources:
           DEBUG(DEB_LEV_SIMPLE_SEQ, "OMX_StateWaitForResources\n");
           break;
-      }    
+      }
       tsem_up(appPriv->cameraSourceEventSem);
     }
   }
@@ -123,9 +123,9 @@ OMX_ERRORTYPE camera_sourceEventHandler(
 
 
 OMX_ERRORTYPE camera_sourceFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s for camera component\n",__func__);
 
@@ -164,12 +164,12 @@ OMX_ERRORTYPE camera_sourceFillBufferDone(
 
 /** callbacks implementation of color converter component */
 OMX_ERRORTYPE colorconvEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n",__func__);
 
@@ -197,7 +197,7 @@ OMX_ERRORTYPE colorconvEventHandler(
         case OMX_StateWaitForResources:
           DEBUG(DEB_LEV_SIMPLE_SEQ, "OMX_StateWaitForResources\n");
           break;
-      }    
+      }
       tsem_up(appPriv->colorconvEventSem);
     }
   }
@@ -208,9 +208,9 @@ OMX_ERRORTYPE colorconvEventHandler(
 
 
 OMX_ERRORTYPE colorconvEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n",__func__);
 
@@ -222,9 +222,9 @@ OMX_ERRORTYPE colorconvEmptyBufferDone(
 }
 
 OMX_ERRORTYPE colorconvFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n",__func__);
 
@@ -237,12 +237,12 @@ OMX_ERRORTYPE colorconvFillBufferDone(
 
 /** callbacks implementation of fbsink component */
 OMX_ERRORTYPE fbsinkEventHandler(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_EVENTTYPE eEvent,
-  OMX_OUT OMX_U32 Data1,
-  OMX_OUT OMX_U32 Data2,
-  OMX_OUT OMX_PTR pEventData) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_EVENTTYPE eEvent,
+  OMX_U32 Data1,
+  OMX_U32 Data2,
+  OMX_PTR pEventData) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n",__func__);
 
@@ -270,12 +270,12 @@ OMX_ERRORTYPE fbsinkEventHandler(
         case OMX_StateWaitForResources:
           DEBUG(DEB_LEV_SIMPLE_SEQ, "OMX_StateWaitForResources\n");
           break;
-      }    
+      }
       tsem_up(appPriv->fbsinkEventSem);
     } else if (OMX_CommandPortEnable || OMX_CommandPortDisable) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Received Port Enable/Disable Event\n",__func__);
       tsem_up(appPriv->fbsinkEventSem);
-    } 
+    }
   }
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s, return code: 0x%X\n",__func__, OMX_ErrorNone);
@@ -284,9 +284,9 @@ OMX_ERRORTYPE fbsinkEventHandler(
 
 
 OMX_ERRORTYPE fbsinkEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer) {
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n",__func__);
 
@@ -412,7 +412,7 @@ OMX_ERRORTYPE setColorConvParameters() {
   }
   else {
     sVideoPortFormat.eCompressionFormat = OMX_VIDEO_CodingUnused;
-    sVideoPortFormat.eColorFormat = DEFAULT_CAMERA_COLOR_FORMAT; 
+    sVideoPortFormat.eColorFormat = DEFAULT_CAMERA_COLOR_FORMAT;
     sVideoPortFormat.xFramerate = 0;
     if ((err = OMX_SetParameter(appPriv->colorconvhandle, OMX_IndexParamVideoPortFormat, &sVideoPortFormat)) != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Setting colorconv input port video format failed!\n");
@@ -432,7 +432,7 @@ OMX_ERRORTYPE setColorConvParameters() {
     sOmxPortDefinition.format.video.nStride = DEFAULT_FRAME_WIDTH;
     sOmxPortDefinition.format.video.nSliceHeight = DEFAULT_FRAME_HEIGHT;
     sOmxPortDefinition.format.video.eCompressionFormat = OMX_VIDEO_CodingUnused;
-    sOmxPortDefinition.format.video.eColorFormat = DEFAULT_CAMERA_COLOR_FORMAT; 
+    sOmxPortDefinition.format.video.eColorFormat = DEFAULT_CAMERA_COLOR_FORMAT;
     sOmxPortDefinition.nBufferSize = sOmxPortDefinition.format.video.nStride * sOmxPortDefinition.format.video.nFrameHeight * 3;
     if ((err = OMX_SetParameter(appPriv->colorconvhandle, OMX_IndexParamPortDefinition, &sOmxPortDefinition)) != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Setting colorconv input port parameters failed!\n");
@@ -450,7 +450,7 @@ OMX_ERRORTYPE setColorConvParameters() {
   }
   else {
     sVideoPortFormat.eCompressionFormat = OMX_VIDEO_CodingUnused;
-    sVideoPortFormat.eColorFormat = DEFAULT_FBSINK_COLOR_FORMAT; 
+    sVideoPortFormat.eColorFormat = DEFAULT_FBSINK_COLOR_FORMAT;
     sVideoPortFormat.xFramerate = 0;
     if ((err = OMX_SetParameter(appPriv->colorconvhandle, OMX_IndexParamVideoPortFormat, &sVideoPortFormat)) != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Setting colorconv input port video format failed!\n");
@@ -470,7 +470,7 @@ OMX_ERRORTYPE setColorConvParameters() {
     sOmxPortDefinition.format.video.nStride = DEFAULT_FRAME_WIDTH;
     sOmxPortDefinition.format.video.nSliceHeight = DEFAULT_FRAME_HEIGHT;
     sOmxPortDefinition.format.video.eCompressionFormat = OMX_VIDEO_CodingUnused;
-    sOmxPortDefinition.format.video.eColorFormat = DEFAULT_FBSINK_COLOR_FORMAT; 
+    sOmxPortDefinition.format.video.eColorFormat = DEFAULT_FBSINK_COLOR_FORMAT;
     sOmxPortDefinition.nBufferSize = sOmxPortDefinition.format.video.nStride * sOmxPortDefinition.format.video.nFrameHeight * 3;
     if ((err = OMX_SetParameter(appPriv->colorconvhandle, OMX_IndexParamPortDefinition, &sOmxPortDefinition)) != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "Setting colorconv input port parameters failed!\n");
@@ -478,7 +478,7 @@ OMX_ERRORTYPE setColorConvParameters() {
     }
   }
 
-  
+
 
   return errRet;
 }
@@ -531,7 +531,7 @@ OMX_ERRORTYPE setFbsinkParameters() {
     }
   }
 
-  
+
   setHeader(&sConfigCrop, sizeof(OMX_CONFIG_RECTTYPE));
   sConfigCrop.nPortIndex = 0;
   if ((err = OMX_GetConfig(appPriv->fbsinkhandle, OMX_IndexConfigCommonInputCrop, &sConfigCrop)) != OMX_ErrorNone) {
@@ -548,7 +548,7 @@ OMX_ERRORTYPE setFbsinkParameters() {
       errRet = err;
     }
   }
-  
+
 
   /* set display position (x, y) */
   setHeader(&sConfigOutputPosition, sizeof(OMX_CONFIG_POINTTYPE));
@@ -565,7 +565,7 @@ OMX_ERRORTYPE setFbsinkParameters() {
       errRet = err;
     }
   }
-  
+
 
   return errRet;
 }
@@ -923,7 +923,7 @@ RUN_AGAIN:
     fprintf(stdout, "Stop capturing...\n");
   }
 
-  /* If in autopause mode, stay for a while before exit */ 
+  /* If in autopause mode, stay for a while before exit */
   if (bCameraAutoPause) {
     fprintf(stdout, "Now the camera is in autopause mode, wait for %d sec before out of this mode...\n", 5);
     sleep(5);
@@ -972,7 +972,7 @@ RUN_AGAIN:
   tsem_down(appPriv->colorconvEventSem);
   /* Wait fbsink (Exec-->Idle) to complete */
   tsem_down(appPriv->fbsinkEventSem);
-  
+
 
   /* Transition camera component Idle-->Exec */
   if ((err = OMX_SendCommand(appPriv->camerahandle, OMX_CommandStateSet, OMX_StateExecuting, NULL)) != OMX_ErrorNone) {

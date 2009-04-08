@@ -109,19 +109,19 @@ void omx_videodec_component_BufferMgmtCallback(
   OMX_BUFFERHEADERTYPE* outputbuffer);
 
 OMX_ERRORTYPE omx_videodec_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 OMX_ERRORTYPE omx_videodec_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure);
 
 OMX_ERRORTYPE omx_videodec_component_ComponentRoleEnum(
-  OMX_IN OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_U8 *cRole,
-  OMX_IN OMX_U32 nIndex);
+  OMX_HANDLETYPE hComponent,
+  OMX_U8 *cRole,
+  OMX_U32 nIndex);
 
 void SetInternalVideoParameters(OMX_COMPONENTTYPE *openmaxStandComp);
 

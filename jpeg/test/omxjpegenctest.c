@@ -278,12 +278,12 @@ int main(int argc, char** argv){
 /* Callbacks implementation */
 
 OMX_ERRORTYPE jpegEncEventHandler(
-        OMX_IN OMX_HANDLETYPE hComponent,
-        OMX_IN OMX_PTR pAppData,
-        OMX_IN OMX_EVENTTYPE eEvent,
-        OMX_IN OMX_U32 nData1,
-        OMX_IN OMX_U32 nData2,
-        OMX_IN OMX_PTR pEventData)
+        OMX_HANDLETYPE hComponent,
+        OMX_PTR pAppData,
+        OMX_EVENTTYPE eEvent,
+        OMX_U32 nData1,
+        OMX_U32 nData2,
+        OMX_PTR pEventData)
 {
   if(eEvent==OMX_EventCmdComplete) {
     DEBUG(DEB_LEV_SIMPLE_SEQ,"Event handler has been called \n");
@@ -316,9 +316,9 @@ OMX_ERRORTYPE jpegEncEventHandler(
 
 
 OMX_ERRORTYPE jpegEncEmptyBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
 
   DEBUG(DEB_LEV_ERR, "Hi there, I am in the %s callback.\n", __func__);
@@ -351,9 +351,9 @@ OMX_ERRORTYPE jpegEncEmptyBufferDone(
 }
 
 OMX_ERRORTYPE jpegEncFillBufferDone(
-  OMX_OUT OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_PTR pAppData,
-  OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+  OMX_HANDLETYPE hComponent,
+  OMX_PTR pAppData,
+  OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_S32 buffer_ts;
   buffer_ts = (OMX_S32)pBuffer->nTickCount;

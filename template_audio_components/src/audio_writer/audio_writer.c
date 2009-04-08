@@ -49,9 +49,9 @@ void omx_audio_writer_component_BufferMgmtCallback(
 }
 
 OMX_ERRORTYPE omx_audio_writer_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR pParameter)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR pParameter)
 {
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_COMPONENTTYPE *pComponent = (OMX_COMPONENTTYPE*) hComponent;

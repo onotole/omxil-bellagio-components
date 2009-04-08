@@ -420,9 +420,9 @@ void omx_videoenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 }
 
 OMX_ERRORTYPE omx_videoenc_component_SetParameter(
-OMX_IN  OMX_HANDLETYPE hComponent,
-OMX_IN  OMX_INDEXTYPE nParamIndex,
-OMX_IN  OMX_PTR ComponentParameterStructure) {
+		OMX_HANDLETYPE hComponent,
+		OMX_INDEXTYPE nParamIndex,
+		OMX_PTR ComponentParameterStructure) {
 
   OMX_ERRORTYPE eError = OMX_ErrorNone;
   OMX_U32 portIndex;
@@ -538,9 +538,9 @@ OMX_IN  OMX_PTR ComponentParameterStructure) {
 }
 
 OMX_ERRORTYPE omx_videoenc_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure) {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure) {
 
   omx_base_video_PortType *port;
   OMX_ERRORTYPE eError = OMX_ErrorNone;
@@ -641,9 +641,9 @@ OMX_ERRORTYPE omx_videoenc_component_MessageHandler(OMX_COMPONENTTYPE* openmaxSt
 }
 
 OMX_ERRORTYPE omx_videoenc_component_ComponentRoleEnum(
-  OMX_IN OMX_HANDLETYPE hComponent,
-  OMX_OUT OMX_U8 *cRole,
-  OMX_IN OMX_U32 nIndex) {
+  OMX_HANDLETYPE hComponent,
+  OMX_U8 *cRole,
+  OMX_U32 nIndex) {
 
   if (nIndex == 0) {
     strcpy((char *)cRole, VIDEO_ENC_MPEG4_ROLE);

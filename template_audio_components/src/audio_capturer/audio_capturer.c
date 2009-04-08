@@ -45,9 +45,9 @@ void omx_audio_capturer_component_BufferMgmtCallback(
 }
 
 OMX_ERRORTYPE omx_audio_capturer_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)
 {
   int omxErr = OMX_ErrorNone;
   OMX_AUDIO_PARAM_PORTFORMATTYPE *pAudioPortFormat;
@@ -83,9 +83,9 @@ OMX_ERRORTYPE omx_audio_capturer_SetParameter(
 }
 
 OMX_ERRORTYPE omx_audio_capturer_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure)
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)
 {
   OMX_AUDIO_PARAM_PORTFORMATTYPE *pAudioPortFormat;
   OMX_ERRORTYPE err = OMX_ErrorNone;

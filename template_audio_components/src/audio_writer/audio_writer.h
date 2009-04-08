@@ -92,8 +92,8 @@ OMX_ERRORTYPE omx_audio_writer_component_DoStateSet(
   OMX_U32 destinationState);
 
 OMX_ERRORTYPE omx_audio_writer_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR pParameter);
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR pParameter);
 
 #endif

@@ -287,9 +287,9 @@ OMX_ERRORTYPE omx_jpegdec_component_Deinit(OMX_COMPONENTTYPE *openmaxStandComp) 
 
 /** this function sets the parameter values regarding image format & index */
 OMX_ERRORTYPE omx_jpegdec_component_SetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_IN  OMX_PTR ComponentParameterStructure)  {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)  {
 
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_IMAGE_PARAM_PORTFORMATTYPE *pImagePortFormat;
@@ -350,9 +350,9 @@ OMX_ERRORTYPE omx_jpegdec_component_SetParameter(
 
 /** this function gets the parameters regarding image formats and index */
 OMX_ERRORTYPE omx_jpegdec_component_GetParameter(
-  OMX_IN  OMX_HANDLETYPE hComponent,
-  OMX_IN  OMX_INDEXTYPE nParamIndex,
-  OMX_INOUT OMX_PTR ComponentParameterStructure)  {
+  OMX_HANDLETYPE hComponent,
+  OMX_INDEXTYPE nParamIndex,
+  OMX_PTR ComponentParameterStructure)  {
 
   OMX_IMAGE_PARAM_PORTFORMATTYPE *pImagePortFormat;
   OMX_PARAM_COMPONENTROLETYPE * pComponentRole;
