@@ -41,7 +41,7 @@
 #include <OMX_Types.h>
 
 #include <bellagio/tsemaphore.h>
-#include <user_debug_levels.h>
+#include <bellagio/omx_comp_debug_levels.h>
 
 /* Application's private data */
 typedef struct appPrivateType{
