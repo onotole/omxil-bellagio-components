@@ -1,6 +1,6 @@
 bin_PROGRAMS = omxaudiodectest omxvoicexchange omxaudioenctest \
                omxcameratest omxmuxtest omxparsertest \
-               omxvideocapnplay omxvideoenctest
+               omxvideocapnplay omxvideoenctest omxvideodectest
 
 bellagio_LDADD = -lomxil-bellagio
 common_CFLAGS = -I$(top_srcdir)/test/components/common -I$(includedir)
@@ -36,6 +36,10 @@ omxparsertest_CFLAGS = $(common_CFLAGS)
 omxvideocapnplay_SOURCES = omxvideocapnplay.c omxvideocapnplay.h
 omxvideocapnplay_LDADD   = $(bellagio_LDADD) -lpthread
 omxvideocapnplay_CFLAGS  = $(common_CFLAGS)
+
+omxvideodectest_SOURCES = omxvideodectest.c omxvideodectest.h
+omxvideodectest_LDADD   = $(bellagio_LDADD) -lpthread
+omxvideodectest_CFLAGS  = $(common_CFLAGS)
 
 omxvideoenctest_SOURCES = omxvideoenctest.c omxvideoenctest.h
 omxvideoenctest_LDADD   = $(bellagio_LDADD) -lpthread
