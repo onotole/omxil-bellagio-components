@@ -101,6 +101,7 @@ fi
 
 # unused
 AC_CHECK_HEADER([X11/Xlib.h], [with_xvideosink=yes], [with_xvideosink=no])
+AC_CHECK_HEADER([X11/extensions/Xv.h], [with_xvideosink=yes], [with_xvideosink=no])
 X11_LIBS="-lX11 -lXext -lXv"
 AC_SUBST(X11_LIBS)
 
