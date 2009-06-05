@@ -85,11 +85,4 @@ make clean
 make
 make install
 cd ..
-cd omx_component_template
-autoreconf -i -f
-./configure --prefix=$1
-make clean
-make
-make install
-cd ..
 

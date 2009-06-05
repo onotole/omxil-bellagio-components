@@ -1,4 +1,4 @@
-AC_INIT([OpenMAX Bellagio libasound based ALSA Src/Sink Component ], [0.1], [], [libomxalsa])
+AC_INIT([OpenMAX Bellagio libasound based ALSA Src/Sink Component], [0.1], [], [libomxalsa])
 AM_INIT_AUTOMAKE([tar-ustar])
 
 # Prerequisite autoconf version

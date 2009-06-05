@@ -1,4 +1,4 @@
-AC_INIT([OpenMAX Bellagio FFmpeg based Non-Free Component ], [0.1], [], [libomxffmpegnonfree])
+AC_INIT([OpenMAX Bellagio FFmpeg based Non-Free Component], [0.1], [], [libomxffmpegnonfree])
 AM_INIT_AUTOMAKE([tar-ustar])
 
 # Prerequisite autoconf version
@@ -103,10 +103,17 @@ if test "x$with_ffmpegnonfree" = "xyes"; then
         LDFLAGS="${LDFLAGS} ${FFMPEG_LIBS}"
 
         # Check for FFmpeg audio decoder API version
+        # Check for FFmpeg audio decoder API version (ffmpeg 0.5)
+        AC_CHECK_LIB([avcodec], [avformat_alloc_context],
+                     [AC_DEFINE([FFMPEG_5], [2], [FFmpeg 05. version])],
+                     [AC_DEFINE([FFMPEG_5], [1], [FFmpeg audio2 decoder API])],
+                     [-lavutil -lm])
+
         AC_CHECK_LIB([avcodec], [avcodec_decode_audio2],
                      [AC_DEFINE([FFMPEG_DECODER_VERSION], [2], [FFmpeg audio2 decoder API])],
                      [AC_DEFINE([FFMPEG_DECODER_VERSION], [1], [FFmpeg audio deocder API ])],
                      [-lavutil -lm])
+
 
         # Check for location of FFmpeg library headers. These were moved
         # in FFmpeg r12194 (2008-02-25). For example, instead of
