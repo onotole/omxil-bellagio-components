@@ -7,3 +7,14 @@ autoreconf -i -f
 make
 make install
 
+
+FFMPEG issue:
+
+In order to use this component the ffmpeg library should be
+ manually compiled with the following options:
+
+./configure --enable-shared --enable-gpl --enable-nonfree  --enable-swscale --enable-libamr-nb --enable-libvorbis
+
+The resulting library is not redistributable at all.
+These components are released for examples purposes.
+
