@@ -38,7 +38,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
-    src/libjpeg-6c/Makefile
     m4/Makefile
     test/Makefile
 ])

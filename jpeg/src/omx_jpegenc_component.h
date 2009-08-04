@@ -42,7 +42,7 @@
 
 #ifndef _CDJPEG_H_
 #define _CDJPEG_H_
-#include "libjpeg-6c/cdjpeg.h"
+#include "cdjpeg.h"
 #endif
 
 /** Port private definition.
