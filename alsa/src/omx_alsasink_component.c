@@ -39,10 +39,6 @@
 /** Number of AlsaSink Instance*/
 static OMX_U32 noAlsasinkInstance=0;
 
-#ifdef AV_SYNC_LOG  /* for checking AV sync */ //TODO : give seg fault if enabled
-static FILE *fd = NULL;
-#endif
-
 /** The Constructor
  */
 OMX_ERRORTYPE omx_alsasink_component_Constructor(OMX_COMPONENTTYPE *openmaxStandComp,OMX_STRING cComponentName) {
@@ -127,13 +123,6 @@ OMX_ERRORTYPE omx_alsasink_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
   omx_alsasink_component_Private->sPCMModeParam.eChannelMapping[0] = OMX_AUDIO_ChannelNone;
 
 /* testing the A/V sync */
-#ifdef AV_SYNC_LOG
-  fd = fopen("audio_timestamps.out","w");
-  if(!fd) {
-    DEBUG(DEB_LEV_ERR, "Couldn't open audio timestamp log err=%d\n",errno);
-  }
-#endif
-
   noAlsasinkInstance++;
   if(noAlsasinkInstance > MAX_COMPONENT_ALSASINK) {
     return OMX_ErrorInsufficientResources;
@@ -201,10 +190,6 @@ OMX_ERRORTYPE omx_alsasink_component_Destructor(OMX_COMPONENTTYPE *openmaxStandC
     free(omx_alsasink_component_Private->ports);
     omx_alsasink_component_Private->ports=NULL;
   }
-
-#ifdef AV_SYNC_LOG
-      fclose(fd);
-#endif
 
   noAlsasinkInstance--;
 
@@ -423,9 +408,6 @@ OMX_BOOL omx_alsasink_component_ClockPortHandleFunction(omx_alsasink_component_P
           }
           if(pMediaTime->eUpdateType==OMX_TIME_UpdateRequestFulfillment) {
             if((pMediaTime->nOffset)>0) {
-#ifdef AV_SYNC_LOG
-         fprintf(fd,"%lld %lld\n",inputbuffer->nTimeStamp,pMediaTime->nWallTimeAtMediaTime);
-#endif
               SendFrame = OMX_TRUE; /* as offset is >0 send the data to the device */
             }
             else {

@@ -48,10 +48,6 @@ extern XvImage *XvShmCreateImage(Display *, XvPortID, int, char *, int, int,
                                  XShmSegmentInfo *);
 
 
-#ifdef AV_SYNC_LOG  /* for checking AV sync */
-static FILE *fd = NULL;
-#endif
-
 /** Returns a time value in milliseconds based on a clock starting at
  *  some arbitrary base. Given a call to GetTime that returns a value
  *  of n a subsequent call to GetTime made m milliseconds later should
@@ -167,11 +163,6 @@ OMX_ERRORTYPE omx_xvideo_sink_component_Constructor(OMX_COMPONENTTYPE *openmaxSt
     tsem_init(omx_xvideo_sink_component_Private->xvideoSyncSem, 0);
   }
 
- /* testing the A/V sync */
-#ifdef AV_SYNC_LOG
- fd = fopen("video_timestamps.out","w");
-#endif
-
   noxvideo_sinkInstance++;
   if(noxvideo_sinkInstance > MAX_COMPONENT_XVIDEOSINK) {
     DEBUG(DEB_LEV_ERR, "Reached Max Instances %d\n",(int)noxvideo_sinkInstance);
@@ -202,13 +193,6 @@ OMX_ERRORTYPE omx_xvideo_sink_component_Destructor(OMX_COMPONENTTYPE *openmaxSta
     free(omx_xvideo_sink_component_Private->xvideoSyncSem);
     omx_xvideo_sink_component_Private->xvideoSyncSem = NULL;
   }
-
-#ifdef AV_SYNC_LOG
-   if(fd != NULL) {
-      fclose(fd);
-      fd = NULL;
-   }
-#endif
 
   omx_base_sink_Destructor(openmaxStandComp);
   noxvideo_sinkInstance--;

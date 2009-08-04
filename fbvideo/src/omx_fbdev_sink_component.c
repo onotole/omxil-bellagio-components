@@ -47,10 +47,6 @@ static OMX_U32 nofbdev_sinkInstance=0;
 /** Maximum number of sink component instances */
 #define MAX_COMPONENT_FBDEVSINK 2
 
-#ifdef AV_SYNC_LOG  /* for checking AV sync */
-static FILE *fd = NULL;
-#endif
-
 /** Returns a time value in milliseconds based on a clock starting at
  *  some arbitrary base. Given a call to GetTime that returns a value
  *  of n a subsequent call to GetTime made m milliseconds later should
@@ -160,11 +156,6 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Constructor(OMX_COMPONENTTYPE *openmaxSta
   openmaxStandComp->GetParameter = omx_fbdev_sink_component_GetParameter;
   omx_fbdev_sink_component_Private->messageHandler = omx_fbdev_sink_component_MessageHandler;
 
- /* testing the A/V sync */
-#ifdef AV_SYNC_LOG
- fd = fopen("video_timestamps.out","w");
-#endif
-
   nofbdev_sinkInstance++;
   if(nofbdev_sinkInstance > MAX_COMPONENT_FBDEVSINK) {
     DEBUG(DEB_LEV_ERR, "Reached Max Instances %d\n",(int)nofbdev_sinkInstance);
@@ -190,13 +181,6 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Destructor(OMX_COMPONENTTYPE *openmaxStan
     free(omx_fbdev_sink_component_Private->ports);
     omx_fbdev_sink_component_Private->ports=NULL;
   }
-
-#ifdef AV_SYNC_LOG
-   if(fd != NULL) {
-      fclose(fd);
-      fd = NULL;
-   }
-#endif
 
   omx_base_sink_Destructor(openmaxStandComp);
   nofbdev_sinkInstance--;
