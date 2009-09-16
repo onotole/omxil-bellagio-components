@@ -3,7 +3,8 @@
 
   This test application can encode audio pcm stream into mp3/aac/amr format.
 
-  Copyright (C) 2008  STMicroelectronics and Nokia
+  Copyright (C) 2008-2009 STMicroelectronics
+  Copyright (C) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the Free
