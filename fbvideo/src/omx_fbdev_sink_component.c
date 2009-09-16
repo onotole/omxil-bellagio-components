@@ -191,15 +191,7 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Destructor(OMX_COMPONENTTYPE *openmaxStan
 
 OMX_S32 calcStride2(omx_fbdev_sink_component_PrivateType* omx_fbdev_sink_component_Private) {
   OMX_U32 stride;
-
-  if(omx_fbdev_sink_component_Private->vscr_info.bits_per_pixel == 32){
-    stride = omx_fbdev_sink_component_Private->fscr_info.line_length;
-  } else if(omx_fbdev_sink_component_Private->vscr_info.bits_per_pixel == 8){
-    stride = omx_fbdev_sink_component_Private->fscr_info.line_length*4;
-  } else{
-    stride = omx_fbdev_sink_component_Private->fscr_info.line_length*
-           omx_fbdev_sink_component_Private->vscr_info.bits_per_pixel/8;
-  }
+  stride = omx_fbdev_sink_component_Private->fscr_info.line_length;
   return stride;
 }
 /** The initialization function
@@ -815,19 +807,30 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
           //last byte - all 1
           src_cpy_ptr += cp_byte;
           dest_cpy_ptr += 2;
-         /*
-          *(dest_cpy_ptr + 0) = b;
-          *(dest_cpy_ptr + 1) = g;
-          *(dest_cpy_ptr + 2) = r;
-          //last byte - all 1
-          *(dest_cpy_ptr + 3) = 0xff;
-          src_cpy_ptr += cp_byte;
-          dest_cpy_ptr += 4;
-        */
         }
         dest_cpy_ptr = org_dst_cpy_ptr + dest_stride;
         src_cpy_ptr =  org_src_cpy_ptr + src_stride;
       }
+    } else if(fbpxlfmt == OMX_COLOR_Format16bitBGR565 && colorformat == OMX_COLOR_Format24bitRGB888) {
+    	cp_byte = 3;
+    	for (i = 0; i < cpy_height; ++i) {
+    		// copy rows
+    		org_src_cpy_ptr = src_cpy_ptr;
+    		org_dst_cpy_ptr = dest_cpy_ptr;
+    		for(j = 0; j < cpy_byte_width; j += cp_byte) {
+    			//extract source rgba components
+    			r = *(src_cpy_ptr + 0);
+    			g = *(src_cpy_ptr + 1);
+    			b = *(src_cpy_ptr + 2);
+    			*(dest_cpy_ptr + 0) = ((r>>3) & 0x1f) | ((g<<3) & 0xE0);
+    			*(dest_cpy_ptr + 1) = ((g>>5) & 0x07) | (b & 0xf8);
+    			//last byte - all 1
+    			src_cpy_ptr += cp_byte;
+    			dest_cpy_ptr += 2;
+    		}
+    		dest_cpy_ptr = org_dst_cpy_ptr + dest_stride;
+    		src_cpy_ptr =  org_src_cpy_ptr + src_stride;
+    	}
     } else if(fbpxlfmt == OMX_COLOR_Format24bitRGB888 && colorformat == OMX_COLOR_Format24bitRGB888) {
       cp_byte = 3;
       for (i = 0; i < cpy_height; ++i) {
