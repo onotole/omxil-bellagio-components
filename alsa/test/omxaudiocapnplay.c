@@ -88,22 +88,17 @@ static void setHeader(OMX_PTR header, OMX_U32 size) {
 /** help display */
 void display_help() {
   printf("\n");
-  printf("Usage: omxaudiocapnplay -o outputfile.pcm [-t] [-h] [-s]\n");
-  printf("\n");
-  printf("       -o outfile.pcm: If this option is specified, the output is written to user specified outfile\n");
-  printf("                   If the volume component option (-c) is specified then outfile will be .rgb file\n");
-  printf("                   Else outfile will be in .yuv format \n");
-  printf("                   N.B : This option is not needed if you use the sink component\n");
+  printf("Usage: omxaudiocapnplay -o outputfile.pcm [-t] [-h] [-s] [-r rate] [-n channels]\n");
   printf("\n");
   printf("       -h: Displays this help\n");
   printf("\n");
-  printf("\n");
-  printf("       -r 8000 : sample rate[range 8000....48000]\n");
-  printf("       -n 2     : number of channel\n");
-  printf("       -s       : Uses the audio sink component to play\n");
-  printf("       -v       : Volume Component Requested\n");
-  printf("\n");
-  printf("       -t       : Use Tunneling \n");
+  printf("       -o outfile.pcm: If this option is specified, the output is written to user specified outfile\n");
+  printf("                   N.B : This option is not needed if you use the sink component\n");
+  printf("       -r rate : sample rate[range 8000....48000]. Default 8000\n");
+  printf("       -n channels : number of channel. Default 2\n");
+  printf("       -s  : Uses the audio sink component to play\n");
+  printf("       -v  : Volume Component Requested\n");
+  printf("       -t  : Use Tunneling \n");
   printf("\n");
   exit(1);
 }
