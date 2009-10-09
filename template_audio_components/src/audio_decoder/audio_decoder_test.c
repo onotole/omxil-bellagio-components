@@ -299,7 +299,7 @@ static void options(int argc, char** argv)
       perror("audio_decoder_test: ");
       exit(EXIT_FAILURE);
     }
-    appPriv->opd = open(argv[i++], O_WRONLY | O_CREAT);
+    appPriv->opd = open(argv[i++], O_WRONLY | O_CREAT, 0);
     if(-1 == appPriv->opd) {
       perror("audio_decoder_test: ");
       exit(EXIT_FAILURE);

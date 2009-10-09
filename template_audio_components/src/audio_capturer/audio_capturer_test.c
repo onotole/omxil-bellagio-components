@@ -232,7 +232,7 @@ static void options(int argc, char** argv)
   }
 
   if((argc - i) == 1) {
-    appPriv->opd = open(argv[i++], O_WRONLY | O_CREAT);
+    appPriv->opd = open(argv[i++], O_WRONLY | O_CREAT, 0);
     if(-1 == appPriv->opd) {
       perror("audio_reader_test: ");
     exit(EXIT_FAILURE);

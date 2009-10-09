@@ -178,7 +178,7 @@ static void test_component(void)
     pContentURI = (OMX_PARAM_CONTENTURITYPE*) calloc(1, nSize);
     if(NULL != pContentURI) {
       setHeader(pContentURI, nSize);
-      strcpy(pContentURI->contentURI, (char*) appPriv->szURI);
+      strcpy((char*)pContentURI->contentURI, (char*) appPriv->szURI);
       err = OMX_SetParameter(appPriv->handle, OMX_IndexParamContentURI, pContentURI);
       free(pContentURI);
     }
@@ -288,7 +288,7 @@ static void options(int argc, char** argv)
   }
 
   if(NULL != szOutFile) {
-    appPriv->opd = open(szOutFile, O_WRONLY | O_CREAT);
+    appPriv->opd = open(szOutFile, O_WRONLY | O_CREAT, 0);
     if(-1 == appPriv->opd) {
       perror("audio_reader_test: ");
       exit(EXIT_FAILURE);

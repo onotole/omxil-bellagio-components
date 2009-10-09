@@ -152,7 +152,7 @@ static void test_component(void)
     pContentURI = (OMX_PARAM_CONTENTURITYPE*) calloc(1, nSize);
     if(NULL != pContentURI) {
       setHeader(pContentURI, nSize);
-      strcpy(pContentURI->contentURI, (char*) appPriv->szURI);
+      strcpy((char*)pContentURI->contentURI, (char*) appPriv->szURI);
       err = OMX_SetParameter(appPriv->handle, OMX_IndexParamContentURI, pContentURI);
       free(pContentURI);
     }
