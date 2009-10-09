@@ -38,8 +38,9 @@
 
 #define MAX_COMPONENT_AUDIODEC 4
 
-/** output length arguement passed along decoding function */
-#define OUTPUT_LEN_STANDARD_FFMPEG 192000
+/** output length argument passed along decoding function */
+//#define OUTPUT_LEN_STANDARD_FFMPEG 192000
+#define OUTPUT_LEN_STANDARD_FFMPEG 288000
 
 /** Number of Audio Component Instance*/
 static OMX_U32 noAudioDecInstance=0;
@@ -52,6 +53,7 @@ OMX_ERRORTYPE omx_audiodec_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
   omx_audiodec_component_PrivateType* omx_audiodec_component_Private;
   omx_base_audio_PortType *pPort;
   OMX_U32 i;
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (!openmaxStandComp->pComponentPrivate) {
     DEBUG(DEB_LEV_FUNCTION_NAME,"In %s, allocating component\n",__func__);
@@ -189,7 +191,7 @@ OMX_ERRORTYPE omx_audiodec_component_Destructor(OMX_COMPONENTTYPE *openmaxStandC
     omx_audiodec_component_Private->ports=NULL;
   }
 
-  DEBUG(DEB_LEV_FUNCTION_NAME, "Destructor of audiodecoder component is called\n");
+  DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s\n", __func__);
 
   omx_base_filter_Destructor(openmaxStandComp);
 
@@ -204,7 +206,7 @@ OMX_ERRORTYPE omx_audiodec_component_Destructor(OMX_COMPONENTTYPE *openmaxStandC
 OMX_ERRORTYPE omx_audiodec_component_ffmpegLibInit(omx_audiodec_component_PrivateType* omx_audiodec_component_Private) {
   OMX_U32 target_codecID;  // id of FFmpeg codec to be used for different audio formats
 
-  DEBUG(DEB_LEV_FULL_SEQ, "FFMpeg Library/codec iniited\n");
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   switch(omx_audiodec_component_Private->audio_coding_type){
   case OMX_AUDIO_CodingMP3 :
@@ -257,7 +259,7 @@ OMX_ERRORTYPE omx_audiodec_component_ffmpegLibInit(omx_audiodec_component_Privat
     }
   }
 
-  //omx_audiodec_component_Private->avCodecContext->channels = 1;
+  omx_audiodec_component_Private->avCodecContext->channels = 2;
   //omx_audiodec_component_Private->avCodecContext->bit_rate = 12200;
   //omx_audiodec_component_Private->avCodecContext->sample_rate = 8000;
   //omx_audiodec_component_Private->avCodecContext->strict_std_compliance = FF_COMPLIANCE_INOFFICIAL;
@@ -275,7 +277,7 @@ OMX_ERRORTYPE omx_audiodec_component_ffmpegLibInit(omx_audiodec_component_Privat
   omx_audiodec_component_Private->avCodecContext->flags |= CODEC_FLAG_EMU_EDGE;
   omx_audiodec_component_Private->avCodecContext->workaround_bugs |= FF_BUG_AUTODETECT;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "done\n");
+  DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s\n", __func__);
   return OMX_ErrorNone;
 }
 
@@ -453,6 +455,10 @@ void omx_audiodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   }
   pOutputBuffer->nFilledLen = 0;
   pOutputBuffer->nOffset=0;
+  if (pOutputBuffer->nAllocLen < OUTPUT_LEN_STANDARD_FFMPEG) {
+	    DEBUG(DEB_LEV_ERR, "In %s output size is not enough %i\n",__func__, (int)pOutputBuffer->nAllocLen);
+        return;
+  }
   /** resetting output length to a predefined value */
   output_length = OUTPUT_LEN_STANDARD_FFMPEG;
 #if FFMPEG_DECODER_VERSION >= 2
@@ -817,7 +823,7 @@ OMX_ERRORTYPE omx_audiodec_component_MessageHandler(OMX_COMPONENTTYPE* openmaxSt
   OMX_ERRORTYPE err;
   OMX_STATETYPE eCurrentState = omx_audiodec_component_Private->state;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateExecuting ) && (omx_audiodec_component_Private->state == OMX_StateIdle)) {
