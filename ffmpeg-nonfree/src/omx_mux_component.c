@@ -221,11 +221,7 @@ OMX_ERRORTYPE omx_mux_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
   }
 
   /* allocate the output media context */
-#ifdef FFMPEG_0_5
   omx_mux_component_Private->avformatcontext = avformat_alloc_context();
-#else
-  omx_mux_component_Private->avformatcontext = av_alloc_format_context();
-#endif
   if (!omx_mux_component_Private->avformatcontext) {
       DEBUG(DEB_LEV_ERR, "Memory error\n");
       return OMX_ErrorBadParameter;
@@ -725,7 +721,7 @@ OMX_ERRORTYPE omx_mux_component_MessageHandler(OMX_COMPONENTTYPE* openmaxStandCo
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_STATETYPE oldState = omx_mux_component_Private->state;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   /* Execute the base message handling */
   err = omx_base_component_MessageHandler(openmaxStandComp,message);

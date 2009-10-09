@@ -605,7 +605,7 @@ OMX_ERRORTYPE omx_amr_audiodec_component_MessageHandler(OMX_COMPONENTTYPE* openm
   OMX_ERRORTYPE err;
   OMX_STATETYPE eCurrentState = omx_amr_audiodec_component_Private->state;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateExecuting ) && (omx_amr_audiodec_component_Private->state == OMX_StateIdle)) {

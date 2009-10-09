@@ -343,7 +343,7 @@ void omx_amr_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxSta
   OMX_ERRORTYPE err;
   AVRational  bq = { 1, 1000000 };
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n",__func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n",__func__);
 
   if((omx_amr_audioenc_component_Private->isFirstBuffer) && (omx_amr_audioenc_component_Private->audio_coding_type == OMX_AUDIO_CodingAMR)) {
     if(omx_amr_audioenc_component_Private->pAudioAmr.eAMRBandMode <= OMX_AUDIO_AMRBandModeNB7) {
@@ -747,7 +747,7 @@ OMX_ERRORTYPE omx_amr_audioenc_component_MessageHandler(OMX_COMPONENTTYPE* openm
   OMX_ERRORTYPE err;
   OMX_STATETYPE eCurrentState = omx_amr_audioenc_component_Private->state;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateExecuting ) && (omx_amr_audioenc_component_Private->state == OMX_StateIdle)) {
