@@ -7,3 +7,5 @@ autoreconf -i -f
 make
 make install
 
+This version of  ffmpeg components is compatible with
+ official release of ffmpeg 0.5.
