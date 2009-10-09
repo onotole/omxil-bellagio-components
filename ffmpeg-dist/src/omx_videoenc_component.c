@@ -612,7 +612,7 @@ OMX_ERRORTYPE omx_videoenc_component_MessageHandler(OMX_COMPONENTTYPE* openmaxSt
   omx_videoenc_component_PrivateType* omx_videoenc_component_Private = openmaxStandComp->pComponentPrivate;
   OMX_ERRORTYPE eError;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateIdle ) && (omx_videoenc_component_Private->state == OMX_StateLoaded)) {

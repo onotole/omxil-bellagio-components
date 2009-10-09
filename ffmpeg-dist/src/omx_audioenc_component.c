@@ -398,7 +398,7 @@ void omx_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   static OMX_U8* data;
   OMX_ERRORTYPE err;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n",__func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n",__func__);
 
   /*If temporary buffer exist then process that first*/
   if(omx_audioenc_component_Private->temp_buffer_filledlen > 0 && omx_audioenc_component_Private->isNewBuffer) {
@@ -753,7 +753,7 @@ OMX_ERRORTYPE omx_audioenc_component_MessageHandler(OMX_COMPONENTTYPE* openmaxSt
   OMX_ERRORTYPE err;
   OMX_STATETYPE eCurrentState = omx_audioenc_component_Private->state;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateExecuting ) && (omx_audioenc_component_Private->state == OMX_StateIdle)) {

@@ -675,7 +675,7 @@ OMX_ERRORTYPE omx_parser3gp_component_MessageHandler(OMX_COMPONENTTYPE* openmaxS
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_STATETYPE oldState = omx_parser3gp_component_Private->state;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   /* Execute the base message handling */
   err = omx_base_component_MessageHandler(openmaxStandComp,message);

@@ -1192,7 +1192,7 @@ OMX_ERRORTYPE omx_video_colorconv_MessageHandler(OMX_COMPONENTTYPE* openmaxStand
   OMX_ERRORTYPE err = OMX_ErrorNone;
   OMX_STATETYPE eState;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
   eState = omx_ffmpeg_colorconv_component_Private->state; //storing current state
 
   if (message->messageType == OMX_CommandStateSet) {
