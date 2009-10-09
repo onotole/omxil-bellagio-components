@@ -722,7 +722,7 @@ OMX_ERRORTYPE omx_xvideo_sink_component_MessageHandler(OMX_COMPONENTTYPE* openma
   OMX_ERRORTYPE err;
   OMX_STATETYPE eState;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
   eState = omx_xvideo_sink_component_Private->state; //storing current state
 
   if (message->messageType == OMX_CommandStateSet){

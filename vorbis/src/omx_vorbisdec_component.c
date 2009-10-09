@@ -694,7 +694,7 @@ OMX_ERRORTYPE omx_vorbis_decoder_MessageHandler(OMX_COMPONENTTYPE* openmaxStandC
   omx_vorbisdec_component_PrivateType* omx_vorbisdec_component_Private = (omx_vorbisdec_component_PrivateType*)openmaxStandComp->pComponentPrivate;
   OMX_ERRORTYPE err;
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateIdle) && (omx_vorbisdec_component_Private->state == OMX_StateLoaded)) {
