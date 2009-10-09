@@ -1,4 +1,4 @@
-AC_INIT([OpenMAX examples], [0.1], [], [omxBellagioExamples])
+AC_INIT([OpenMAX application examples], [0.1], [], [omxBellagioExamples])
 AM_INIT_AUTOMAKE([tar-ustar])
 
 # Prerequisite autoconf version
@@ -10,7 +10,6 @@ AC_SUBST(OMXIL_LIBS)
 
 AC_CONFIG_HEADERS([config.h])
 CFLAGS="${CFLAGS} -Werror"
-AC_PREFIX_DEFAULT(/usr/local/bin/bellagio_examples)
 
 ################################################################################
 # Set the shared versioning info, according to section 6.3 of the libtool info #
