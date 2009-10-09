@@ -1039,7 +1039,7 @@ OMX_ERRORTYPE omx_jpegdec_decoder_MessageHandler(OMX_COMPONENTTYPE* openmaxStand
   omx_jpegdec_component_PrivateType* omx_jpegdec_component_Private = (omx_jpegdec_component_PrivateType*)openmaxStandComp->pComponentPrivate;
   OMX_ERRORTYPE err;
   OMX_STATETYPE eCurrentState = omx_jpegdec_component_Private->state;
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s\n", __func__);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
 
   if (message->messageType == OMX_CommandStateSet){
     if ((message->messageParam == OMX_StateIdle) && (omx_jpegdec_component_Private->state == OMX_StateLoaded)) {
