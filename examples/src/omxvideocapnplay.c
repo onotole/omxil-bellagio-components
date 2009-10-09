@@ -82,6 +82,8 @@ int flagIsColorConvRequested;
 int flagIsSinkRequested;
 int flagIsFormatRequested;
 int flagSetupTunnel;
+int isXrequired;
+int isfbdevrequired;
 
 static OMX_BOOL bEOS = OMX_FALSE;
 
@@ -222,6 +224,9 @@ void display_help() {
   printf("       -W 176: Width of the frame  [default 176]\n");
   printf("       -H 144: Height of the frame [default 144]\n");
   printf("       -s: Uses the video sink component to display the output of the color converter(.rgb file)\n");
+  printf("           If also -x is specified, the x option is ignored\n");
+  printf("       -x: Uses the X-video sink component to display the output of the color converter(.rgb file)\n");
+  printf("           If also -s is specified, it is considered the default and the fb dev will be used\n");
   printf("\n");
   printf("       -t: Tunneling option - if this option is selected then by default the color converter and \n");
   printf("           video sink components are selected even if those two options are not specified - \n");
@@ -374,6 +379,8 @@ int main(int argc, char** argv) {
     flagIsColorConvRequested = 0;
     flagSetupTunnel = 0;
     flagIsSinkRequested = 0;
+    isXrequired = 0;
+    isfbdevrequired = 0;
     flagIsFormatRequested = 0;
 
     argn_dec = 1;
@@ -393,6 +400,11 @@ int main(int argc, char** argv) {
             break;
           case 's':
             flagIsSinkRequested = 1;
+            isfbdevrequired = 1;
+            break;
+          case 'x':
+            flagIsSinkRequested = 1;
+            isXrequired = 1;
             break;
           case 'o':
             flagIsOutputExpected = 1;
@@ -452,7 +464,9 @@ int main(int argc, char** argv) {
       }
       argn_dec++;
     }
-
+    if (isfbdevrequired) {
+    	isXrequired = 0;
+    }
     /** if color converter component is not selected then sink component will not work, even if specified */
     if(!flagIsColorConvRequested && flagIsSinkRequested) {
       DEBUG(DEB_LEV_ERR, "You requested for sink - not producing any output file\n");
@@ -570,14 +584,18 @@ int main(int argc, char** argv) {
 
     /** getting sink component handle - if reqd' */
     if(flagIsSinkRequested == 1) {
-      err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.video.xvideosink", NULL, &fbdev_sink_callbacks);
-      if(err != OMX_ErrorNone){
-        DEBUG(DEB_LEV_ERR, "No video sink component component found. Exiting...\n");
-        exit(1);
-      } else {
-        DEBUG(DEFAULT_MESSAGES, "Found The video sink component for color converter \n");
-      }
-    }
+    	if (isfbdevrequired) {
+    	      err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.fbdev.fbdev_sink", NULL, &fbdev_sink_callbacks);
+    	} else {
+    		err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.video.xvideosink", NULL, &fbdev_sink_callbacks);
+    	}
+    	if(err != OMX_ErrorNone){
+    		DEBUG(DEB_LEV_ERR, "No video sink component component found. Exiting...\n");
+    		exit(1);
+    	} else {
+    		DEBUG(DEFAULT_MESSAGES, "Found The video sink component for color converter \n");
+    	}
+	}
   }
 
   /** output buffer size calculation based on input dimension speculation */
