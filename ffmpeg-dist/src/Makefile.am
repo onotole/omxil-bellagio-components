@@ -18,5 +18,5 @@ libomxffmpegdist_la_SOURCES = omx_audioenc_component.c  \
 
 libomxffmpegdist_la_LIBADD  = -lomxil-bellagio
 libomxffmpegdist_la_LDFLAGS = $(FFMPEG_LIBS)
-libomxffmpegdist_la_CFLAGS  = $(FFMPEG_CFLAGS)
+libomxffmpegdist_la_CFLAGS  = $(FFMPEG_CFLAGS) $(OMXIL_CFLAGS)
 

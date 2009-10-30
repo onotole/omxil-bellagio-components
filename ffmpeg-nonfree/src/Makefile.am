@@ -10,5 +10,5 @@ libomxffmpegnonfree_la_SOURCES = omx_amr_audiodec_component.c \
 
 libomxffmpegnonfree_la_LIBADD  = -lomxil-bellagio
 libomxffmpegnonfree_la_LDFLAGS = $(FFMPEG_LIBS)
-libomxffmpegnonfree_la_CFLAGS  = $(FFMPEG_CFLAGS)
+libomxffmpegnonfree_la_CFLAGS  = $(FFMPEG_CFLAGS) $(OMXIL_CFLAGS)
 

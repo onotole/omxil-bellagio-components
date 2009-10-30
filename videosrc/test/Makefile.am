@@ -5,5 +5,5 @@ common_CFLAGS  = -I$(includedir)
 
 omxvideocapturetest_SOURCES = omxvideocapturetest.c omxvideocapturetest.h
 omxvideocapturetest_LDADD   = $(bellagio_LDADD)
-omxvideocapturetest_CFLAGS  = $(common_CFLAGS)
+omxvideocapturetest_CFLAGS  = $(common_CFLAGS) $(OMXIL_CFLAGS)
 

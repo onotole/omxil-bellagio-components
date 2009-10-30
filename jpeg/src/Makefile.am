@@ -13,4 +13,4 @@ libomximagejpeg_la_SOURCES = omx_jpegdec_component.c \
 
 libomximagejpeg_la_LIBADD  = -lomxil-bellagio  -ljpeg
 libomximagejpeg_la_LDFLAGS =
-
+libomximagejpeg_la_CFLAGS = $(OMXIL_CFLAGS)

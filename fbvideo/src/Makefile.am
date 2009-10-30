@@ -5,4 +5,4 @@ libomxfbdev_la_SOURCES = omx_fbdev_sink_component.c omx_fbdev_sink_component.h \
 
 libomxfbdev_la_LIBADD  = -lomxil-bellagio
 libomxfbdev_la_LDFLAGS = 
-libomxfbdev_la_CFLAGS  = 
+libomxfbdev_la_CFLAGS  = $(OMXIL_CFLAGS)

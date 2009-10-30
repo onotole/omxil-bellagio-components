@@ -6,5 +6,5 @@ libomxcamera_la_SOURCES = omx_camera_source_component.c \
 
 libomxcamera_la_LIBADD  = -lomxil-bellagio
 libomxcamera_la_LDFLAGS = 
-libomxcamera_la_CFLAGS  = 
+libomxcamera_la_CFLAGS  = $(OMXIL_CFLAGS)
 

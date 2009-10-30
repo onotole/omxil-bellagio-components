@@ -34,8 +34,5 @@ cd ..
 cd template_audio_components
 make distclean
 cd ..
-cd omx_component_template
-make distclean
-cd ..
 
 

@@ -8,5 +8,5 @@ libomxalsa_la_SOURCES = omx_alsasink_component.c \
 
 libomxalsa_la_LIBADD  = -lomxil-bellagio
 libomxalsa_la_LDFLAGS = $(ALSA_LIBS)
-libomxalsa_la_CFLAGS  = $(ALSA_CFLAGS)
+libomxalsa_la_CFLAGS  = $(ALSA_CFLAGS) $(OMXIL_CFLAGS)
 

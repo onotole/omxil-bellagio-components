@@ -1,8 +1,7 @@
 check_PROGRAMS = omxjpegdectest omxjpegenctest
 
 bellagio_LDADD = -lomxil-bellagio -lpthread
-common_CFLAGS  = -I$(includedir)
-#common_CFLAGS = -I$(top_srcdir)/test/components/common -I$(includedir)
+common_CFLAGS  = -I$(includedir) $(OMXIL_CFLAGS)
 
 omxjpegdectest_SOURCES = omxjpegdectest.c omxjpegdectest.h
 omxjpegdectest_LDADD = $(bellagio_LDADD)
