@@ -22,9 +22,6 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date$
-  Revision $Rev$
-  Author $Author$
 */
 
 #include <bellagio/omxcore.h>
@@ -371,7 +368,7 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Destructor(OMX_COMPONENTTYPE *openm
 
 
 /** The Initialization function
-  * This function alloates the frames and buffers to store the color converterted output from input yuv
+  * This function allocates the frames and buffers to store the color converterted output from input yuv
   */
 OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
 
@@ -416,7 +413,7 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Init(OMX_COMPONENTTYPE *openmaxStan
 };
 
 /** The Deinitialization function
-  * This function dealloates the frames and buffers to store the color converterted output from input yuv
+  * This function deallocates the frames and buffers to store the color converterted output from input yuv
   */
 OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Deinit(OMX_COMPONENTTYPE *openmaxStandComp) {
 
@@ -446,14 +443,14 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Deinit(OMX_COMPONENTTYPE *openmaxSt
 }
 
 
-/**  This function copies source inmage to destination image of required dimension and color formats
-  * @param src_ptr is the source image strting pointer
+/**  This function copies source image to destination image of required dimension and color formats
+  * @param src_ptr is the source image string pointer
   * @param src_stride is the source image stride (src_width * byte_per_pixel)
   * @param src_width is source image width
   * @param src_height is source image height
   * @param src_offset_x is x offset value (if any) from starting pointer
   * @param src_offset_y is y offset value (if any) from starting pointer
-  * @param dest_ptr is the destination image strting pointer
+  * @param dest_ptr is the destination image string pointer
   * @param dest_stride is the destination image stride (dest_width * byte_per_pixel)
   * @param dest_width is destination image width
   * @param dest_height is destination image height
@@ -685,10 +682,6 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
       memcpy(dest_U_ptr, src_U_ptr, chroma_crop_width); //  Copy U rows into in_buffer
       memcpy(dest_V_ptr, src_V_ptr, chroma_crop_width); //  Copy V rows into in_buffer
     }
-    // V
-    //for (i = 0; i < chroma_crop_height; ++i, src_V_ptr += src_chroma_stride, dest_V_ptr += dest_chroma_stride) {
-    //  memcpy(dest_V_ptr, src_V_ptr, chroma_crop_width);  //  Copy V rows into in_buffer
-    //}
   } else {
     OMX_U32 cpy_byte_width = calcStride((OMX_U32) abs(cpy_width), colorformat);  //  Bytes width to copy
 

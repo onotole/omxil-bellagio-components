@@ -23,9 +23,6 @@
  * Modification:
  *         Added support for parsing bitstream when data received as Bitstream(rather than input file).
    
-   $Date$
-   Revision $Rev$
-   Author $Author$
  */
 
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */

@@ -19,10 +19,6 @@
   FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
   details.
 
-  $Date$
-  Revision $Rev$
-  Author $Author$
-
 */
 
 #ifndef _OMX_CAMERA_TEST_H_
