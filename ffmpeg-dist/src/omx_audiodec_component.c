@@ -452,10 +452,6 @@ void omx_audiodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   }
   pOutputBuffer->nFilledLen = 0;
   pOutputBuffer->nOffset=0;
-  if (pOutputBuffer->nAllocLen < OUTPUT_LEN_STANDARD_FFMPEG) {
-	    DEBUG(DEB_LEV_ERR, "In %s output size is not enough %i\n",__func__, (int)pOutputBuffer->nAllocLen);
-        return;
-  }
   /** resetting output length to a predefined value */
   output_length = OUTPUT_LEN_STANDARD_FFMPEG;
 #if FFMPEG_DECODER_VERSION >= 2
