@@ -22,9 +22,6 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-09-11 12:14:48 +0200 (Thu, 11 Sep 2008) $
-  Revision $Rev: 1484 $
-  Author $Author: pankaj_sen $
 */
 
 #include "omxvoicexchange.h"

@@ -21,9 +21,6 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-02-12 12:06:30 +0530 (Tue, 12 Feb 2008) $
-  Revision $Rev: 1298 $
-  Author $Author: pankaj_sen $
 */
 
 #ifndef __OMX_AUDIO_ENC_TEST_H__

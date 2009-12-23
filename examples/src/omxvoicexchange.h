@@ -22,9 +22,6 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-02-04 12:14:14 +0530 (Mon, 04 Feb 2008) $
-  Revision $Rev: 1286 $
-  Author $Author: pankaj_sen $
 */
 
 #include <stdio.h>

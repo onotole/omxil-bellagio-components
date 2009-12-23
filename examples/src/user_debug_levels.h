@@ -23,10 +23,6 @@
 	51 Franklin St, Fifth Floor, Boston, MA
 	02110-1301  USA
 
-	$Date: 2008-11-26 12:09:39 +0100 (Wed, 26 Nov 2008) $
-	Revision $Rev: 689 $
-	Author $Author: gsent $
-
 */
 
 

@@ -21,9 +21,6 @@
   51 Franklin St, Fifth Floor, Boston, MA
   02110-1301  USA
 
-  $Date: 2008-02-13 16:26:20 +0530 (Wed, 13 Feb 2008) $
-  Revision $Rev: 1301 $
-  Author $Author: pankaj_sen $
 */
 
 #include "omxaudioenctest.h"
