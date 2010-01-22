@@ -85,4 +85,11 @@ make clean
 make
 sudo make install
 cd ..
+cd theora
+autoreconf -i -f
+./configure
+make clean
+make
+sudo make install
+cd ..
 

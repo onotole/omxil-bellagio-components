@@ -46,6 +46,11 @@ autoreconf -i -f ; ./configure ; make ; make dist
 mv libomxaudiotemplates-0.1.tar.gz /tmp/bellagio
 cd ..
 
+cd theora
+autoreconf -i -f ; ./configure ; make ; make dist
+mv libomxtheora-0.1.tar.gz /tmp/bellagio
+cd ..
+
 cd videosrc
 autoreconf -i -f ; ./configure ; make ; make dist
 mv libomxvideosrc-0.1.tar.gz /tmp/bellagio
@@ -65,62 +70,65 @@ cd /tmp/bellagio
 
 tar xzvf libomxalsa-0.1.tar.gz
 cd libomxalsa-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxfbdevsink-0.1.tar.gz
 cd libomxfbdevsink-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxvideosrc-0.1.tar.gz
 cd libomxvideosrc-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf omxBellagioExamples-0.1.tar.gz
 cd omxBellagioExamples-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxaudiotemplates-0.1.tar.gz
 cd libomxaudiotemplates-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxffmpegdist-0.1.tar.gz
 cd libomxffmpegdist-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxjpeg-0.1.tar.gz
 cd libomxjpeg-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxvorbis-0.1.tar.gz
 cd libomxvorbis-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxcamera-0.1.tar.gz
 cd libomxcamera-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxffmpegnonfree-0.1.tar.gz
 cd libomxffmpegnonfree-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxmad-0.1.tar.gz
 cd libomxmad-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
 tar xzvf libomxxvideo-0.1.tar.gz
 cd libomxxvideo-0.1
-./configure ; make ; sudo make install
+./configure ; make ; sudo make install; sudo make uninstall
 cd ..
 
-
+tar xzvf libomxtheora-0.1.tar.gz
+cd libomxtheora-0.1
+./configure ; make ; sudo make install; sudo make uninstall
+cd ..

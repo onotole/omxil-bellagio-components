@@ -85,4 +85,11 @@ make clean
 make
 make install
 cd ..
+cd theora
+autoreconf -i -f
+./configure --prefix=$1
+make clean
+make
+make install
+cd ..
 

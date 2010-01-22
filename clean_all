@@ -34,5 +34,7 @@ cd ..
 cd template_audio_components
 make distclean
 cd ..
-
+cd theora
+make distclean
+cd ..
 

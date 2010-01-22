@@ -25,6 +25,9 @@ cd ..
 cd template_audio_components
 make uninstall
 cd ..
+cd theora
+make uninstall
+cd ..
 cd videosrc
 make uninstall
 cd ..

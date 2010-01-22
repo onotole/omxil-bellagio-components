@@ -97,4 +97,12 @@ make clean
 make
 make install
 cd ..
+mkdir theora
+cd theora
+autoreconf -i -f $1/theora
+$1/theora/configure --prefix=$2
+make clean
+make
+make install
+cd ..
 
