@@ -611,7 +611,7 @@ OMX_ERRORTYPE omx_filereader_component_GetExtensionIndex(
   if(strcmp(cParameterName,"OMX.ST.index.param.inputfilename") == 0) {
     *pIndexType = OMX_IndexVendorInputFilename;
   } else {
-    return OMX_ErrorBadParameter;
+		return omx_base_component_GetExtensionIndex(hComponent, cParameterName, pIndexType);
   }
   return OMX_ErrorNone;
 }
