@@ -90,7 +90,8 @@ fi
 # Check for pkg-config modules                                                 #
 ################################################################################
 
-PKG_CHECK_MODULES([THEORA], [theora], [with_theora_decoder=yes], [with_theora_decoder=no])
+PKG_CHECK_MODULES([THEORA], [theora], [with_theora=yes], [with_theora=no])
+PKG_CHECK_MODULES([THEORADEC], [theoradec], [with_theora_decoder=yes], [with_theora_decoder=no])
 
 ################################################################################
 # Check for types                                                              #
@@ -125,6 +126,6 @@ PKG_CHECK_MODULES([THEORA], [theora], [with_theora_decoder=yes], [with_theora_de
 ################################################################################
 # Conditionals and file output                                                 #
 ################################################################################
-AM_CONDITIONAL([WITH_THEORA], [test x$with_theora_decoder = xyes && test x$with_omxcore_files = xyes])
+AM_CONDITIONAL([WITH_THEORA], [test x$with_theora = xyes && test x$with_theora_decoder = xyes && test x$with_omxcore_files = xyes])
 
 AC_OUTPUT

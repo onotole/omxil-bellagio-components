@@ -1,5 +1,5 @@
 /**
-  @file src/components/theora/omx_theoradec_component.h
+  src/omx_theoradec_component.h
   
   This component implements a Theora decoder using libtheora.
 
@@ -39,7 +39,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
-#include <omx_base_filter.h>
+#include <bellagio/omx_base_filter.h>
 #include <string.h>
 
 #include <theora/theoradec.h>

@@ -1,5 +1,5 @@
 /**
-  @file src/components/theora/omx_theoradec_component.c
+  src/omx_theoradec_component.c
   
   This component implements a Theora video decoder using libtheora.
 
@@ -26,10 +26,9 @@
   Author $Author: pankaj_sen $
 */
 
-#include <omxcore.h>
-#include <omx_base_video_port.h>
+#include <bellagio/omxcore.h>
+#include <bellagio/omx_base_video_port.h>
 #include <omx_theoradec_component.h>
-#include<OMX_Video.h>
 
 /** Maximum Number of Video Component Instance*/
 #define MAX_COMPONENT_THEORADEC 4
@@ -559,10 +558,10 @@ OMX_ERRORTYPE omx_theoradec_component_GetExtensionIndex(
 
   DEBUG(DEB_LEV_FUNCTION_NAME,"In  %s \n",__func__);
 
-  if(strcmp(cParameterName,"OMX.ST.index.config.videoextradata") == 0) {
-    *pIndexType = OMX_IndexVendorVideoExtraData;
+  if(strcmp(cParameterName, "OMX.ST.index.config.videoextradata") == 0) {
+	    *pIndexType = OMX_VIDEO_CodingTheora;
   } else {
-    return OMX_ErrorBadParameter;
+	    return omx_base_component_GetExtensionIndex(hComponent, cParameterName, pIndexType);
   }
   return OMX_ErrorNone;
 }
