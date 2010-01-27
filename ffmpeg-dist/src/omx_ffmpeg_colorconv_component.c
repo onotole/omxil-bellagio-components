@@ -709,6 +709,7 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
   }
 }
 
+struct SwsContext *imgConvertYuvCtx = NULL;
 
 /** This function is used to process the input buffer and provide one output buffer
   */
@@ -726,7 +727,6 @@ void omx_ffmpeg_colorconv_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openma
   OMX_S32 input_src_stride = inPort->sPortParam.format.video.nStride;    //  Negative means bottom-to-top (think Windows bmp)
   OMX_U32 input_src_width = inPort->sPortParam.format.video.nFrameWidth;
   OMX_U32 input_src_height = inPort->sPortParam.format.video.nSliceHeight;
-  struct SwsContext *imgConvertYuvCtx = NULL;
 
   /**  FIXME: Configuration values should be clamped to prevent memory trampling and potential segfaults.
     *  It might be best to store clamped AND unclamped values on a per-port basis so that OMX_GetConfig
