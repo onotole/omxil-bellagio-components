@@ -177,7 +177,7 @@ int setPortParameters() {
       omx_colorconvPortDefinition.nPortIndex = 0; //sink input port index
       err = OMX_SetParameter(appPriv->fbdev_sink_handle, OMX_IndexParamPortDefinition, &omx_colorconvPortDefinition);
       if(err != OMX_ErrorNone) {
-        DEBUG(DEB_LEV_ERR,"\n error in setting the inputport param of the sink component- exiting\n");
+        DEBUG(DEB_LEV_ERR,"\n error in setting the input port param of the sink component- exiting\n");
         exit(1);
       }
       omxVideoParam.nPortIndex = 1; //color converter output port index
@@ -1134,6 +1134,12 @@ OMX_ERRORTYPE colorconvFillBufferDone(
         */
       if(flagIsSinkRequested && (!flagSetupTunnel)) {
         if(pInBufferSink1->pBuffer == pBuffer->pBuffer) {
+        	/** GU at this line the data is provided to the video sink.
+        	 * pInBufferSink1 and pInBufferSink2 are the OpenMAX buffers, nFilledLen is the
+        	 * length of the data. This function is a callback executed by the OpenMAX component
+        	 * that precedes the renderer, the color converter that fills the buffer to be provided
+        	 * to the renderer.
+        	 */
           pInBufferSink1->nFilledLen = pBuffer->nFilledLen;
           err = OMX_EmptyThisBuffer(appPriv->fbdev_sink_handle, pInBufferSink1);
         } else {
