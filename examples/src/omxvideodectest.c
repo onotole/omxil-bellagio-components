@@ -183,6 +183,7 @@ int setPortParameters() {
       omxVideoParam.nPortIndex = 1; //color converter output port index
       err = OMX_GetParameter(appPriv->colorconv_handle, OMX_IndexParamVideoPortFormat, &omxVideoParam);
       omxVideoParam.nPortIndex = 0; //sink input port index
+      omxVideoParam.xFramerate = 25;
       err = OMX_SetParameter(appPriv->fbdev_sink_handle, OMX_IndexParamVideoPortFormat, &omxVideoParam);
       if(err != OMX_ErrorNone) {
         DEBUG(DEB_LEV_ERR,"\n error in setting the input video param of the sink component- exiting\n");
