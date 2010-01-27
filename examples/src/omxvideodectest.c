@@ -87,6 +87,7 @@ int flagIsColorConvRequested;
 int flagIsSinkRequested;
 int flagIsFormatRequested;
 int flagSetupTunnel;
+int flagIsXrequired;
 
 static OMX_BOOL bEOS = OMX_FALSE;
 
@@ -255,6 +256,9 @@ void display_help() {
   printf("           video sink components are selected even if those two options are not specified - \n");
   printf("           the components are tunneled between themselves\n");
   printf("\n");
+  printf("       -x: If the rendering is selected the video is displayed in a xvideo window \n");
+  printf("           instead of on the frame buffer\n");
+  printf("\n");
   exit(1);
 }
 
@@ -404,6 +408,7 @@ int main(int argc, char** argv) {
     flagSetupTunnel = 0;
     flagIsSinkRequested = 0;
     flagIsFormatRequested = 0;
+    flagIsXrequired = 0;
 
     argn_dec = 1;
     while (argn_dec < argc) {
@@ -431,6 +436,9 @@ int main(int argc, char** argv) {
             break;
           case 'f' :
             flagIsFormatRequested = 1;
+            break;
+          case 'x' :
+        	  flagIsXrequired = 1;
             break;
           default:
             display_help();
@@ -596,7 +604,7 @@ int main(int argc, char** argv) {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Omx core is initialized \n");
   }
 
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
+/*  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
   test_OMX_ComponentNameEnum();
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
   test_OMX_RoleEnum(COMPONENT_NAME_BASE);
@@ -605,7 +613,7 @@ int main(int argc, char** argv) {
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
   test_OpenClose(COMPONENT_NAME_BASE);
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-
+*/
 
   full_component_name = malloc(sizeof(char*) * OMX_MAX_STRINGNAME_SIZE);
   strcpy(full_component_name, COMPONENT_NAME_BASE);
@@ -638,7 +646,11 @@ int main(int argc, char** argv) {
 
     /** getting sink component handle - if reqd' */
     if(flagIsSinkRequested == 1) {
-      err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.fbdev.fbdev_sink", NULL, &fbdev_sink_callbacks);
+    	if (flagIsXrequired) {
+    		err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.video.xvideosink", NULL, &fbdev_sink_callbacks);
+    	} else {
+    		err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.fbdev.fbdev_sink", NULL, &fbdev_sink_callbacks);
+    	}
       if(err != OMX_ErrorNone){
         DEBUG(DEB_LEV_ERR, "No video sink component component found. Exiting...\n");
         exit(1);
