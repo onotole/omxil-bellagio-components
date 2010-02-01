@@ -383,7 +383,6 @@ static inline void UpdateFrameSize(OMX_COMPONENTTYPE *openmaxStandComp) {
       break;
   }
 }
-
 /** This function is used to process the input buffer and provide one output buffer
   */
 void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandComp, OMX_BUFFERHEADERTYPE* pInputBuffer, OMX_BUFFERHEADERTYPE* pOutputBuffer) {
@@ -396,7 +395,7 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   int nLen = 0;
   int internalOutputFilled=0;
   int nSize;
-  struct SwsContext *imgConvertYuvCtx = NULL;
+  struct SwsContext *imgConvertYuvCtx_dec = NULL;
   OMX_ERRORTYPE err;
 
   if(omx_videodec_component_Private->isFirstBuffer == OMX_TRUE) {
@@ -511,8 +510,8 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
                       omx_videodec_component_Private->avCodecContext->width,
                       omx_videodec_component_Private->avCodecContext->height);
 
-      if ( !imgConvertYuvCtx ) {
-        imgConvertYuvCtx = sws_getContext( omx_videodec_component_Private->avCodecContext->width,
+      if ( !imgConvertYuvCtx_dec ) {
+        imgConvertYuvCtx_dec = sws_getContext( omx_videodec_component_Private->avCodecContext->width,
                                               omx_videodec_component_Private->avCodecContext->height,
                                               omx_videodec_component_Private->avCodecContext->pix_fmt,
                                               omx_videodec_component_Private->avCodecContext->width,
@@ -520,12 +519,12 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
                                               omx_videodec_component_Private->eOutFramePixFmt, SWS_FAST_BILINEAR, NULL, NULL, NULL );
       }
 
-      sws_scale(imgConvertYuvCtx, omx_videodec_component_Private->avFrame->data,
+      sws_scale(imgConvertYuvCtx_dec, omx_videodec_component_Private->avFrame->data,
                 omx_videodec_component_Private->avFrame->linesize, 0,
                 omx_videodec_component_Private->avCodecContext->height, pic.data, pic.linesize );
 
-      if (imgConvertYuvCtx ) {
-        sws_freeContext(imgConvertYuvCtx);
+      if (imgConvertYuvCtx_dec ) {
+        sws_freeContext(imgConvertYuvCtx_dec);
       }
 
       DEBUG(DEB_LEV_FULL_SEQ, "nSize=%d,frame linesize=%d,height=%d,pic linesize=%d PixFmt=%d\n",nSize,
