@@ -58,6 +58,7 @@ typedef struct appPrivateType{
 #define VERSIONMINOR    1
 #define VERSIONREVISION 0
 #define VERSIONSTEP     0
+long GetTime();
 
 /* Callback prototypes for video decoder */
 OMX_ERRORTYPE videodecEventHandler(
