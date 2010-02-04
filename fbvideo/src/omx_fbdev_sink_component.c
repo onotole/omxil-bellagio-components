@@ -489,13 +489,13 @@ OMX_COLOR_FORMATTYPE find_omx_pxlfmt(struct fb_var_screeninfo *vscr_info) {
 
 
 /**  This function copies source image to destination image of required dimension and color formats
-  * @param src_ptr is the source image strting pointer
+  * @param src_ptr is the source image string pointer
   * @param src_stride is the source image stride (src_width * byte_per_pixel)
   * @param src_width is source image width
   * @param src_height is source image height
   * @param src_offset_x is x offset value (if any) from starting pointer
   * @param src_offset_y is y offset value (if any) from starting pointer
-  * @param dest_ptr is the destination image strting pointer
+  * @param dest_ptr is the destination image string pointer
   * @param dest_stride is the destination image stride (dest_width * byte_per_pixel)
   * @param dest_width is destination image width
   * @param dest_height is destination image height
@@ -1136,6 +1136,10 @@ void omx_fbdev_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
     old_time = GetTime();
   }
 
+DEBUG(DEB_LEV_ERR, "          ptr       stride   width   height   offset_x offset_y\n");
+DEBUG(DEB_LEV_ERR, "  INPUT:  %x  %6i   %5i    %5i      %5i    %5i\n", (int)input_src_ptr, (int)input_src_stride, (int)input_src_width, (int)input_src_height, (int)input_src_offset_x, (int)input_src_offset_y);
+DEBUG(DEB_LEV_ERR, " OUTPUT:  %x  %6i   %5i    %5i      %5i    %5i\n", (int)input_dest_ptr, (int)input_dest_stride, (int)input_dest_width, (int)input_dest_height, (int)input_dest_offset_x, (int)input_dest_offset_y);
+DEBUG(DEB_LEV_ERR," %i  %i  %i  %i\n", (int)input_cpy_width, (int)input_cpy_height, (int)input_colorformat, (int)(omx_fbdev_sink_component_Private->fbpxlfmt));
 
   /**  Copy image data into in_buffer */
   omx_img_copy(input_src_ptr, input_src_stride, input_src_width, input_src_height,
