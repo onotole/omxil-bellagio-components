@@ -240,7 +240,7 @@ void display_help() {
   printf("       -c : Color conv option - input file is decoded and color converted in outfile(.rgb file)\n");
   printf("       -h: Displays this help\n");
   printf("\n");
-  printf("       -f : input format specification in case of color conv comp usage \n");
+  printf("       -f : output format specification in case of color conv comp usage \n");
   printf("            The available input formats are - \n");
   printf("              - OMX_COLOR_Format24bitRGB888  (default format) \n");
   printf("              - OMX_COLOR_Format24bitBGR888  \n");
