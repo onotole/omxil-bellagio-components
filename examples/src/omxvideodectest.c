@@ -91,12 +91,6 @@ int flagIsXrequired;
 
 static OMX_BOOL bEOS = OMX_FALSE;
 
-long GetTime() {
-    struct timeval now;
-    gettimeofday(&now, NULL);
-    return ((long)now.tv_sec) * 1000 + ((long)now.tv_usec) / 1000;
-}
-
 static void setHeader(OMX_PTR header, OMX_U32 size) {
   OMX_VERSIONTYPE* ver = (OMX_VERSIONTYPE*)(header + sizeof(OMX_U32));
   *((OMX_U32*)header) = size;
@@ -1008,7 +1002,6 @@ OMX_ERRORTYPE fb_sinkEmptyBufferDone(
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
 
   OMX_ERRORTYPE err;
-//  DEBUG(DEB_LEV_ERR, "%s at %ld\n", __func__, GetTime());
   static int inputBufferDropped = 0;
   if(pBuffer != NULL) {
     if(!bEOS) {
@@ -1098,7 +1091,6 @@ OMX_ERRORTYPE colorconvEmptyBufferDone(
 
   OMX_ERRORTYPE err;
   static int iBufferDropped = 0;
-//  DEBUG(DEB_LEV_ERR, "%s at %ld\n", __func__, GetTime());
 
   if(pBuffer != NULL) {
     if(!bEOS) {
@@ -1134,7 +1126,6 @@ OMX_ERRORTYPE colorconvFillBufferDone(
   OMX_OUT OMX_PTR pAppData,
   OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
 
-//	 DEBUG(DEB_LEV_ERR, "%s at %ld\n", __func__, GetTime());
   OMX_ERRORTYPE err;
   if(pBuffer != NULL) {
     if(!bEOS) {
@@ -1339,8 +1330,6 @@ OMX_ERRORTYPE videodecEmptyBufferDone(
   int data_read;
   static int iBufferDropped=0;
 
-// DEBUG(DEB_LEV_ERR, "%s at %ld\n", __func__, GetTime());
-
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback.\n", __func__);
 
   data_read = fread(pBuffer->pBuffer, 1, buffer_in_size, fd);
@@ -1376,7 +1365,6 @@ OMX_ERRORTYPE videodecFillBufferDone(
 
   OMX_ERRORTYPE err;
   OMX_STATETYPE eState;
-  DEBUG(DEB_LEV_ERR, "%ld\n", GetTime());
 
   if(pBuffer != NULL) {
     if(!bEOS) {
