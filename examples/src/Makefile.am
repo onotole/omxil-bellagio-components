@@ -2,7 +2,7 @@ bin_PROGRAMS = omxaudiodectest omxvoicexchange omxaudioenctest \
                omxcameratest omxmuxtest omxparsertest \
                omxvideocapnplay omxvideoenctest omxvideodectest
 
-bellagio_LDADD = -lomxil-bellagio
+bellagio_LDADD = $(OMXIL_LIBS)
 common_CFLAGS = -I$(top_srcdir)/test/components/common -I$(includedir) $(OMXIL_CFLAGS)
 
 omxaudiodectest_SOURCES = omxaudiodectest.c omxaudiodectest.h

@@ -1,6 +1,6 @@
 check_PROGRAMS = omxvideocapturetest 
 
-bellagio_LDADD = -lomxil-bellagio
+bellagio_LDADD = $(OMXIL_LIBS)
 common_CFLAGS  = -I$(includedir)
 
 omxvideocapturetest_SOURCES = omxvideocapturetest.c omxvideocapturetest.h

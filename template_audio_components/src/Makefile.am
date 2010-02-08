@@ -9,5 +9,5 @@ libomxaudioset_la_LIBADD = audio_capturer/libomxaudio_capturer.la \
                            audio_renderer/libomxaudio_renderer.la \
                            audio_writer/libomxaudio_writer.la
 
-libomxaudioset_la_LDFLAGS = -lomxil-bellagio
+libomxaudioset_la_LDFLAGS = $(OMXIL_LIBS)
 libomxaudioset_la_CFLAGS = $(OMXIL_CFLAGS)
