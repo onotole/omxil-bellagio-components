@@ -834,7 +834,6 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
         // copy rows
         org_src_cpy_ptr = src_cpy_ptr;
         org_dst_cpy_ptr = dest_cpy_ptr;
-DEBUG(DEB_LEV_ERR, "Here %s cpy_byte_width %i  cp_byte %i\n", __func__, (int)cpy_byte_width, (int)cp_byte);
         for(j = 0; j < cpy_byte_width; j += cp_byte) {
           //extract source rgba components
           r = *(src_cpy_ptr + 0);
@@ -1137,11 +1136,6 @@ void omx_fbdev_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
     old_time = GetTime();
   }
 
-/*DEBUG(DEB_LEV_ERR, "          ptr       stride   width   height   offset_x offset_y\n");
-DEBUG(DEB_LEV_ERR, "  INPUT:  %x  %6i   %5i    %5i      %5i    %5i\n", (int)input_src_ptr, (int)input_src_stride, (int)input_src_width, (int)input_src_height, (int)input_src_offset_x, (int)input_src_offset_y);
-DEBUG(DEB_LEV_ERR, " OUTPUT:  %x  %6i   %5i    %5i      %5i    %5i\n", (int)input_dest_ptr, (int)input_dest_stride, (int)input_dest_width, (int)input_dest_height, (int)input_dest_offset_x, (int)input_dest_offset_y);
-DEBUG(DEB_LEV_ERR," %i  %i  %i  %i\n", (int)input_cpy_width, (int)input_cpy_height, (int)input_colorformat, (int)(omx_fbdev_sink_component_Private->fbpxlfmt));
-*/
   /**  Copy image data into in_buffer */
   omx_img_copy(input_src_ptr, input_src_stride, input_src_width, input_src_height,
                input_src_offset_x, input_src_offset_y,
