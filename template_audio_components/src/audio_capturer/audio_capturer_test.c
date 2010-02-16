@@ -84,7 +84,7 @@ OMX_ERRORTYPE audiocapturerFillBufferDone(
 
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback.\n", __func__);
 
-  DEBUG(DEB_LEV_PARAMS, "Fill buffer %x\n", (int) pBuffer);
+  DEBUG(DEB_LEV_PARAMS, "Fill buffer %p\n", pBuffer);
 
   write(appPriv->opd,
 	pBuffer->pBuffer + pBuffer->nOffset,

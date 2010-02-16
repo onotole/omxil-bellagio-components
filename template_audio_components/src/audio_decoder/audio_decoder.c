@@ -55,7 +55,7 @@ OMX_ERRORTYPE omx_audio_decoder_component_Constructor(
       return OMX_ErrorInsufficientResources;
     }
     } else {
-      DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int) pComponent->pComponentPrivate);
+      DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, pComponent->pComponentPrivate);
     }
   }
 

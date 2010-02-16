@@ -588,9 +588,9 @@ int main(int argc, char** argv) {
     pInBuffer[1]->nFilledLen = data_read;
     pInBuffer[1]->nOffset = 0;
 
-    DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %x\n", (int)pInBuffer[0]->pBuffer);
+    DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %p\n", pInBuffer[0]->pBuffer);
     err = OMX_EmptyThisBuffer(appPriv->videoenchandle, pInBuffer[0]);
-    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %x\n", (int)pInBuffer[1]->pBuffer);
+    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %p\n", pInBuffer[1]->pBuffer);
     err = OMX_EmptyThisBuffer(appPriv->videoenchandle, pInBuffer[1]);
 
     DEBUG(DEFAULT_MESSAGES,"Waiting for  EOS\n");
@@ -842,7 +842,7 @@ OMX_ERRORTYPE videoencEmptyBufferDone(
       return OMX_ErrorNone;
     }
     pBuffer->nFilledLen = data_read;
-    DEBUG(DEB_LEV_PARAMS, "Empty buffer %x\n", (int)pBuffer);
+    DEBUG(DEB_LEV_PARAMS, "Empty buffer %p\n", pBuffer);
     err = OMX_EmptyThisBuffer(hComponent, pBuffer);
   } else if(!bEOS){
     if(pSrcOutBuffer[0]->pBuffer == pBuffer->pBuffer) {

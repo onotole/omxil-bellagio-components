@@ -73,7 +73,7 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Constructor(OMX_COMPONENTTYPE *openmaxSta
       return OMX_ErrorInsufficientResources;
     }
   } else {
-    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int)openmaxStandComp->pComponentPrivate);
+    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, openmaxStandComp->pComponentPrivate);
   }
 
   omx_fbdev_sink_component_Private = openmaxStandComp->pComponentPrivate;
@@ -262,7 +262,10 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Init(OMX_COMPONENTTYPE *openmaxStandComp)
     return OMX_ErrorHardware;
   }
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "mmap framebuffer memory =%x omx_fbdev_sink_component_Private->product=%d stride=%d\n",(int)omx_fbdev_sink_component_Private->scr_ptr,(int)omx_fbdev_sink_component_Private->product,(int)omx_fbdev_sink_component_Private->fbstride);
+  DEBUG(DEB_LEV_SIMPLE_SEQ, "mmap framebuffer memory =%p omx_fbdev_sink_component_Private->product=%d stride=%d\n",
+		  omx_fbdev_sink_component_Private->scr_ptr,
+		  (unsigned int)omx_fbdev_sink_component_Private->product,
+		  (int)omx_fbdev_sink_component_Private->fbstride);
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Successfully opened %s for display.\n", "/dev/fb0");
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Display Size: %u x %u\n", (int)omx_fbdev_sink_component_Private->fbwidth, (int)omx_fbdev_sink_component_Private->fbheight);
   DEBUG(DEB_LEV_SIMPLE_SEQ, "Bitdepth: %u\n", (int)omx_fbdev_sink_component_Private->fbbpp);

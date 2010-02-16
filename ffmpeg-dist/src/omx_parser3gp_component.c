@@ -457,9 +457,9 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
               FirstTimeStampFlag[stream_index] = OMX_TRUE;
            }
          } else {
-           DEBUG(DEB_LEV_ERR,"In %s Buffer Size=%d less than Pkt size=%d buffer=%x port_index=%d \n",__func__,
-                              (int)pOutputBuffer->nAllocLen,(int)omx_parser3gp_component_Private->pkt.size,
-                              (unsigned int)pOutputBuffer,(int)pOutputBuffer->nOutputPortIndex);
+           DEBUG(DEB_LEV_ERR,"In %s Buffer Size=%d less than Pkt size=%d buffer=%p port_index=%d \n",__func__,
+                              (int)pOutputBuffer->nAllocLen, (int)omx_parser3gp_component_Private->pkt.size,
+                              pOutputBuffer, (int)pOutputBuffer->nOutputPortIndex);
          }
        }else { /* the port type and the stream data do not match so keep the data in temporary buffer*/
          if(temp_buffer->nAllocLen >= omx_parser3gp_component_Private->pkt.size) {
@@ -501,7 +501,7 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
   av_free_packet(&omx_parser3gp_component_Private->pkt);
 
   /** return the current output buffer */
-  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %x len=%d is full returning\n", (int)pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %p len=%d is full returning\n", pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
 }
 
 OMX_ERRORTYPE omx_parser3gp_component_SetParameter(

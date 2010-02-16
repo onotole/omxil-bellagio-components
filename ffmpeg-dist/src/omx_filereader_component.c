@@ -319,7 +319,7 @@ void omx_filereader_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
   av_free_packet(&omx_filereader_component_Private->pkt);
 
   /** return the current output buffer */
-  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %x len=%d is full returning\n", (int)pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %p len=%d is full returning\n", pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
 }
 
 OMX_ERRORTYPE omx_filereader_component_SetParameter(

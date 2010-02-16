@@ -795,7 +795,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer File Reader\n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill reader second buffer %x\n", (int)outBufferFileRead[0]);
+    DEBUG(DEB_LEV_PARAMS, "Fill reader second buffer %p\n", outBufferFileRead[0]);
     err = OMX_FillThisBuffer(appPriv->filereaderhandle, outBufferFileRead[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer File Reader\n", __func__,err);
@@ -809,7 +809,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %x\n", (int)outBufferVolume[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %p\n", outBufferVolume[1]);
     err = OMX_FillThisBuffer(appPriv->volumehandle, outBufferVolume[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
@@ -828,9 +828,9 @@ int main(int argc, char** argv) {
     inBufferAudioDec[1]->nFilledLen = data_read;
     inBufferAudioDec[1]->nOffset = 0;
 
-    DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %x\n", (int)inBufferAudioDec[0]);
+    DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %p\n", inBufferAudioDec[0]);
     err = OMX_EmptyThisBuffer(appPriv->audiodechandle, inBufferAudioDec[0]);
-    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %x\n", (int)inBufferAudioDec[1]);
+    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %p\n", inBufferAudioDec[1]);
     err = OMX_EmptyThisBuffer(appPriv->audiodechandle, inBufferAudioDec[1]);
 #ifndef NOFILEREADER
   }
@@ -842,7 +842,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %x\n", (int)outBufferAudioDec[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %p\n", outBufferAudioDec[1]);
     err = OMX_FillThisBuffer(appPriv->audiodechandle, outBufferAudioDec[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
@@ -1373,7 +1373,7 @@ OMX_ERRORTYPE audiodecEmptyBufferDone(
     }
     pBuffer->nFilledLen = data_read;
     if(!bEOS) {
-      DEBUG(DEB_LEV_FULL_SEQ, "Empty buffer %x\n", (int)pBuffer);
+      DEBUG(DEB_LEV_FULL_SEQ, "Empty buffer %p\n", pBuffer);
       err = OMX_EmptyThisBuffer(hComponent, pBuffer);
     } else {
       DEBUG(DEB_LEV_FULL_SEQ, "In %s Dropping Empty This buffer to Audio Dec\n", __func__);
@@ -1641,7 +1641,7 @@ OMX_ERRORTYPE audiosinkEmptyBufferDone(
   static int alsaSinkBufferDropped=0;
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback.\n", __func__);
 
-  DEBUG(DEB_LEV_PARAMS, "Empty buffer %x\n", (int)pBuffer);
+  DEBUG(DEB_LEV_PARAMS, "Empty buffer %p\n", pBuffer);
   if(!bEOS) {
     if(outBufferVolume[0]->pBuffer == pBuffer->pBuffer) {
       outBufferVolume[0]->nFilledLen=0;

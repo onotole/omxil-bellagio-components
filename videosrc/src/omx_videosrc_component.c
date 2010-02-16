@@ -617,7 +617,7 @@ OMX_ERRORTYPE videosrc_port_FreeBuffer(
       openmaxStandPort->bIsFullOfBuffers = OMX_FALSE;
       if (openmaxStandPort->bBufferStateAllocated[i] & BUFFER_ALLOCATED) {
         if(openmaxStandPort->pInternalBufferStorage[i]->pBuffer){
-          DEBUG(DEB_LEV_PARAMS, "In %s freeing %i pBuffer=%x\n",__func__, (int)i, (int)openmaxStandPort->pInternalBufferStorage[i]->pBuffer);
+          DEBUG(DEB_LEV_PARAMS, "In %s freeing %i pBuffer=%p\n",__func__, (int)i, openmaxStandPort->pInternalBufferStorage[i]->pBuffer);
           openmaxStandPort->pInternalBufferStorage[i]->pBuffer=NULL;
           omx_videosrc_component_Private->bOutBufferMemoryMapped = OMX_FALSE;
         }

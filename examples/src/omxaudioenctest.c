@@ -576,9 +576,9 @@ int main(int argc, char** argv) {
     inBuffer[1]->nFilledLen = data_read2;
     filesize -= data_read2;
 
-    DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %x\n", (int)inBuffer[0]);
+    DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %p\n", inBuffer[0]);
     err = OMX_EmptyThisBuffer(appPriv->audioenchandle, inBuffer[0]);
-    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %x\n", (int)inBuffer[1]);
+    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %p\n", inBuffer[1]);
     err = OMX_EmptyThisBuffer(appPriv->audioenchandle, inBuffer[1]);
   }
 
@@ -761,7 +761,7 @@ OMX_ERRORTYPE audioencEmptyBufferDone(
       return OMX_ErrorNone;
     }
     if(!bEOS) {
-      DEBUG(DEB_LEV_FULL_SEQ, "Empty buffer %x\n", (int)pBuffer);
+      DEBUG(DEB_LEV_FULL_SEQ, "Empty buffer %p\n", pBuffer);
       err = OMX_EmptyThisBuffer(hComponent, pBuffer);
     }else {
       DEBUG(DEB_LEV_ERR, "In %s Dropping Empty This buffer to Audio Encoder\n", __func__);

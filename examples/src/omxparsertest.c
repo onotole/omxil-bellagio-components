@@ -1564,7 +1564,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Parser3gp \n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %x\n", (int)outBufferParseVideo[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %p\n", outBufferParseVideo[1]);
     err = OMX_FillThisBuffer(appPriv->parser3gphandle, outBufferParseVideo[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Parser3gp\n", __func__,err);
@@ -1576,7 +1576,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Parser3gp \n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %x\n", (int)outBufferParseAudio[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %p\n", outBufferParseAudio[1]);
     err = OMX_FillThisBuffer(appPriv->parser3gphandle, outBufferParseAudio[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Parser3gp\n", __func__,err);
@@ -1588,7 +1588,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Dec\n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %x\n", (int)outBufferVideoDec[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %p\n", outBufferVideoDec[1]);
     err = OMX_FillThisBuffer(appPriv->videodechandle, outBufferVideoDec[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Dec\n", __func__,err);
@@ -1600,7 +1600,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %x\n", (int)outBufferAudioDec[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %p\n", outBufferAudioDec[1]);
     err = OMX_FillThisBuffer(appPriv->audiodechandle, outBufferAudioDec[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
@@ -1613,7 +1613,7 @@ int main(int argc, char** argv) {
          DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Color converter\n", __func__,err);
          exit(1);
        }
-       DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %x\n", (int)outBufferColorconv[1]);
+       DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %p\n", outBufferColorconv[1]);
        err = OMX_FillThisBuffer(appPriv->colorconv_handle, outBufferColorconv[1]);
        if(err != OMX_ErrorNone) {
          DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Color Converter\n", __func__,err);
@@ -1626,7 +1626,7 @@ int main(int argc, char** argv) {
            DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Scheduler\n", __func__,err);
            exit(1);
          }
-         DEBUG(DEB_LEV_PARAMS, "Fill video scheduler second buffer %x\n", (int)outBufferVideoSchd[1]);
+         DEBUG(DEB_LEV_PARAMS, "Fill video scheduler second buffer %p\n", outBufferVideoSchd[1]);
          err = OMX_FillThisBuffer(appPriv->videoschd_handle, outBufferVideoSchd[1]);
          if(err != OMX_ErrorNone) {
            DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Scheduler\n", __func__,err);
@@ -1639,7 +1639,7 @@ int main(int argc, char** argv) {
          DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
           exit(1);
        }
-       DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %x\n", (int)outBufferVolume[1]);
+       DEBUG(DEB_LEV_PARAMS, "Fill decoder second buffer %p\n", outBufferVolume[1]);
        err = OMX_FillThisBuffer(appPriv->volumehandle, outBufferVolume[1]);
        if(err != OMX_ErrorNone) {
          DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Dec\n", __func__,err);
@@ -3112,7 +3112,7 @@ OMX_ERRORTYPE audiosinkEmptyBufferDone(
   static int alsaSinkBufferDropped=0;
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback.\n", __func__);
 
-  DEBUG(DEB_LEV_PARAMS, "Empty buffer %x\n", (int)pBuffer);
+  DEBUG(DEB_LEV_PARAMS, "Empty buffer %p\n", pBuffer);
   if(!bEOS) {
     if(outBufferVolume[0]->pBuffer == pBuffer->pBuffer) {
       outBufferVolume[0]->nFilledLen=0;

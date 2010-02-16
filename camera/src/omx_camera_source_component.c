@@ -553,8 +553,8 @@ static OMX_ERRORTYPE camera_DeinitCameraDevice(omx_camera_source_component_Priva
 
   if(omx_camera_source_component_Private->sMapbufQueue.buffers != NULL ) {
     for (i = 0; i < OMX_MAPBUFQUEUE_GETMAXLEN( omx_camera_source_component_Private->sMapbufQueue ); ++i) {
-      DEBUG(DEB_LEV_PARAMS, "i=%d,addr=%x,length=%d\n",(int)i,
-        (int)omx_camera_source_component_Private->sMapbufQueue.buffers[i].pCapAddrStart,
+      DEBUG(DEB_LEV_PARAMS, "i=%d,addr=%p,length=%d\n",(int)i,
+        omx_camera_source_component_Private->sMapbufQueue.buffers[i].pCapAddrStart,
         (int)omx_camera_source_component_Private->sMapbufQueue.buffers[i].length);
 
       if (-1 == munmap(omx_camera_source_component_Private->sMapbufQueue.buffers[i].pCapAddrStart,
@@ -713,7 +713,7 @@ OMX_ERRORTYPE omx_camera_source_component_Constructor(OMX_COMPONENTTYPE *openmax
       return OMX_ErrorInsufficientResources;
     }
   } else {
-    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int)openmaxStandComp->pComponentPrivate);
+    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, openmaxStandComp->pComponentPrivate);
   }
 
   /* Call base source constructor */
@@ -1988,8 +1988,8 @@ static int camera_init_mmap(omx_camera_source_component_PrivateType* omx_camera_
       return OMX_ErrorHardware;
     }
 
-    DEBUG(DEB_LEV_PARAMS, "i=%d,addr=%x,length=%d\n",(int)i,
-      (int)omx_camera_source_component_Private->sMapbufQueue.buffers[i].pCapAddrStart,
+    DEBUG(DEB_LEV_PARAMS, "i=%d,addr=%p,length=%d\n",(int)i,
+      omx_camera_source_component_Private->sMapbufQueue.buffers[i].pCapAddrStart,
       (int)omx_camera_source_component_Private->sMapbufQueue.buffers[i].length);
   }
 

@@ -53,7 +53,7 @@ OMX_ERRORTYPE omx_vorbisdec_component_Constructor( OMX_COMPONENTTYPE *openmaxSta
       return OMX_ErrorInsufficientResources;
     }
   }  else {
-    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int)openmaxStandComp->pComponentPrivate);
+    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, openmaxStandComp->pComponentPrivate);
   }
 
   omx_vorbisdec_component_Private = openmaxStandComp->pComponentPrivate;
@@ -278,14 +278,14 @@ void omx_vorbisdec_component_BufferMgmtCallbackVorbis(OMX_COMPONENTTYPE *openmax
   ogg_int16_t convbuffer[4096];
 
 
-  DEBUG(DEB_LEV_FULL_SEQ, "input buf %x filled len : %d \n", (int)inputbuffer->pBuffer, (int)inputbuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "input buf %p filled len : %d \n", inputbuffer->pBuffer, (int)inputbuffer->nFilledLen);
   /** Fill up the current input buffer when a new buffer has arrived */
   if(omx_vorbisdec_component_Private->isNewBuffer) {
     omx_vorbisdec_component_Private->inputCurrBuffer = inputbuffer->pBuffer;
     omx_vorbisdec_component_Private->inputCurrLength = inputbuffer->nFilledLen;
     omx_vorbisdec_component_Private->positionInOutBuf = 0;
 
-    DEBUG(DEB_LEV_SIMPLE_SEQ, "new -- input buf %x filled len : %d \n", (int)inputbuffer->pBuffer, (int)inputbuffer->nFilledLen);
+    DEBUG(DEB_LEV_SIMPLE_SEQ, "new -- input buf %p filled len : %d \n", inputbuffer->pBuffer, (int)inputbuffer->nFilledLen);
 
     /** for each new input buffer --- copy buffer content into into ogg sync state structure data */
     vorbis_buffer = ogg_sync_buffer(&omx_vorbisdec_component_Private->oy, inputbuffer->nAllocLen);
@@ -497,7 +497,7 @@ void omx_vorbisdec_component_BufferMgmtCallbackVorbis(OMX_COMPONENTTYPE *openmax
     eos=1;
   }
 
-  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %x len=%d is full returning\n", (int)outputbuffer->pBuffer, (int)outputbuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %p len=%d is full returning\n", outputbuffer->pBuffer, (int)outputbuffer->nFilledLen);
 }
 
 /** setting parameter values

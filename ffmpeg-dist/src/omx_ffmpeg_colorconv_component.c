@@ -215,7 +215,7 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Constructor(OMX_COMPONENTTYPE *open
       return OMX_ErrorInsufficientResources;
     }
   } else {
-    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int)openmaxStandComp->pComponentPrivate);
+    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, openmaxStandComp->pComponentPrivate);
   }
 
   omx_ffmpeg_colorconv_component_Private = openmaxStandComp->pComponentPrivate;
@@ -800,8 +800,8 @@ void omx_ffmpeg_colorconv_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openma
 
   pOutputBuffer->nFilledLen = (OMX_U32) abs(output_dest_stride) * output_dest_height;
 
-  DEBUG(DEB_LEV_FULL_SEQ, "in %s One output buffer %x len=%d is full returning in color converter\n",
-          __func__, (int)pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "in %s One output buffer %p len=%d is full returning in color converter\n",
+          __func__, pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
 }
 
 

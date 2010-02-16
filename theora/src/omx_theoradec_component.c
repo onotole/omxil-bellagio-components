@@ -62,7 +62,7 @@ OMX_ERRORTYPE omx_theoradec_component_Constructor(OMX_COMPONENTTYPE *openmaxStan
       return OMX_ErrorInsufficientResources;
     }
   } else {
-    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int)openmaxStandComp->pComponentPrivate);
+    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, openmaxStandComp->pComponentPrivate);
   }
 
   omx_theoradec_component_Private = openmaxStandComp->pComponentPrivate;
@@ -358,8 +358,8 @@ exit (1);
   }
   pInputBuffer->nFilledLen = 0;
 
-  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %x nLen=%d is full returning in video decoder\n", 
-            (int)pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %p nLen=%d is full returning in video decoder\n",
+            pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
 }
 
 OMX_ERRORTYPE omx_theoradec_component_SetParameter(

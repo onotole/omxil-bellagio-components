@@ -337,7 +337,7 @@ OMX_ERRORTYPE jpegEncEmptyBufferDone(
   }
   pBuffer->nFilledLen = data_read;
   if(!bEOS) {
-    DEBUG(DEB_LEV_ERR, "Empty buffer %x\n", (int)pBuffer);
+    DEBUG(DEB_LEV_ERR, "Empty buffer %p\n", pBuffer);
     err = OMX_EmptyThisBuffer(hComponent, pBuffer);
   } else {
     DEBUG(DEB_LEV_FULL_SEQ, "In %s Dropping Empty This buffer to Audio Dec\n", __func__);

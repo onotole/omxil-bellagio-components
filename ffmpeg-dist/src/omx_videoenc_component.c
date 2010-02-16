@@ -56,7 +56,7 @@ OMX_ERRORTYPE omx_videoenc_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
       return OMX_ErrorInsufficientResources;
     }
   } else {
-    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int)openmaxStandComp->pComponentPrivate);
+    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, openmaxStandComp->pComponentPrivate);
   }
 
   omx_videoenc_component_Private = openmaxStandComp->pComponentPrivate;
@@ -412,8 +412,8 @@ void omx_videoenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
     }
     nOutputFilled = 1;
   }
-  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %x nLen=%d is full returning in video encoder\n",
-            (int)pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "One output buffer %p nLen=%d is full returning in video encoder\n",
+            pOutputBuffer->pBuffer, (int)pOutputBuffer->nFilledLen);
 }
 
 OMX_ERRORTYPE omx_videoenc_component_SetParameter(

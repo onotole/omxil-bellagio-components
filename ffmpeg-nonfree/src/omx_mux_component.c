@@ -455,7 +455,7 @@ void omx_mux_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandComp, O
   pInputBuffer->nOffset = 0;
 
   /** return the current input buffer */
-  DEBUG(DEB_LEV_FULL_SEQ, "One input buffer %x len=%d is full returning\n", (int)pInputBuffer->pBuffer, (int)pInputBuffer->nFilledLen);
+  DEBUG(DEB_LEV_FULL_SEQ, "One input buffer %p len=%d is full returning\n", pInputBuffer->pBuffer, (int)pInputBuffer->nFilledLen);
 }
 
 OMX_ERRORTYPE omx_mux_component_SetParameter(

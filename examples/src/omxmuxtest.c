@@ -1026,7 +1026,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Src \n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %x\n", (int)outBufferSrcVideo[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %p\n", outBufferSrcVideo[1]);
     err = OMX_FillThisBuffer(appPriv->videosrchandle, outBufferSrcVideo[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Src\n", __func__,err);
@@ -1038,7 +1038,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Src \n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %x\n", (int)outBufferSrcAudio[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill parser second buffer %p\n", outBufferSrcAudio[1]);
     err = OMX_FillThisBuffer(appPriv->audiosrchandle, outBufferSrcAudio[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Src\n", __func__,err);
@@ -1050,7 +1050,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Enc\n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill encoder second buffer %x\n", (int)outBufferVideoEnc[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill encoder second buffer %p\n", outBufferVideoEnc[1]);
     err = OMX_FillThisBuffer(appPriv->videoenchandle, outBufferVideoEnc[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Video Enc\n", __func__,err);
@@ -1062,7 +1062,7 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Enc\n", __func__,err);
       exit(1);
     }
-    DEBUG(DEB_LEV_PARAMS, "Fill encoder second buffer %x\n", (int)outBufferAudioEnc[1]);
+    DEBUG(DEB_LEV_PARAMS, "Fill encoder second buffer %p\n", outBufferAudioEnc[1]);
     err = OMX_FillThisBuffer(appPriv->audioenchandle, outBufferAudioEnc[1]);
     if(err != OMX_ErrorNone) {
       DEBUG(DEB_LEV_ERR, "In %s Error %08x Calling FillThisBuffer Audio Enc\n", __func__,err);

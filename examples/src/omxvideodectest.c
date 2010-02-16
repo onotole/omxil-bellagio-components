@@ -748,11 +748,11 @@ int main(int argc, char** argv) {
     pInBuffer2->nOffset = 0;
   }
 
-  DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %x\n", (int)pInBuffer1->pBuffer);
+  DEBUG(DEB_LEV_PARAMS, "Empty first  buffer %p\n", pInBuffer1->pBuffer);
   err = OMX_EmptyThisBuffer(appPriv->videodechandle, pInBuffer1);
 
   if(!flagSetupTunnel) {
-    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %x\n", (int)pInBuffer2->pBuffer);
+    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %p\n", pInBuffer2->pBuffer);
     err = OMX_EmptyThisBuffer(appPriv->videodechandle, pInBuffer2);
   }
 
@@ -842,7 +842,7 @@ int main(int argc, char** argv) {
     data_read = fread(pInBuffer2->pBuffer, 1, buffer_in_size, fd);
     pInBuffer2->nFilledLen = data_read;
     pInBuffer2->nOffset = 0;
-    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %x\n", (int)pInBuffer2->pBuffer);
+    DEBUG(DEB_LEV_PARAMS, "Empty second buffer %p\n", pInBuffer2->pBuffer);
     err = OMX_EmptyThisBuffer(appPriv->videodechandle, pInBuffer2);
   }
   tsem_down(appPriv->eofSem);
@@ -1349,7 +1349,7 @@ OMX_ERRORTYPE videodecEmptyBufferDone(
   }
   pBuffer->nFilledLen = data_read;
   if(!bEOS) {
-    DEBUG(DEB_LEV_FULL_SEQ, "Empty buffer %x\n", (int)pBuffer);
+    DEBUG(DEB_LEV_FULL_SEQ, "Empty buffer %p\n", pBuffer);
     err = OMX_EmptyThisBuffer(hComponent, pBuffer);
   } else {
     DEBUG(DEB_LEV_FULL_SEQ, "In %s Dropping Empty This buffer to Audio Dec\n", __func__);
