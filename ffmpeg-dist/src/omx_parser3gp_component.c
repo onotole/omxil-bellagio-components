@@ -214,9 +214,9 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
   /** opening the input file whose name is already set via setParameter */
   error = av_open_input_file(&omx_parser3gp_component_Private->avformatcontext,
                             (char*)omx_parser3gp_component_Private->sInputFileName,
-                            omx_parser3gp_component_Private->avinputformat,
+                            NULL,
                             0,
-                            omx_parser3gp_component_Private->avformatparameters);
+                            NULL);
 
   if(error != 0) {
     DEBUG(DEB_LEV_ERR,"Couldn't Open Input Stream error=%d File Name=%s\n",

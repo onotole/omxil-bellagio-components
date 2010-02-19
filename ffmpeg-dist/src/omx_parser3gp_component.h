@@ -4,7 +4,7 @@
   OpenMAX parser3gp component. This component is a 3gp parser that parses the input
   3gp file to provide the audio and video streams outputs
 
-  Copyright (C) 2007-2009  STMicroelectronics
+  Copyright (C) 2007-2010  STMicroelectronics
   Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
@@ -55,8 +55,6 @@
  * see the define above
  * @param sTimeStamp Store Time Stamp to be set
  * @param avformatcontext is the ffmpeg video format context
- * @param avformatparameters is the ffmpeg video format related parameters
- * @param avinputformat is the ffmpeg video format related settings
  * @param pTmpOutputBuffer is a temporary buffer to hold the data from av_read_frame
  * @param sInputFileName is the input filename provided by client
  * @param video_coding_type is the coding type determined by input file
@@ -72,8 +70,6 @@ DERIVEDCLASS(omx_parser3gp_component_PrivateType, omx_base_source_PrivateType)
 #define omx_parser3gp_component_PrivateType_FIELDS omx_base_source_PrivateType_FIELDS \
   OMX_TIME_CONFIG_TIMESTAMPTYPE       sTimeStamp; \
   AVFormatContext                     *avformatcontext; \
-  AVFormatParameters                  *avformatparameters; \
-  AVInputFormat                       *avinputformat; \
   OMX_BUFFERHEADERTYPE*               pTmpOutputBuffer; \
   OMX_STRING                          sInputFileName; \
   OMX_U32                             video_coding_type; \

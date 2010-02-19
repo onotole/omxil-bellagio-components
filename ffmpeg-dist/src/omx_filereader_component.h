@@ -4,7 +4,7 @@
   OpenMAX file reader component. This component is a file reader that detects the input
   file format so that client calls the appropriate decoder.
 
-  Copyright (C) 2007-2009 STMicroelectronics
+  Copyright (C) 2007-2010 STMicroelectronics
   Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
@@ -61,10 +61,6 @@ DERIVEDCLASS(omx_filereader_component_PrivateType, omx_base_source_PrivateType)
   OMX_TIME_CONFIG_TIMESTAMPTYPE sTimeStamp; \
   /** @param avformatcontext is the FFmpeg audio format context */ \
   AVFormatContext *avformatcontext; \
-  /** @param avformatparameters is the FFmpeg audio format related parameters */ \
-  AVFormatParameters *avformatparameters; \
-  /** @param avinputformat is the FFmpeg audio format related settings */ \
-  AVInputFormat *avinputformat; \
   /** @param pkt is the FFmpeg packet structure for data delivery */ \
   AVPacket pkt; \
   /** @param sInputFileName is the input filename provided by client */ \
