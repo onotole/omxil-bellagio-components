@@ -27,3 +27,19 @@ compile_remote_localtarget
 	Location of source code as first parameter
 	Installation path required as second parameter
 
+
+--------------------------------------------------------
+Packages needed in Ubuntu 10.10
+
+sudo apt-get install libasound2-dev
+install and compile ffmpeg with special parameters:
+./configure --enable-shared --enable-gpl --enable-nonfree --enable-libamr-nb --enable-libfaac --enable-libvorbis --enable-swscale
+
+sudo apt-get install libjpeg8-dev
+sudo apt-get install libid3tag0-dev
+sudo apt-get install libmad0-dev
+sudo apt-get install libvorbis-dev
+sudo apt-get install libx11-dev
+sudo apt-get install libxv-dev
+sudo apt-get install libtheora-dev
+
