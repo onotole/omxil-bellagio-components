@@ -391,6 +391,7 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 
   omx_videodec_component_PrivateType* omx_videodec_component_Private = openmaxStandComp->pComponentPrivate;
   AVPicture pic;
+  int got_picture;
 
   OMX_S32 nOutputFilled = 0;
   OMX_U8* outputCurrBuffer;
@@ -454,12 +455,18 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   while (!nOutputFilled) {
     omx_videodec_component_Private->avCodecContext->frame_number++;
 
+#ifdef OLD_FFMPEG_VERSION
     nLen = avcodec_decode_video(omx_videodec_component_Private->avCodecContext,
           omx_videodec_component_Private->avFrame,
           (int*)&internalOutputFilled,
           omx_videodec_component_Private->inputCurrBuffer,
           omx_videodec_component_Private->inputCurrLength);
-
+#else
+    avcodec_decode_video2(omx_videodec_component_Private->avCodecContext,
+    		omx_videodec_component_Private->avFrame,
+    		&got_picture,
+    		omx_videodec_component_Private->avPacket);
+#endif
     if (nLen < 0) {
       DEBUG(DEB_LEV_ERR, "A general error or simply frame not decoded?\n");
     }
@@ -519,7 +526,7 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
                                               omx_videodec_component_Private->eOutFramePixFmt, SWS_FAST_BILINEAR, NULL, NULL, NULL );
       }
 
-      sws_scale(imgConvertYuvCtx_dec, omx_videodec_component_Private->avFrame->data,
+      sws_scale(imgConvertYuvCtx_dec, (const uint8_t* const*)(omx_videodec_component_Private->avFrame->data),
                 omx_videodec_component_Private->avFrame->linesize, 0,
                 omx_videodec_component_Private->avCodecContext->height, pic.data, pic.linesize );
 

@@ -67,6 +67,7 @@ DERIVEDCLASS(omx_videodec_component_PrivateType, omx_base_filter_PrivateType)
   AVCodecContext *avCodecContext;  \
   /** @param picture pointer to FFmpeg AVFrame  */ \
   AVFrame *avFrame; \
+  AVPacket *avPacket; \
   /** @param pVideoMpeg4 Reference to OMX_VIDEO_PARAM_MPEG4TYPE structure*/  \
   OMX_VIDEO_PARAM_MPEG4TYPE pVideoMpeg4;  \
   /** @param pVideoAvc Reference to OMX_VIDEO_PARAM_AVCTYPE structure */ \
