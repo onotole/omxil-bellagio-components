@@ -67,7 +67,7 @@ DERIVEDCLASS(omx_videodec_component_PrivateType, omx_base_filter_PrivateType)
   AVCodecContext *avCodecContext;  \
   /** @param picture pointer to FFmpeg AVFrame  */ \
   AVFrame *avFrame; \
-  AVPacket *avPacket; \
+  AVPacket avPacket; \
   /** @param pVideoMpeg4 Reference to OMX_VIDEO_PARAM_MPEG4TYPE structure*/  \
   OMX_VIDEO_PARAM_MPEG4TYPE pVideoMpeg4;  \
   /** @param pVideoAvc Reference to OMX_VIDEO_PARAM_AVCTYPE structure */ \
@@ -78,6 +78,9 @@ DERIVEDCLASS(omx_videodec_component_PrivateType, omx_base_filter_PrivateType)
   OMX_U16 minBufferLength; \
   /** @param inputCurrBuffer Field that stores pointer of the current input buffer position */ \
   OMX_U8* inputCurrBuffer;\
+  OMX_U8* internalInputBuffer;\
+  OMX_BOOL isPendingBuffer;\
+  OMX_U16 pendingOffset;\
   /** @param inputCurrLength Field that stores current input buffer length in bytes */ \
   OMX_U32 inputCurrLength;\
   /** @param isFirstBuffer Field that the buffer is the first buffer */ \
@@ -122,7 +125,7 @@ OMX_ERRORTYPE omx_videodec_component_ComponentRoleEnum(
   OMX_U32 nIndex);
 
 void SetInternalVideoParameters(OMX_COMPONENTTYPE *openmaxStandComp);
-
+int nextFrameLen(OMX_U8* pBuffer, OMX_U32 nFilledLen, unsigned int* length);
 OMX_ERRORTYPE omx_videodec_component_SetConfig(
   OMX_HANDLETYPE hComponent,
   OMX_INDEXTYPE nIndex,

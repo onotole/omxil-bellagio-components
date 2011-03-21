@@ -68,7 +68,7 @@ enum PixelFormat find_ffmpeg_pxlfmt(OMX_COLOR_FORMATTYPE omx_pxlfmt) {
       break;
     case OMX_COLOR_Format32bitBGRA8888:
     case OMX_COLOR_Format32bitARGB8888:
-      ffmpeg_pxlfmt = PIX_FMT_RGBA32;
+      ffmpeg_pxlfmt = PIX_FMT_RGBA;
       break;
     case OMX_COLOR_FormatYUV411Planar:
     case OMX_COLOR_FormatYUV411PackedPlanar:
@@ -787,7 +787,7 @@ void omx_ffmpeg_colorconv_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openma
                                       outPort->ffmpeg_pxlfmt, SWS_FAST_BILINEAR, NULL, NULL, NULL );
   }
 
-  sws_scale(imgConvertYuvCtx, omx_ffmpeg_colorconv_component_Private->in_frame->data,
+  sws_scale(imgConvertYuvCtx, (const uint8_t* const*)(omx_ffmpeg_colorconv_component_Private->in_frame->data),
             omx_ffmpeg_colorconv_component_Private->in_frame->linesize, 0,
             input_src_height,
             omx_ffmpeg_colorconv_component_Private->conv_frame->data,

@@ -31,6 +31,7 @@
 
 /** Maximum Number of Video Component Instance*/
 #define MAX_COMPONENT_VIDEODEC 4
+#define TEMP_BUFFER_SIZE 32000
 
 /** Counter of Video Component Instance*/
 static OMX_U32 noVideoDecInstance = 0;
@@ -198,13 +199,15 @@ OMX_ERRORTYPE omx_videodec_component_ffmpegLibInit(omx_videodec_component_Privat
   avcodec_init();
   av_register_all();
 
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "FFmpeg library/codec initialized\n");
+  DEBUG(DEB_LEV_SIMPLE_SEQ, "FFmpeg library/codec initialization\n");
 
   switch(omx_videodec_component_Private->video_coding_type) {
     case OMX_VIDEO_CodingMPEG4 :
-      target_codecID = CODEC_ID_MPEG4;
+    	DEBUG(DEB_LEV_ERR, "FFmpeg set to CODEC_ID_MPEG4\n");
+    	target_codecID = CODEC_ID_MPEG4;
       break;
     case OMX_VIDEO_CodingAVC :
+    	DEBUG(DEB_LEV_ERR, "FFmpeg set to CODEC_ID_H264\n");
       target_codecID = CODEC_ID_H264;
       break;
     default :
@@ -234,6 +237,7 @@ OMX_ERRORTYPE omx_videodec_component_ffmpegLibInit(omx_videodec_component_Privat
     DEBUG(DEB_LEV_ERR, "Could not open codec\n");
     return OMX_ErrorInsufficientResources;
   }
+  av_init_packet(&(omx_videodec_component_Private->avPacket));
   DEBUG(DEB_LEV_SIMPLE_SEQ, "done\n");
 
   return OMX_ErrorNone;
@@ -343,7 +347,13 @@ OMX_ERRORTYPE omx_videodec_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) {
   omx_videodec_component_Private->inputCurrLength = 0;
   omx_videodec_component_Private->isFirstBuffer = OMX_TRUE;
   omx_videodec_component_Private->isNewBuffer = 1;
-
+  omx_videodec_component_Private->pendingOffset = 0;
+  omx_videodec_component_Private->isPendingBuffer = OMX_FALSE;
+  omx_videodec_component_Private->internalInputBuffer = malloc(TEMP_BUFFER_SIZE);
+  if (omx_videodec_component_Private->internalInputBuffer == NULL) {
+	    DEBUG(DEB_LEV_ERR, "Out of memory\n");
+	    eError = OMX_ErrorInsufficientResources;
+  }
   return eError;
 }
 
@@ -396,27 +406,14 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   OMX_S32 nOutputFilled = 0;
   OMX_U8* outputCurrBuffer;
   int nLen = 0;
-  int internalOutputFilled=0;
   int nSize;
   OMX_ERRORTYPE err;
+  unsigned int frameLen;
+  int ret = 0;
+  DEBUG(DEB_LEV_ERR, "In %s \n",__func__);
 
   if(omx_videodec_component_Private->isFirstBuffer == OMX_TRUE) {
     omx_videodec_component_Private->isFirstBuffer = OMX_FALSE;
-
-    if((pInputBuffer->nFlags & OMX_BUFFERFLAG_CODECCONFIG) == OMX_BUFFERFLAG_CODECCONFIG) {
-      omx_videodec_component_Private->extradata_size = pInputBuffer->nFilledLen;
-      if(omx_videodec_component_Private->extradata_size > 0) {
-        if(omx_videodec_component_Private->extradata) {
-          free(omx_videodec_component_Private->extradata);
-        }
-        omx_videodec_component_Private->extradata = malloc(pInputBuffer->nFilledLen);
-        memcpy(omx_videodec_component_Private->extradata, pInputBuffer->pBuffer,pInputBuffer->nFilledLen);
-      }
-
-      DEBUG(DEB_ALL_MESS, "In %s Received First Buffer Extra Data Size=%d\n",__func__,(int)pInputBuffer->nFilledLen);
-      pInputBuffer->nFlags = 0x0;
-      pInputBuffer->nFilledLen = 0;
-    }
 
     if (!omx_videodec_component_Private->avcodecReady) {
       err = omx_videodec_component_ffmpegLibInit(omx_videodec_component_Private);
@@ -434,114 +431,144 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 
   /** Fill up the current input buffer when a new buffer has arrived */
   if(omx_videodec_component_Private->isNewBuffer) {
+
+	  DEBUG(DEB_LEV_ERR, "NEW BUFFER!!!\n");
     omx_videodec_component_Private->inputCurrBuffer = pInputBuffer->pBuffer;
     omx_videodec_component_Private->inputCurrLength = pInputBuffer->nFilledLen;
+
     omx_videodec_component_Private->isNewBuffer = 0;
     DEBUG(DEB_LEV_FULL_SEQ, "New Buffer FilledLen = %d\n", (int)pInputBuffer->nFilledLen);
 
-    nSize = avpicture_get_size (omx_videodec_component_Private->eOutFramePixFmt,
-                                omx_videodec_component_Private->avCodecContext->width,
-                                omx_videodec_component_Private->avCodecContext->height);
-    if(pOutputBuffer->nAllocLen < nSize) {
-      DEBUG(DEB_LEV_ERR, "Ouch!!!! Output buffer Alloc Len %d less than Frame Size %d\n",(int)pOutputBuffer->nAllocLen,nSize);
-      return;
-    }
   }
 
   outputCurrBuffer = pOutputBuffer->pBuffer;
   pOutputBuffer->nFilledLen = 0;
   pOutputBuffer->nOffset = 0;
 
+  if (omx_videodec_component_Private->isPendingBuffer) {
+	  ret = nextFrameLen(omx_videodec_component_Private->inputCurrBuffer, omx_videodec_component_Private->inputCurrLength, &frameLen);
+	  DEBUG(DEB_LEV_FULL_SEQ, "latest old buffer COMPRESSED FRAME LEN = %u\n", omx_videodec_component_Private->pendingOffset);
+	  DEBUG(DEB_LEV_FULL_SEQ, "new buffer COMPRESSED FRAME LEN = %u ret = %i\n", frameLen, ret);
+	  if (ret < 0) {
+		  DEBUG(DEB_LEV_ERR, "Unrecoverable error!!!!!!!\n");
+		  return;
+	  }
+	  if ((frameLen + omx_videodec_component_Private->pendingOffset) > TEMP_BUFFER_SIZE) {
+		  DEBUG(DEB_LEV_ERR, "Not enough memory for the frame!!!!!!!\n");
+		  return;
+	  }
+	  memcpy(omx_videodec_component_Private->internalInputBuffer + omx_videodec_component_Private->pendingOffset,
+			  omx_videodec_component_Private->inputCurrBuffer,
+			  frameLen);
+	  omx_videodec_component_Private->pendingOffset = omx_videodec_component_Private->pendingOffset + frameLen;
+  }
   while (!nOutputFilled) {
-    omx_videodec_component_Private->avCodecContext->frame_number++;
+	  if (!omx_videodec_component_Private->isPendingBuffer) {
+		  ret = nextFrameLen(omx_videodec_component_Private->inputCurrBuffer, omx_videodec_component_Private->inputCurrLength, &frameLen);
+		  DEBUG(DEB_LEV_FULL_SEQ, "COMPRESSED FRAME LEN = %u ret = %i\n", frameLen, ret);
+		  if (ret < 0) {
+			  if (frameLen < TEMP_BUFFER_SIZE) {
+				  memcpy(omx_videodec_component_Private->internalInputBuffer, omx_videodec_component_Private->inputCurrBuffer, frameLen);
+				  if (pInputBuffer->nFilledLen != frameLen) {
+					  DEBUG(DEB_LEV_ERR, "NOOOOOOO!!!!!!!\n");
+				  }
+				  pInputBuffer->nFilledLen = 0;
+				  omx_videodec_component_Private->pendingOffset = frameLen;
+				  omx_videodec_component_Private->isPendingBuffer = OMX_TRUE;
+				  omx_videodec_component_Private->isNewBuffer = 1;
+				  break;
+			  } else {
+				  DEBUG(DEB_LEV_ERR, "Too much!!!!!!!\n");
+			  }
+		  }
+		  omx_videodec_component_Private->avPacket.size = frameLen;
+		  omx_videodec_component_Private->avPacket.data = omx_videodec_component_Private->inputCurrBuffer;
+	  } else {
+		  DEBUG(DEB_LEV_ERR, "omx_videodec_component_Private->pendingOffset %i\n", omx_videodec_component_Private->pendingOffset);
+		  omx_videodec_component_Private->avPacket.size = omx_videodec_component_Private->pendingOffset;
+		  DEBUG(DEB_LEV_ERR, "omx_videodec_component_Private->avPacket.size %i\n", omx_videodec_component_Private->avPacket.size);
+		  omx_videodec_component_Private->avPacket.data = omx_videodec_component_Private->internalInputBuffer;
+		  omx_videodec_component_Private->pendingOffset = 0;
+		  omx_videodec_component_Private->isPendingBuffer = OMX_FALSE;
+		  DEBUG(DEB_LEV_ERR, "Before decode first bytes are: 0x%02x%02x%02x%02x - 0x%02x%02x%02x%02x\n",
+				  (*(omx_videodec_component_Private->inputCurrBuffer)),
+				  (*(omx_videodec_component_Private->inputCurrBuffer+1)),
+				  (*(omx_videodec_component_Private->inputCurrBuffer+2)),
+				  (*(omx_videodec_component_Private->inputCurrBuffer+3)),
+				  (*(omx_videodec_component_Private->inputCurrBuffer+4)),
+				  (*(omx_videodec_component_Private->inputCurrBuffer+5)),
+				  (*(omx_videodec_component_Private->inputCurrBuffer+6)),
+				  (*(omx_videodec_component_Private->inputCurrBuffer+7)));
+	  }
+//		  omx_videodec_component_Private->avCodecContext->frame_number++;
+	  DEBUG(DEB_LEV_ERR, "Before decode first bytes are: 0x%02x%02x%02x%02x - 0x%02x%02x%02x%02x\n",
+			  (*(omx_videodec_component_Private->avPacket.data)),
+			  (*(omx_videodec_component_Private->avPacket.data+1)),
+			  (*(omx_videodec_component_Private->avPacket.data+2)),
+			  (*(omx_videodec_component_Private->avPacket.data+3)),
+			  (*(omx_videodec_component_Private->avPacket.data+4)),
+			  (*(omx_videodec_component_Private->avPacket.data+5)),
+			  (*(omx_videodec_component_Private->avPacket.data+6)),
+			  (*(omx_videodec_component_Private->avPacket.data+7)));
+	  DEBUG(DEB_LEV_ERR, "Before decode size is %u\n", omx_videodec_component_Private->avPacket.size);
+	  DEBUG(DEB_LEV_ERR, "Frame number is %u\n", omx_videodec_component_Private->avCodecContext->frame_number);
 
-#ifdef OLD_FFMPEG_VERSION
-    nLen = avcodec_decode_video(omx_videodec_component_Private->avCodecContext,
-          omx_videodec_component_Private->avFrame,
-          (int*)&internalOutputFilled,
-          omx_videodec_component_Private->inputCurrBuffer,
-          omx_videodec_component_Private->inputCurrLength);
-#else
-    avcodec_decode_video2(omx_videodec_component_Private->avCodecContext,
+
+	  nLen = avcodec_decode_video2(omx_videodec_component_Private->avCodecContext,
     		omx_videodec_component_Private->avFrame,
     		&got_picture,
-    		omx_videodec_component_Private->avPacket);
-#endif
-    if (nLen < 0) {
-      DEBUG(DEB_LEV_ERR, "A general error or simply frame not decoded?\n");
-    }
+    		&(omx_videodec_component_Private->avPacket));
 
-    {
-      omx_base_video_PortType *inPort = (omx_base_video_PortType *)omx_videodec_component_Private->ports[OMX_BASE_FILTER_INPUTPORT_INDEX];
-      if((inPort->sPortParam.format.video.nFrameWidth != omx_videodec_component_Private->avCodecContext->width) ||
-         (inPort->sPortParam.format.video.nFrameHeight != omx_videodec_component_Private->avCodecContext->height)) {
-        DEBUG(DEB_LEV_SIMPLE_SEQ, "Sending Port Settings Change Event in video decoder\n");
+	  if (nLen < 0) {
+		  DEBUG(DEB_LEV_ERR, "A general error or simply frame not decoded? nLen = %i\n", nLen);
+	  }
 
-        switch(omx_videodec_component_Private->video_coding_type) {
-          case OMX_VIDEO_CodingMPEG4 :
-          case OMX_VIDEO_CodingAVC :
-            inPort->sPortParam.format.video.nFrameWidth = omx_videodec_component_Private->avCodecContext->width;
-            inPort->sPortParam.format.video.nFrameHeight = omx_videodec_component_Private->avCodecContext->height;
-            break;
-          default :
-            DEBUG(DEB_LEV_ERR, "Video formats other than MPEG-4 AVC not supported\nCodec not found\n");
-            break;
+	  if ( nLen > 0) {
+		  DEBUG(DEB_LEV_ERR, "nLen > 0\n");
+		  omx_videodec_component_Private->inputCurrBuffer += nLen;
+		  omx_videodec_component_Private->inputCurrLength -= nLen;
+		  pInputBuffer->nFilledLen -= nLen;
+
+		  //Buffer is fully consumed. Request for new Input Buffer
+		  if(pInputBuffer->nFilledLen == 0) {
+			  omx_videodec_component_Private->isNewBuffer = 1;
+		  }
+
+		  avpicture_fill (&pic, (unsigned char*)(outputCurrBuffer),
+				  omx_videodec_component_Private->eOutFramePixFmt,
+				  omx_videodec_component_Private->avCodecContext->width,
+				  omx_videodec_component_Private->avCodecContext->height);
+
+		  if ( !imgConvertYuvCtx_dec ) {
+        	imgConvertYuvCtx_dec = sws_getContext( omx_videodec_component_Private->avCodecContext->width,
+        			omx_videodec_component_Private->avCodecContext->height,
+        			omx_videodec_component_Private->avCodecContext->pix_fmt,
+        			omx_videodec_component_Private->avCodecContext->width,
+        			omx_videodec_component_Private->avCodecContext->height,
+        			omx_videodec_component_Private->eOutFramePixFmt, SWS_FAST_BILINEAR, NULL, NULL, NULL );
         }
 
-        UpdateFrameSize (openmaxStandComp);
-
-        /** Send Port Settings changed call back */
-        (*(omx_videodec_component_Private->callbacks->EventHandler))
-          (openmaxStandComp,
-           omx_videodec_component_Private->callbackData,
-           OMX_EventPortSettingsChanged, // The command was completed
-           nLen,  //to adjust the file pointer to resume the correct decode process
-           0, // This is the input port index
-           NULL);
-      }
-    }
-
-    if ( nLen >= 0 && internalOutputFilled) {
-      omx_videodec_component_Private->inputCurrBuffer += nLen;
-      omx_videodec_component_Private->inputCurrLength -= nLen;
-      pInputBuffer->nFilledLen -= nLen;
-
-      //Buffer is fully consumed. Request for new Input Buffer
-      if(pInputBuffer->nFilledLen == 0) {
-        omx_videodec_component_Private->isNewBuffer = 1;
-      }
-
-
-      avpicture_fill (&pic, (unsigned char*)(outputCurrBuffer),
-                      omx_videodec_component_Private->eOutFramePixFmt,
-                      omx_videodec_component_Private->avCodecContext->width,
-                      omx_videodec_component_Private->avCodecContext->height);
-
-      if ( !imgConvertYuvCtx_dec ) {
-        imgConvertYuvCtx_dec = sws_getContext( omx_videodec_component_Private->avCodecContext->width,
-                                              omx_videodec_component_Private->avCodecContext->height,
-                                              omx_videodec_component_Private->avCodecContext->pix_fmt,
-                                              omx_videodec_component_Private->avCodecContext->width,
-                                              omx_videodec_component_Private->avCodecContext->height,
-                                              omx_videodec_component_Private->eOutFramePixFmt, SWS_FAST_BILINEAR, NULL, NULL, NULL );
-      }
-
-      sws_scale(imgConvertYuvCtx_dec, (const uint8_t* const*)(omx_videodec_component_Private->avFrame->data),
-                omx_videodec_component_Private->avFrame->linesize, 0,
+        sws_scale(imgConvertYuvCtx_dec, (const uint8_t* const*)(omx_videodec_component_Private->avFrame->data),
+        		omx_videodec_component_Private->avFrame->linesize, 0,
                 omx_videodec_component_Private->avCodecContext->height, pic.data, pic.linesize );
 
-/*      if (imgConvertYuvCtx_dec ) {
-        sws_freeContext(imgConvertYuvCtx_dec);
-      }
-*/
-      DEBUG(DEB_LEV_FULL_SEQ, "nSize=%d,frame linesize=%d,height=%d,pic linesize=%d PixFmt=%d\n",nSize,
-        omx_videodec_component_Private->avFrame->linesize[0],
-        omx_videodec_component_Private->avCodecContext->height,
-        pic.linesize[0],omx_videodec_component_Private->eOutFramePixFmt);
+        nSize = avpicture_get_size (omx_videodec_component_Private->eOutFramePixFmt,
+                                      omx_videodec_component_Private->avCodecContext->width,
+                                      omx_videodec_component_Private->avCodecContext->height);
 
-      pOutputBuffer->nFilledLen += nSize;
+        DEBUG(DEB_LEV_FULL_SEQ, "nSize=%d,frame linesize=%d,height=%d,pic linesize=%d PixFmt=%d\n",nSize,
+                omx_videodec_component_Private->avFrame->linesize[0],
+                omx_videodec_component_Private->avCodecContext->height,
+                pic.linesize[0],omx_videodec_component_Private->eOutFramePixFmt);
+        if(pOutputBuffer->nAllocLen < nSize) {
+        	DEBUG(DEB_LEV_ERR, "Ouch!!!! Output buffer Alloc Len %d less than Frame Size %d\n",(int)pOutputBuffer->nAllocLen,nSize);
+           	return;
+        }
 
-    } else {
+        pOutputBuffer->nFilledLen += nSize;
+
+    } else if (nLen == 0) {
+        DEBUG(DEB_LEV_ERR, "nLen == 0\n");
       /**  This condition becomes true when the input buffer has completely be consumed.
         * In this case is immediately switched because there is no real buffer consumption
         */
@@ -551,6 +578,13 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
         */
       omx_videodec_component_Private->isNewBuffer = 1;
       pOutputBuffer->nFilledLen = 0;
+    } else {
+        DEBUG(DEB_LEV_ERR, "nLen < 0\n");
+        DEBUG(DEB_LEV_ERR, "Skip frame or pseudo-frame of length %u\n", frameLen);
+        omx_videodec_component_Private->inputCurrBuffer += frameLen;
+        omx_videodec_component_Private->inputCurrLength -= frameLen;
+        pInputBuffer->nFilledLen -= frameLen;
+        continue;
     }
 
     nOutputFilled = 1;
@@ -834,4 +868,25 @@ OMX_ERRORTYPE omx_videodec_component_ComponentRoleEnum(
     return OMX_ErrorUnsupportedIndex;
   }
   return OMX_ErrorNone;
+}
+
+int nextFrameLen(OMX_U8* pBuffer, OMX_U32 nFilledLen, unsigned int* length) {
+	unsigned int i;
+	DEBUG(DEB_LEV_FUNCTION_NAME, "In %s nFilledLen %u, pBuffer %p\n", __func__, (unsigned int)nFilledLen, pBuffer);
+
+	for (i = 1; i<nFilledLen-3; i++) {
+		if (pBuffer[i] == 0x0) {
+			if (pBuffer[i+1] == 0x0) {
+				if (pBuffer[i+2] == 0x0) {
+					if (pBuffer[i+3] == 0x01) {
+						DEBUG(DEB_LEV_ERR, "GOTCHA!!\n");
+						*length = i;
+						return 0;
+					}
+				}
+			}
+		}
+	}
+	*length = nFilledLen;
+	return -1;
 }

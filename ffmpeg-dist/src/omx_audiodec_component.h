@@ -64,9 +64,10 @@ DERIVEDCLASS(omx_audiodec_component_PrivateType, omx_base_filter_PrivateType)
   /** @param avCodec pointer to the ffpeg audio decoder */ \
   AVCodec *avCodec;  \
   /** @param avCodecContext pointer to FFmpeg decoder context  */ \
-  AVCodecContext *avCodecContext;  \
+  AVCodecContext *avCodecContext; \
+  AVPacket avpkt; \
   /** @param pAudioMp3 Reference to OMX_AUDIO_PARAM_MP3TYPE structure*/  \
-  OMX_AUDIO_PARAM_MP3TYPE pAudioMp3;  \
+  OMX_AUDIO_PARAM_MP3TYPE pAudioMp3; \
   /** @param pAudioVorbis Reference to OMX_AUDIO_PARAM_VORBISTYPE structure */ \
   OMX_AUDIO_PARAM_VORBISTYPE pAudioVorbis;  \
   /** @param pAudioAAC Reference to  OMX_AUDIO_PARAM_AACPROFILETYPE structure */ \

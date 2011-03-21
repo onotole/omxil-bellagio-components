@@ -30,9 +30,6 @@
 /** modification to include audio formats */
 #include <OMX_Audio.h>
 
-/* For FFMPEG_DECODER_VERSION */
-#include <config.h>
-
 #define MAX_COMPONENT_AUDIODEC 4
 
 /** output length argument passed along decoding function */
@@ -204,6 +201,8 @@ OMX_ERRORTYPE omx_audiodec_component_ffmpegLibInit(omx_audiodec_component_Privat
   OMX_U32 target_codecID;  // id of FFmpeg codec to be used for different audio formats
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s\n", __func__);
+
+  av_init_packet(&(omx_audiodec_component_Private->avpkt));
 
   switch(omx_audiodec_component_Private->audio_coding_type){
   case OMX_AUDIO_CodingMP3 :
@@ -454,19 +453,12 @@ void omx_audiodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   pOutputBuffer->nOffset=0;
   /** resetting output length to a predefined value */
   output_length = OUTPUT_LEN_STANDARD_FFMPEG;
-#if FFMPEG_DECODER_VERSION >= 2
-  len  = avcodec_decode_audio2(omx_audiodec_component_Private->avCodecContext,
+  omx_audiodec_component_Private->avpkt.data = pInputBuffer->pBuffer;
+  omx_audiodec_component_Private->avpkt.size = pInputBuffer->nFilledLen;
+
+  len  = avcodec_decode_audio3(omx_audiodec_component_Private->avCodecContext,
                               (short*)(pOutputBuffer->pBuffer),
-                              &output_length,
-                              pInputBuffer->pBuffer,
-                              pInputBuffer->nFilledLen);
-#else
-  len  = avcodec_decode_audio(omx_audiodec_component_Private->avCodecContext,
-                              (short*)(pOutputBuffer->pBuffer),
-                              &output_length,
-                              pInputBuffer->pBuffer,
-                              pInputBuffer->nFilledLen);
-#endif
+                              &output_length, &(omx_audiodec_component_Private->avpkt));
 
   DEBUG(DEB_LEV_FULL_SEQ, "In %s chl=%d sRate=%d \n", __func__,
     (int)omx_audiodec_component_Private->pAudioPcmMode.nChannels,

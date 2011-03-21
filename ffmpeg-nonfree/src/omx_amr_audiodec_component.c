@@ -30,9 +30,6 @@
 /** modification to include audio formats */
 #include <OMX_Audio.h>
 
-/* For FFMPEG_DECODER_VERSION */
-#include <config.h>
-
 #define MAX_COMPONENT_AMR_AUDIODEC 4
 
 /** output length arguement passed along decoding function */
@@ -364,19 +361,13 @@ void omx_amr_audiodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxSta
   pOutputBuffer->nOffset=0;
   /** resetting output length to a predefined value */
   output_length = OUTPUT_LEN_STANDARD_FFMPEG;
-#if FFMPEG_DECODER_VERSION >= 2
+
   len  = avcodec_decode_audio2(omx_amr_audiodec_component_Private->avCodecContext,
                               (short*)(pOutputBuffer->pBuffer),
                               &output_length,
                               pInputBuffer->pBuffer,
                               pInputBuffer->nFilledLen);
-#else
-  len  = avcodec_decode_audio(omx_amr_audiodec_component_Private->avCodecContext,
-                              (short*)(pOutputBuffer->pBuffer),
-                              &output_length,
-                              pInputBuffer->pBuffer,
-                              pInputBuffer->nFilledLen);
-#endif
+
   if((omx_amr_audiodec_component_Private->pAudioPcmMode.nSamplingRate != omx_amr_audiodec_component_Private->avCodecContext->sample_rate) ||
      ( omx_amr_audiodec_component_Private->pAudioPcmMode.nChannels!=omx_amr_audiodec_component_Private->avCodecContext->channels)) {
     DEBUG(DEB_LEV_FULL_SEQ, "---->Sending Port Settings Change Event\n");
