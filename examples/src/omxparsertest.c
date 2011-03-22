@@ -13,7 +13,7 @@
     mp3 (ffmpeg)
     aac (ffmpeg)
 
-  Copyright (C) 2007-2009 STMicroelectronics
+  Copyright (C) 2007-2011 STMicroelectronics
   Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
@@ -152,6 +152,7 @@ int flagIsDisplayRequested;     /* If Display is ON - volume, color & video sche
 int flagSetupTunnel;
 int flagAVsync;                 /* to select the AVsync option 1 = AV sync ON, clock component selected, 0 = no clock component selected*/
 int flagIsXVideoSinkRequested;   /* requested X-video sink*/
+int flagOnlyParserOutput;
 
 static void setHeader(OMX_PTR header, OMX_U32 size) {
   OMX_VERSIONTYPE* ver = (OMX_VERSIONTYPE*)(header + sizeof(OMX_U32));
@@ -373,6 +374,7 @@ void display_help() {
   printf("\n");
   printf("Usage: omxparsertest -vo outfileVideo.yuv -ao outfileAudio.pcm  [-t]  [-h] [-d] [-c] [-x] input_filename\n");
   printf("\n");
+  printf("       -o Only parser output specified. In this case the output files for audio and video should be specified with the following options\n");
   printf("       -ao outfileAudio.pcm \n");
   printf("       -vo outfileVideo.yuv \n");
   printf("                   If this option is specified, the output is written to user specified outfiles\n");
@@ -393,165 +395,6 @@ void display_help() {
   printf("           are not specified - the components are tunneled between themselves\n");
   printf("\n");
   exit(1);
-}
-
-OMX_ERRORTYPE test_OMX_ComponentNameEnum() {
-  char * name;
-  int index;
-
-  OMX_ERRORTYPE err = OMX_ErrorNone;
-
-  DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s\n",__func__);
-  name = malloc(OMX_MAX_STRINGNAME_SIZE);
-  index = 0;
-  while(1) {
-    err = OMX_ComponentNameEnum (name, OMX_MAX_STRINGNAME_SIZE, index);
-    if ((name != NULL) && (err == OMX_ErrorNone)) {
-      DEBUG(DEFAULT_MESSAGES, "component %i is %s\n",index, name);
-    } else break;
-    if (err != OMX_ErrorNone) break;
-      index++;
-  }
-  free(name);
-  name = NULL;
-  DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s result %i\n",__func__, err);
-  return err;
-}
-
-OMX_ERRORTYPE test_OMX_RoleEnum(OMX_STRING component_name) {
-  OMX_U32 no_of_roles;
-  OMX_U8 **string_of_roles;
-  OMX_ERRORTYPE err = OMX_ErrorNone;
-  int index;
-
-  DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s\n",__func__);
-  DEBUG(DEB_LEV_SIMPLE_SEQ, "Getting roles of %s. Passing Null first...\n", component_name);
-  err = OMX_GetRolesOfComponent(component_name, &no_of_roles, NULL);
-  if (err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "Not able to retrieve the number of roles of the given component\n");
-    DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s result %i\n",__func__, err);
-    return err;
-  }
-  DEBUG(DEFAULT_MESSAGES, "The number of roles for the component %s is: %i\n", component_name, (int)no_of_roles);
-
-  if(no_of_roles == 0) {
-    DEBUG(DEB_LEV_ERR, "The Number or roles is 0.\nThe component selected is not correct for the purpose of this test.\nExiting...\n");
-    err = OMX_ErrorInvalidComponentName;
-  }  else {
-    string_of_roles = (OMX_U8**)malloc(no_of_roles * sizeof(OMX_STRING));
-    for (index = 0; index<no_of_roles; index++) {
-      *(string_of_roles + index) = (OMX_U8 *)malloc(no_of_roles*OMX_MAX_STRINGNAME_SIZE);
-    }
-    DEBUG(DEB_LEV_SIMPLE_SEQ, "...then buffers\n");
-
-    err = OMX_GetRolesOfComponent(component_name, &no_of_roles, string_of_roles);
-    if (err != OMX_ErrorNone) {
-      DEBUG(DEB_LEV_ERR, "Not able to retrieve the roles of the given component\n");
-    } else if(string_of_roles != NULL) {
-      for (index = 0; index < no_of_roles; index++) {
-        DEBUG(DEFAULT_MESSAGES, "The role %i for the component:  %s \n", (index + 1), *(string_of_roles+index));
-      }
-    } else {
-      DEBUG(DEB_LEV_ERR, "role string is NULL!!! Exiting...\n");
-      err = OMX_ErrorInvalidComponentName;
-    }
-    for (index = 0; index<no_of_roles; index++) {
-      free(*(string_of_roles + index));
-    }
-    free(string_of_roles);
-  }
-  DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s result %i\n",__func__, err);
-  return err;
-}
-
-OMX_ERRORTYPE test_OMX_ComponentEnumByRole(OMX_STRING role_name) {
-  OMX_U32 no_of_comp_per_role;
-  OMX_U8 **string_of_comp_per_role;
-  OMX_ERRORTYPE err;
-  int index;
-
-  DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s\n",__func__);
-
-  DEBUG(DEFAULT_MESSAGES, "Getting number of components per role for %s\n", role_name);
-
-  err = OMX_GetComponentsOfRole(role_name, &no_of_comp_per_role, NULL);
-  if (err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "Not able to retrieve the number of components of a given role\n");
-    DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s result %i\n",__func__, err);
-    return err;
-  }
-  DEBUG(DEFAULT_MESSAGES, "Number of components per role for %s is %i\n", role_name, (int)no_of_comp_per_role);
-
-  string_of_comp_per_role = (OMX_U8**)malloc(no_of_comp_per_role * sizeof(OMX_STRING));
-  for (index = 0; index<no_of_comp_per_role; index++) {
-    string_of_comp_per_role[index] = malloc(OMX_MAX_STRINGNAME_SIZE);
-  }
-
-  err = OMX_GetComponentsOfRole(role_name, &no_of_comp_per_role, string_of_comp_per_role);
-  if (err != OMX_ErrorNone) {
-    DEBUG(DEB_LEV_ERR, "Not able to retrieve the components of a given role\n");
-    DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s result %i\n",__func__, err);
-    for (index = 0; index<no_of_comp_per_role; index++) {
-      if(string_of_comp_per_role[index]) {
-        free(string_of_comp_per_role[index]);
-        string_of_comp_per_role[index] = NULL;
-      }
-    }
-
-    if(string_of_comp_per_role)  {
-      free(string_of_comp_per_role);
-      string_of_comp_per_role = NULL;
-    }
-    return err;
-  }
-
-  DEBUG(DEFAULT_MESSAGES, " The components are:\n");
-  for (index = 0; index < no_of_comp_per_role; index++) {
-    DEBUG(DEFAULT_MESSAGES, "%s\n", string_of_comp_per_role[index]);
-  }
-  for (index = 0; index<no_of_comp_per_role; index++) {
-    if(string_of_comp_per_role[index]) {
-      free(string_of_comp_per_role[index]);
-      string_of_comp_per_role[index] = NULL;
-    }
-  }
-
-  if(string_of_comp_per_role)  {
-    free(string_of_comp_per_role);
-    string_of_comp_per_role = NULL;
-  }
-  DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s result OMX_ErrorNone\n",__func__);
-  return OMX_ErrorNone;
-}
-
-OMX_ERRORTYPE test_OpenClose(OMX_STRING component_name) {
-  OMX_ERRORTYPE err = OMX_ErrorNone;
-
-  DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s\n",__func__);
-  if(strcmp(component_name, AUDIO_COMPONENT_NAME_BASE) == 0){
-     err = OMX_GetHandle(&appPriv->audiodechandle, component_name, NULL, &audiodeccallbacks);
-     if(err != OMX_ErrorNone) {
-       DEBUG(DEB_LEV_ERR, "No component found\n");
-     } else {
-       err = OMX_FreeHandle(appPriv->audiodechandle);
-       if(err != OMX_ErrorNone) {
-         DEBUG(DEB_LEV_ERR, "In %s err %08x in Free Handle\n",__func__,err);
-       }
-     }
-   } else if(strcmp(component_name, VIDEO_COMPONENT_NAME_BASE) == 0){
-     err = OMX_GetHandle(&appPriv->videodechandle, component_name, NULL , &videodeccallbacks);
-     if(err != OMX_ErrorNone) {
-       DEBUG(DEB_LEV_ERR, "No component found\n");
-     } else {
-       err = OMX_FreeHandle(appPriv->videodechandle);
-       if(err != OMX_ErrorNone) {
-         DEBUG(DEB_LEV_ERR, "In %s err %08x in Free Handle\n",__func__,err);
-       }
-     }
-   }
-
-   DEBUG(DEFAULT_MESSAGES, "GENERAL TEST %s result %i\n",__func__, err);
-  return err;
 }
 
 int main(int argc, char** argv) {
@@ -579,6 +422,7 @@ int main(int argc, char** argv) {
     flagIsDisplayRequested = 0;
     flagAVsync             =0;
     flagIsXVideoSinkRequested = 0;
+    flagOnlyParserOutput = 0;
 
     argn_dec = 1;
     while (argn_dec < argc) {
@@ -613,6 +457,9 @@ int main(int argc, char** argv) {
             flagIsVideoOutputFileExpected = 1;
           }
           break;
+        case 'o' :
+        	flagOnlyParserOutput = 1;
+          break;
         default:
           display_help();
         }
@@ -639,6 +486,13 @@ int main(int argc, char** argv) {
       }
       argn_dec++;
     }
+	if (flagOnlyParserOutput) {
+		if (!flagDecodedOutputReceived) {
+	      DEBUG(DEB_LEV_ERR, "\n with only parser output the output files should be specified\n");
+	      display_help();
+		}
+		flagIsDisplayRequested = 0;
+	}
 
     /** input file name check */
     if ((!flagInputReceived) || ((strstr(input_file, ".3gp") == NULL))) {
@@ -742,22 +596,6 @@ int main(int argc, char** argv) {
   }else {
     DEBUG(DEB_LEV_SIMPLE_SEQ, "Omx core is initialized \n");
   }
-
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_ComponentNameEnum();
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_RoleEnum(VIDEO_COMPONENT_NAME_BASE);
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_ComponentEnumByRole(VIDEO_BASE_ROLE);
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_RoleEnum(AUDIO_COMPONENT_NAME_BASE);
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_ComponentEnumByRole(AUDIO_BASE_ROLE);
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OpenClose(VIDEO_COMPONENT_NAME_BASE);
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OpenClose(AUDIO_COMPONENT_NAME_BASE);
-  DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
 
   DEBUG(DEFAULT_MESSAGES, "The component selected for video decoding is %s\n Role is decided by the decoder\n", VIDEO_COMPONENT_NAME_BASE);
   DEBUG(DEFAULT_MESSAGES, "The component selected for audio decoding is %s\n Role is decided by the decoder\n", AUDIO_COMPONENT_NAME_BASE);
@@ -2071,13 +1909,24 @@ OMX_ERRORTYPE parser3gpFillBufferDone(
   OMX_BUFFERHEADERTYPE* pBuffer)
 {
   OMX_ERRORTYPE err;
+  char* header;
   /* Output data to video & audio decoder */
+  header = malloc(4);
+  *header = 0;
+  *(header+1) = 0;
+  *(header+2) = 0;
+  *(header+3) = 1;
 
   if(pBuffer != NULL){
     switch(pBuffer->nOutputPortIndex) {
     case VIDEO_PORT_INDEX:
       if(!bEOS) {
-        if(inBufferVideoDec[0]->pBuffer == pBuffer->pBuffer) {
+    	  if (flagOnlyParserOutput) {
+//    		  fwrite(header, 1, 4, outfileVideo);
+    	        fwrite(pBuffer->pBuffer, 1, pBuffer->nFilledLen, outfileVideo);
+    	        pBuffer->nFilledLen = 0;
+    	        err = OMX_FillThisBuffer(appPriv->parser3gphandle, pBuffer);
+    	  } else if(inBufferVideoDec[0]->pBuffer == pBuffer->pBuffer) {
           inBufferVideoDec[0]->nFilledLen = pBuffer->nFilledLen;
           inBufferVideoDec[0]->nTimeStamp = pBuffer->nTimeStamp;
           inBufferVideoDec[0]->nFlags = pBuffer->nFlags;
@@ -2102,7 +1951,11 @@ OMX_ERRORTYPE parser3gpFillBufferDone(
       break;
      case AUDIO_PORT_INDEX:
        if(!bEOS) {
-         if(inBufferAudioDec[0]->pBuffer == pBuffer->pBuffer) {
+     	  if (flagOnlyParserOutput) {
+     	        fwrite(pBuffer->pBuffer, 1, pBuffer->nFilledLen, outfileAudio);
+     	        pBuffer->nFilledLen = 0;
+    	        err = OMX_FillThisBuffer(appPriv->parser3gphandle, pBuffer);
+     	  } else if(inBufferAudioDec[0]->pBuffer == pBuffer->pBuffer) {
            inBufferAudioDec[0]->nFilledLen = pBuffer->nFilledLen;
            inBufferAudioDec[0]->nTimeStamp = pBuffer->nTimeStamp;
            inBufferAudioDec[0]->nFlags = pBuffer->nFlags;

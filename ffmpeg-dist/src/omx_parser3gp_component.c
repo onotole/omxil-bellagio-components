@@ -4,7 +4,7 @@
   OpenMAX parser3gp component. This component is a 3gp stream parser that parses the input
   file format so that client calls the appropriate decoder.
 
-  Copyright (C) 2007-2009  STMicroelectronics
+  Copyright (C) 2007-2011  STMicroelectronics
   Copyright (C) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 
   This library is free software; you can redistribute it and/or modify it under
@@ -203,6 +203,7 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
   omx_base_video_PortType *pPortV;
   omx_base_audio_PortType *pPortA;
   int error;
+  int i;
 
   DEBUG(DEB_LEV_FUNCTION_NAME,"In %s \n",__func__);
 
@@ -225,8 +226,22 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
     return OMX_ErrorBadParameter;
   }
 
-  av_find_stream_info(omx_parser3gp_component_Private->avformatcontext);
 
+  av_find_stream_info(omx_parser3gp_component_Private->avformatcontext);
+  DEBUG(DEB_LEV_ERR,"Input file data format:\n");
+  DEBUG(DEB_LEV_ERR,"    nb_streams %i\n", omx_parser3gp_component_Private->avformatcontext->nb_streams);
+  DEBUG(DEB_LEV_ERR,"    video_codec_id %i\n", omx_parser3gp_component_Private->avformatcontext->video_codec_id);
+  DEBUG(DEB_LEV_ERR,"    audio_codec_id %i\n", omx_parser3gp_component_Private->avformatcontext->audio_codec_id);
+  DEBUG(DEB_LEV_ERR,"    duration %i\n", (int)(omx_parser3gp_component_Private->avformatcontext->duration));
+  for (i = 0; i<omx_parser3gp_component_Private->avformatcontext->nb_streams; i++) {
+	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->id %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->id);
+	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec_id %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec_id);
+	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->duration %i\n",(int)(omx_parser3gp_component_Private->avformatcontext->streams[i]->duration));
+	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->extradata_size %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->extradata_size);
+	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->width %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->width);
+	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->height %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->height);
+//	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec->id %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec->id);
+  }
  /* Setting the audio and video coding types of the audio and video ports based on the information obtained from the stream */
  /* for the video port */
   pPortV = (omx_base_video_PortType *) omx_parser3gp_component_Private->ports[VIDEO_PORT_INDEX];

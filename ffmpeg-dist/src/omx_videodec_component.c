@@ -397,6 +397,7 @@ static inline void UpdateFrameSize(OMX_COMPONENTTYPE *openmaxStandComp) {
 struct SwsContext *imgConvertYuvCtx_dec = NULL;
 /** This function is used to process the input buffer and provide one output buffer
   */
+#define EXTRADATA
 void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandComp, OMX_BUFFERHEADERTYPE* pInputBuffer, OMX_BUFFERHEADERTYPE* pOutputBuffer) {
 
   omx_videodec_component_PrivateType* omx_videodec_component_Private = openmaxStandComp->pComponentPrivate;
@@ -410,11 +411,23 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   OMX_ERRORTYPE err;
   unsigned int frameLen;
   int ret = 0;
+
   DEBUG(DEB_LEV_ERR, "In %s \n",__func__);
 
   if(omx_videodec_component_Private->isFirstBuffer == OMX_TRUE) {
     omx_videodec_component_Private->isFirstBuffer = OMX_FALSE;
+#ifdef EXTRADATA
+    ret = nextFrameLen(pInputBuffer->pBuffer, pInputBuffer->nFilledLen, &frameLen);
+    omx_videodec_component_Private->extradata_size = frameLen - 4;
+    omx_videodec_component_Private->extradata = malloc(omx_videodec_component_Private->extradata_size);
+    memcpy(omx_videodec_component_Private->extradata, (pInputBuffer->pBuffer) + 4,omx_videodec_component_Private->extradata_size);
+    pInputBuffer->nFilledLen -= frameLen;
+	omx_videodec_component_Private->inputCurrBuffer = (pInputBuffer->pBuffer) + 4;
+	omx_videodec_component_Private->inputCurrLength = pInputBuffer->nFilledLen;
+	omx_videodec_component_Private->isNewBuffer = 0;
 
+
+#endif
     if (!omx_videodec_component_Private->avcodecReady) {
       err = omx_videodec_component_ffmpegLibInit(omx_videodec_component_Private);
       if (err != OMX_ErrorNone) {

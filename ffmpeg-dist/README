@@ -8,4 +8,6 @@ make
 make install
 
 This version of  ffmpeg components is compatible with
- official release of ffmpeg 0.5.
+ official release of ffmpeg 0.6.1.
+
+Actually the video decoder supports h264, the parser is under debugging.
