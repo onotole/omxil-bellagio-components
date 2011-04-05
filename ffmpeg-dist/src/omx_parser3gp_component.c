@@ -233,14 +233,13 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
   DEBUG(DEB_LEV_ERR,"    video_codec_id %i\n", omx_parser3gp_component_Private->avformatcontext->video_codec_id);
   DEBUG(DEB_LEV_ERR,"    audio_codec_id %i\n", omx_parser3gp_component_Private->avformatcontext->audio_codec_id);
   DEBUG(DEB_LEV_ERR,"    duration %i\n", (int)(omx_parser3gp_component_Private->avformatcontext->duration));
-  for (i = 0; i<omx_parser3gp_component_Private->avformatcontext->nb_streams; i++) {
+  for (i = 0; i < omx_parser3gp_component_Private->avformatcontext->nb_streams; i++) {
 	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->id %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->id);
 	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec_id %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec_id);
 	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->duration %i\n",(int)(omx_parser3gp_component_Private->avformatcontext->streams[i]->duration));
 	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->extradata_size %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->extradata_size);
 	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->width %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->width);
 	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->height %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->height);
-//	  DEBUG(DEB_LEV_ERR,"    omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec->id %i\n",omx_parser3gp_component_Private->avformatcontext->streams[i]->codec->codec->id);
   }
  /* Setting the audio and video coding types of the audio and video ports based on the information obtained from the stream */
  /* for the video port */
@@ -271,35 +270,39 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
     DEBUG(DEB_LEV_ERR,"Trouble in %s No Video Coding Type Selected (only H264 and MPEG4 codecs supported)\n",__func__);
     return OMX_ErrorBadParameter;
   }
-
-  /* for the audio port*/
-  pPortA = (omx_base_audio_PortType *) omx_parser3gp_component_Private->ports[AUDIO_PORT_INDEX];
-  switch(omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->codec_id){
-    case CODEC_ID_MP3:
-        pPortA->sPortParam.format.audio.eEncoding = OMX_AUDIO_CodingMP3;
-        pPortA->sAudioParam.eEncoding = OMX_AUDIO_CodingMP3;
-        omx_parser3gp_component_Private->audio_coding_type = OMX_AUDIO_CodingMP3;
-        break;
-    case CODEC_ID_AAC:
-        pPortA->sPortParam.format.audio.eEncoding = OMX_AUDIO_CodingAAC;
-        pPortA->sAudioParam.eEncoding = OMX_AUDIO_CodingAAC;
-        omx_parser3gp_component_Private->audio_coding_type = OMX_AUDIO_CodingAAC;
-        break;
-    default:
-    (*(omx_parser3gp_component_Private->callbacks->EventHandler))
-      (openmaxStandComp,
-      omx_parser3gp_component_Private->callbackData,
-      OMX_EventError, /* The command was completed */
-      OMX_ErrorFormatNotDetected, /* Format Not Detected */
-      AUDIO_PORT_INDEX, /* This is the output port index */
-      NULL);
-    DEBUG(DEB_LEV_ERR,"Trouble in %s No Audio Coding Type Selected (only MP3 and AAC codecs supported)\n",__func__);
-    return OMX_ErrorBadParameter;
-
+  // TODO enable a full check of transport container
+  if (omx_parser3gp_component_Private->avformatcontext->nb_streams>1) {
+	  /* for the audio port*/
+	  pPortA = (omx_base_audio_PortType *) omx_parser3gp_component_Private->ports[AUDIO_PORT_INDEX];
+	  switch(omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->codec_id){
+		case CODEC_ID_MP3:
+			pPortA->sPortParam.format.audio.eEncoding = OMX_AUDIO_CodingMP3;
+			pPortA->sAudioParam.eEncoding = OMX_AUDIO_CodingMP3;
+			omx_parser3gp_component_Private->audio_coding_type = OMX_AUDIO_CodingMP3;
+			break;
+		case CODEC_ID_AAC:
+			pPortA->sPortParam.format.audio.eEncoding = OMX_AUDIO_CodingAAC;
+			pPortA->sAudioParam.eEncoding = OMX_AUDIO_CodingAAC;
+			omx_parser3gp_component_Private->audio_coding_type = OMX_AUDIO_CodingAAC;
+			break;
+		default:
+		(*(omx_parser3gp_component_Private->callbacks->EventHandler))
+		  (openmaxStandComp,
+		  omx_parser3gp_component_Private->callbackData,
+		  OMX_EventError, /* The command was completed */
+		  OMX_ErrorFormatNotDetected, /* Format Not Detected */
+		  AUDIO_PORT_INDEX, /* This is the output port index */
+		  NULL);
+		DEBUG(DEB_LEV_ERR,"Trouble in %s No Audio Coding Type Selected (only MP3 and AAC codecs supported)\n",__func__);
+		return OMX_ErrorBadParameter;
+	  }
   }
 
   DEBUG(DEB_LEV_SIMPLE_SEQ,"In %s Video Extra data size=%d\n",__func__,omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->extradata_size);
-  DEBUG(DEB_LEV_SIMPLE_SEQ,"In %s Audio Extra data size=%d\n",__func__,omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size);
+  // TODO enable a full check of transport container
+  if (omx_parser3gp_component_Private->avformatcontext->nb_streams>1) {
+	  DEBUG(DEB_LEV_SIMPLE_SEQ,"In %s Audio Extra data size=%d\n",__func__,omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size);
+  }
   /** initialization for buff mgmt callback function */
 
   /** send callback regarding codec context extradata which will be required to
@@ -389,23 +392,27 @@ void omx_parser3gp_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandC
       return;
     }
   }
+	DEBUG(DEB_LEV_ERR, "--1--\n");
 
   if(omx_parser3gp_component_Private->isFirstBufferAudio == OMX_TRUE && pOutputBuffer->nOutputPortIndex==AUDIO_PORT_INDEX  ) {
     omx_parser3gp_component_Private->isFirstBufferAudio = OMX_FALSE;
 
-    if(omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size > 0) {
-      memcpy(pOutputBuffer->pBuffer,
-             omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata,
-             omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size);
-      pOutputBuffer->nFilledLen = omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size;
-      pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_CODECCONFIG;
+	DEBUG(DEB_LEV_ERR, "--2--\n");
+	if (omx_parser3gp_component_Private->avformatcontext->nb_streams>1) {
+		if(omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size > 0) {
+			DEBUG(DEB_LEV_ERR, "--3--\n");
+		  memcpy(pOutputBuffer->pBuffer,
+				 omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata,
+				 omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size);
+		  pOutputBuffer->nFilledLen = omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->extradata_size;
+		  pOutputBuffer->nFlags = pOutputBuffer->nFlags | OMX_BUFFERFLAG_CODECCONFIG;
 
-      DEBUG(DEB_ALL_MESS, "In %s Sending Audio First Buffer Extra Data Size=%d\n",__func__,(int)pOutputBuffer->nFilledLen);
+		  DEBUG(DEB_ALL_MESS, "In %s Sending Audio First Buffer Extra Data Size=%d\n",__func__,(int)pOutputBuffer->nFilledLen);
 
-      return;
-    }
+		  return;
+		}
+	  }
   }
-
   if(omx_parser3gp_component_Private->isFirstBufferVideo == OMX_TRUE && pOutputBuffer->nOutputPortIndex==VIDEO_PORT_INDEX  ) {
     omx_parser3gp_component_Private->isFirstBufferVideo = OMX_FALSE;
 
