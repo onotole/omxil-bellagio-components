@@ -656,7 +656,7 @@ OMX_ERRORTYPE videosrc_port_AllocateTunnelBuffer(
   omx_videosrc_component_PrivateType* omx_videosrc_component_Private = (omx_videosrc_component_PrivateType*)omx_base_component_Private;
   OMX_U8* pBuffer=NULL;
   OMX_ERRORTYPE eError=OMX_ErrorNone;
-  OMX_U32 numRetry=0,nBufferSize;
+  OMX_U32 numRetry=0,nBufferSize=0;
   OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
   OMX_U32 nLocalBufferCountActual;
   OMX_ERRORTYPE err;

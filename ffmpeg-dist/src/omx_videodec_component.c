@@ -407,7 +407,7 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   OMX_S32 nOutputFilled = 0;
   OMX_U8* outputCurrBuffer;
   int nLen = 0;
-  int nSize;
+  int nSize = 0;
   OMX_ERRORTYPE err;
   unsigned int frameLen;
   int ret = 0;

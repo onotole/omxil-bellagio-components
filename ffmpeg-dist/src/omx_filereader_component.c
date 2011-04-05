@@ -344,7 +344,7 @@ OMX_ERRORTYPE omx_filereader_component_SetParameter(
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "   Setting parameter %i\n", nParamIndex);
 
-  switch(nParamIndex) {
+  switch((int)nParamIndex) {
   case OMX_IndexParamAudioPortFormat:
     pAudioPortFormat = (OMX_AUDIO_PARAM_PORTFORMATTYPE*)ComponentParameterStructure;
     portIndex = pAudioPortFormat->nPortIndex;
@@ -425,7 +425,7 @@ OMX_ERRORTYPE omx_filereader_component_GetParameter(
   DEBUG(DEB_LEV_SIMPLE_SEQ, "In %s Getting parameter %08x\n",__func__, nParamIndex);
 
   /* Check which structure we are being fed and fill its header */
-  switch(nParamIndex) {
+  switch((int)nParamIndex) {
   case OMX_IndexParamAudioInit:
     if ((err = checkHeader(ComponentParameterStructure, sizeof(OMX_PORT_PARAM_TYPE))) != OMX_ErrorNone) {
       break;

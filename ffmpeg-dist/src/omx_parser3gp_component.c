@@ -551,7 +551,7 @@ OMX_ERRORTYPE omx_parser3gp_component_SetParameter(
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "   Setting parameter %i\n", nParamIndex);
 
-  switch(nParamIndex) {
+  switch((int)nParamIndex) {
   case OMX_IndexParamVideoPortFormat:
     pVideoPortFormat = (OMX_VIDEO_PARAM_PORTFORMATTYPE*)ComponentParameterStructure;
     portIndex = pVideoPortFormat->nPortIndex;
