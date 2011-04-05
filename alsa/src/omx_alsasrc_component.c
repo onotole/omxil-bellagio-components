@@ -116,14 +116,14 @@ OMX_ERRORTYPE omx_alsasrc_component_Constructor(OMX_COMPONENTTYPE *openmaxStandC
     return OMX_ErrorHardware;
   }
   else
-    DEBUG(DEB_LEV_SIMPLE_SEQ, "Got playback handle at %08x %08X in %i\n", (int)omx_alsasrc_component_Private->playback_handle, (int)&omx_alsasrc_component_Private->playback_handle, getpid());
+    DEBUG(DEB_LEV_SIMPLE_SEQ, "Got playback handle at %p %p in %i\n", omx_alsasrc_component_Private->playback_handle, &omx_alsasrc_component_Private->playback_handle, getpid());
 
   if (snd_pcm_hw_params_malloc(&omx_alsasrc_component_Private->hw_params) < 0) {
     DEBUG(DEB_LEV_ERR, "%s: failed allocating input pPort hw parameters\n", __func__);
     return OMX_ErrorHardware;
   }
   else
-    DEBUG(DEB_LEV_SIMPLE_SEQ, "Got hw parameters at %08x\n", (int)omx_alsasrc_component_Private->hw_params);
+    DEBUG(DEB_LEV_SIMPLE_SEQ, "Got hw parameters at %p\n", omx_alsasrc_component_Private->hw_params);
 
   if ((err = snd_pcm_hw_params_any (omx_alsasrc_component_Private->playback_handle, omx_alsasrc_component_Private->hw_params)) < 0) {
     DEBUG(DEB_LEV_ERR, "cannot initialize hardware parameter structure (%s)\n",  snd_strerror (err));

@@ -54,7 +54,7 @@ static void mem_init_destination(j_compress_ptr cinfo)
   dmgr->next_output_byte = dest;
   dmgr->free_in_buffer = destlen;
 
-  DEBUG(DEB_LEV_ERR, "In %s: free_in_buffer=%d next_output_byte=%x\n", __func__,dmgr->free_in_buffer,(int)dmgr->next_output_byte);
+  DEBUG(DEB_LEV_ERR, "In %s: free_in_buffer=%zu next_output_byte=%p\n", __func__, dmgr->free_in_buffer, dmgr->next_output_byte);
 
 }
 
@@ -70,7 +70,7 @@ static void mem_term_destination(j_compress_ptr cinfo)
       (struct jpeg_destination_mgr*)(cinfo->dest);
   len = destlen - dmgr->free_in_buffer;
 
-  DEBUG(DEB_LEV_ERR, "In %s: destlen=%d free_in_buffer=%d len=%d\n", __func__,destlen,dmgr->free_in_buffer,len);
+  DEBUG(DEB_LEV_ERR, "In %s: destlen=%d free_in_buffer=%zu len=%d\n", __func__, destlen, dmgr->free_in_buffer, len);
 
   dmgr->free_in_buffer = 0;
 }
