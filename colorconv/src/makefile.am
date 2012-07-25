@@ -1,0 +1,12 @@
+omxcolorconvdir = $(plugindir)
+
+omxcolorconv_LTLIBRARIES = libomxcolorconv.la
+
+libomxcolorconv_la_SOURCES =	omx_colorconv_component.c omx_colorconv_component.h \
+				library_entry_point.c
+
+libomxcolorconv_la_LIBADD = $(top_builddir)/src/libomxil-bellagio.la
+libomxcolorconv_la_LDFLAGS =	$(PLUGIN_LDFLAGS)
+libomxcolorconv_la_CFLAGS =	-I$(top_srcdir)/include \
+				-I$(top_srcdir)/src \
+				-I$(top_srcdir)/src/base
