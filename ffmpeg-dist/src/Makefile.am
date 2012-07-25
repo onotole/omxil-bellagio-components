@@ -2,7 +2,7 @@ lib_LTLIBRARIES = libomxffmpegdist.la
 
 libomxffmpegdist_la_SOURCES = omx_audioenc_component.c  \
                           omx_filereader_component.c \
-                          omx_videodec_component.c \
+                          omx_videodec_component_ffmpeg.c \
                           omx_audiodec_component.c  \
                           omx_ffmpeg_colorconv_component.c \
                           omx_parser3gp_component.c \
