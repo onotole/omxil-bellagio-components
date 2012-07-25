@@ -1118,6 +1118,7 @@ void omx_fbdev_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
   static int input_dest_scr_index = 0;
 
   OMX_COLOR_FORMATTYPE input_colorformat = pPort->sVideoParam.eColorFormat;
+
   OMX_S32 input_cpy_width = (OMX_S32) pPort->omxConfigCrop.nWidth;      //  Width (in columns) of the crop rectangle
   OMX_U32 input_cpy_height = pPort->omxConfigCrop.nHeight;          //  Height (in rows) of the crop rectangle
 
@@ -1478,6 +1479,8 @@ OMX_ERRORTYPE omx_fbdev_sink_component_SetParameter(
       //  Figure out stride, slice height, min buffer size
       pPort->sPortParam.format.video.nStride = calcStride(pPort->sPortParam.format.video.nFrameWidth, pPort->sVideoParam.eColorFormat);
       pPort->sPortParam.format.video.nSliceHeight = pPort->sPortParam.format.video.nFrameHeight;  //  No support for slices yet
+
+      pPort->sPortParam.nBufferSize = (OMX_U32) abs(pPort->sPortParam.format.video.nStride) * pPort->sPortParam.format.video.nSliceHeight;
       break;
     case OMX_IndexParamStandardComponentRole:
       pComponentRole = (OMX_PARAM_COMPONENTROLETYPE*)ComponentParameterStructure;
