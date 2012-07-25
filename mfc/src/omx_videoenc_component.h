@@ -21,7 +21,7 @@
 #define VIDEO_ENC_H264_ROLE "video_encoder.avc"
 #define VIDEO_ENC_H263_ROLE "video_encoder.h263"
 
-#define MFC_ENC_DEVICE_NAME "/dev/video9"
+#define MFC_ENC_DEVICE_NAME "/dev/video11"
 #define MFC_CAP_OUT_BUF_COUNT 8
 
 #define MFC_STATE_STREAMING 1

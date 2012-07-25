@@ -50,7 +50,6 @@ appPrivateType* appPriv;
 
 char *input_file, *output_file;
 FILE *infile,*outfile;
-int infile_size;
 int selectedType = 0;
 static OMX_BOOL bEOS = OMX_FALSE;
 OMX_U32 in_width = 176;
@@ -437,9 +436,6 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "Error in opening input file %s\n", input_file);
       exit(1);
     }
-    fseek(infile, 0L, SEEK_END);
-    infile_size = ftell(infile);
-    fseek(infile, 0L, SEEK_SET);
   }
 
   outfile = fopen(output_file, "wb");
@@ -673,7 +669,7 @@ int main(int argc, char** argv) {
   }
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "video encoder and source freed\n");
-return 0;
+  return 0; /* workaround for bellagio bugs */
   OMX_Deinit();
 
   DEBUG(DEFAULT_MESSAGES, "All components freed. Closing...\n");
@@ -838,19 +834,14 @@ OMX_ERRORTYPE videoencEmptyBufferDone(
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback.\n", __func__);
 
   if(!flagIsCameraRequested) {
-    if (ftell(infile) < infile_size) {
-      data_read = fread(pBuffer->pBuffer, sizeof(char), buffer_in_size, infile);
-      if (data_read <= 0) {
-	return OMX_ErrorNone;
-      }
-    } else
-	return OMX_ErrorNone;
-
-    if (ftell(infile) >= infile_size) {
+    data_read = fread(pBuffer->pBuffer, sizeof(char), buffer_in_size, infile);
+    if (data_read <= 0) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In the %s no more input data available\n", __func__);
       pBuffer->nFlags |= OMX_BUFFERFLAG_EOS;
-    }
-    pBuffer->nFilledLen = data_read;
+      // we must set length to non zero to allow this buf pass to BufferMgmtCallback
+      pBuffer->nFilledLen = 1;
+    } else
+      pBuffer->nFilledLen = data_read;
     DEBUG(DEB_LEV_PARAMS, "Empty buffer %p\n", pBuffer);
     err = OMX_EmptyThisBuffer(hComponent, pBuffer);
   } else if(!bEOS){

@@ -9,7 +9,7 @@
 #include "omx_videoenc_component.h"
 
 #undef DEBUG_LEVEL
-#define DEBUG_LEVEL 0
+#define DEBUG_LEVEL 255
 
 #define MFC_MIN_STREAM_SIZE (1024)
 #define MFC_MAX_STREAM_SIZE (2*1024*1024)
@@ -369,18 +369,18 @@ int mfc_v4l_deq(omx_videoenc_component_PrivateType* omx_videoenc_component_Priva
     omx_videoenc_component_Private->mfcInBufBusy[buf.index] = 0;
   }
 
-  DEBUG(DEB_LEV_FUNCTION_NAME, "Out %s(port=%d), idx=%d, bytesused=%d firstbyte=%02X\n", __func__, isCapture, buf.index, buf.m.planes[0].bytesused, omx_videoenc_component_Private->mfcOutBufAddr[0]);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "Out %s(port=%d), idx=%d, bytesused=%d\n", __func__, isCapture, buf.index, buf.m.planes[0].bytesused);
 
   return buf.index;
 }
 
-int mfc_v4l_enq(omx_videoenc_component_PrivateType* omx_videoenc_component_Private, int isCapture, int idx, int flags) {
+int mfc_v4l_enq(omx_videoenc_component_PrivateType* omx_videoenc_component_Private, int isCapture, int idx, int isEOS) {
   struct v4l2_buffer buf;
   struct v4l2_plane planes[2];
   int ret;
   int fd = omx_videoenc_component_Private->mfcFileHandle;
 
-  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s(port=%d,idx=%d,flags=%d)\n", __func__, isCapture, idx, flags);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s(port=%d,idx=%d,isEOS=%d)\n", __func__, isCapture, idx, isEOS);
 
   memset(&buf, 0, sizeof buf);
   memset(planes, 0, sizeof planes);
@@ -389,11 +389,15 @@ int mfc_v4l_enq(omx_videoenc_component_PrivateType* omx_videoenc_component_Priva
   buf.index = idx;
   buf.m.planes = planes;
   buf.length = 2;
-  buf.flags = flags;
 
   if (!isCapture) {
-    planes[0].bytesused = omx_videoenc_component_Private->mfcPlaneSize[0];
-    planes[1].bytesused = omx_videoenc_component_Private->mfcPlaneSize[1];
+    if (!isEOS) {
+        planes[0].bytesused = omx_videoenc_component_Private->mfcPlaneSize[0];
+        planes[1].bytesused = omx_videoenc_component_Private->mfcPlaneSize[1];
+    } else {
+	    planes[0].bytesused = 0;
+	    planes[1].bytesused = 0;
+    }
   }
 
   ret = ioctl(fd, VIDIOC_QBUF, &buf);
@@ -571,37 +575,46 @@ void convertYUV420PtoNV12M(OMX_U8 *yuvBuf, OMX_U8 *nvBuf[2], OMX_U32 width, OMX_
 void omx_videoenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE* openmaxStandComp, OMX_BUFFERHEADERTYPE* inBuffer, OMX_BUFFERHEADERTYPE* outBuffer)
 {
   omx_videoenc_component_PrivateType *omx_videoenc_component_Private = (omx_videoenc_component_PrivateType *)openmaxStandComp->pComponentPrivate;
-  int freeBuf;
+  int freeBuf = MFC_CAP_OUT_BUF_COUNT;
   omx_base_video_PortType *inPort = (omx_base_video_PortType *)omx_videoenc_component_Private->ports[0];
   omx_base_video_PortType *outPort = (omx_base_video_PortType *)omx_videoenc_component_Private->ports[1];
   OMX_U32 width = inPort->sPortParam.format.video.nFrameWidth;
   OMX_U32 height = inPort->sPortParam.format.video.nFrameHeight;
   OMX_U32 frameSize = width * height * 3 / 2;
 
-  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, inbuf=%p, outbuf=%p\n", __func__, inBuffer, outBuffer);
+  DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, inbuf=%d, outbuf=%d inFlags=%d\n", __func__, inBuffer->nFilledLen, outBuffer->nFilledLen, inBuffer->nFlags);
 
   int pollStatus = 0;
 
+  if (inBuffer->nFilledLen >= frameSize && !(omx_videoenc_component_Private->mfcState & MFC_STATE_EOI)) {
+    for (freeBuf = 0; freeBuf < MFC_CAP_OUT_BUF_COUNT; ++freeBuf) {
+      if (!omx_videoenc_component_Private->mfcInBufBusy[freeBuf]) {
+        DEBUG(DEB_LEV_FULL_SEQ, "Found free buf at %d\n", freeBuf);
+        break;
+      }
+    }
+  }
+
   if (omx_videoenc_component_Private->mfcState & MFC_STATE_STREAMING)
-    pollStatus = mfc_poll_status(omx_videoenc_component_Private->mfcFileHandle, 0);
+    pollStatus = mfc_poll_status(omx_videoenc_component_Private->mfcFileHandle, freeBuf < MFC_CAP_OUT_BUF_COUNT ? 0 : 1000);
 
   DEBUG(DEB_LEV_FULL_SEQ, "Poll status = %d\n", pollStatus);
   if (pollStatus & POLLOUT) {
-    mfc_v4l_deq(omx_videoenc_component_Private, 0);
+    freeBuf = mfc_v4l_deq(omx_videoenc_component_Private, 0);
   }
 
-  if (inBuffer->nFilledLen >= frameSize && !(omx_videoenc_component_Private->mfcState & MFC_STATE_EOI)) {
-    for (freeBuf = 0; freeBuf < MFC_CAP_OUT_BUF_COUNT; ++freeBuf) {
-      if (!omx_videoenc_component_Private->mfcInBufBusy[freeBuf])
-        break;
-    }
-
+  if (!(omx_videoenc_component_Private->mfcState & MFC_STATE_EOI)) {
     if (freeBuf < MFC_CAP_OUT_BUF_COUNT) {
-      int flag = 0;
-      DEBUG(DEB_LEV_FULL_SEQ, "Found free buf at %d\n", freeBuf);
-      convertYUV420PtoNV12M(inBuffer->pBuffer + inBuffer->nOffset, &omx_videoenc_component_Private->mfcInBufAddr[2*freeBuf], width, height);
+      int isEOS = 0;
+      if (inBuffer->nFilledLen >= frameSize) {
+        convertYUV420PtoNV12M(inBuffer->pBuffer + inBuffer->nOffset, &omx_videoenc_component_Private->mfcInBufAddr[2*freeBuf], width, height);
+        if (!(inBuffer->nFlags & OMX_BUFFERFLAG_EOS)) {
+          inBuffer->nFilledLen -= frameSize;
+          inBuffer->nOffset += frameSize;
+        }
+      }
       if (inBuffer->nFlags & OMX_BUFFERFLAG_EOS) {
-        flag = V4L2_BUF_FLAG_EOS;
+        isEOS = 1;
         /* BufferMgmtFunction after receiving inBuffer with EOS flag wants to finish execution, which is not what we want
            - MFC has to release all remaining encoded frames.
            Clearing this flag and not decreasing inBuffer->nFilledLen will prevent this.
@@ -609,17 +622,12 @@ void omx_videoenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE* openmaxStandCo
         inBuffer->nFlags &= ~OMX_BUFFERFLAG_EOS;
         omx_videoenc_component_Private->mfcState |= MFC_STATE_EOI;
       } else {
-        inBuffer->nFilledLen -= frameSize;
-        inBuffer->nOffset += frameSize;
+        DEBUG(DEB_LEV_FULL_SEQ, "Returning in buffer with filledLength=%d\n", inBuffer->nFilledLen);
+        inBuffer->nOffset = 0;
+        inBuffer->nFilledLen = 0;
       }
-      mfc_v4l_enq(omx_videoenc_component_Private, 0, freeBuf, flag);
+      mfc_v4l_enq(omx_videoenc_component_Private, 0, freeBuf, isEOS);
     }
-  }
-
-  if (inBuffer->nFilledLen < frameSize) {
-    DEBUG(DEB_LEV_FULL_SEQ, "Returning in buffer with filledLength=%d\n", inBuffer->nFilledLen);
-    inBuffer->nOffset = 0;
-    inBuffer->nFilledLen = 0;
   }
 
   if (pollStatus & POLLIN) {
