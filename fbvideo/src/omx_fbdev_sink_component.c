@@ -31,7 +31,7 @@
 
 
 /** height offset - reqd tadjust the display position - at the centre of upper half of screen */
-#define HEIGHT_OFFSET 10
+#define HEIGHT_OFFSET 0
 
 #define FBDEV_SINK_COMP_ROLE "fbdev.fbdev_sink"
 
@@ -73,11 +73,12 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Constructor(OMX_COMPONENTTYPE *openmaxSta
       return OMX_ErrorInsufficientResources;
     }
   } else {
-    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %p Already Allocated\n", __func__, openmaxStandComp->pComponentPrivate);
+    DEBUG(DEB_LEV_FUNCTION_NAME, "In %s, Error Component %x Already Allocated\n", __func__, (int)openmaxStandComp->pComponentPrivate);
   }
 
   omx_fbdev_sink_component_Private = openmaxStandComp->pComponentPrivate;
   omx_fbdev_sink_component_Private->ports = NULL;
+  omx_fbdev_sink_component_Private->bDoubleBuffering = OMX_TRUE;
 
   /** we could create our own port structures here
     * fixme maybe the base class could use a "port factory" function pointer?
@@ -88,10 +89,10 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Constructor(OMX_COMPONENTTYPE *openmaxSta
   omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainVideo].nPorts = 1;
 
   /** Allocate Ports and call port constructor. */
-  if (omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainVideo].nPorts /*+
-       omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainOther].nPorts)*/  && !omx_fbdev_sink_component_Private->ports) {
-    omx_fbdev_sink_component_Private->ports = calloc((omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainVideo].nPorts /* +
-                                                      omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainOther].nPorts*/), sizeof(omx_base_PortType *));
+  if ((omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainVideo].nPorts +
+       omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainOther].nPorts)  && !omx_fbdev_sink_component_Private->ports) {
+    omx_fbdev_sink_component_Private->ports = calloc((omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainVideo].nPorts +
+                                                      omx_fbdev_sink_component_Private->sPortTypesParam[OMX_PortDomainOther].nPorts), sizeof(omx_base_PortType *));
     if (!omx_fbdev_sink_component_Private->ports) {
       return OMX_ErrorInsufficientResources;
     }
@@ -106,8 +107,8 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Constructor(OMX_COMPONENTTYPE *openmaxSta
 
   /** Domain specific section for the allocated port. */
 
-  pPort->sPortParam.format.video.nFrameWidth = 352;
-  pPort->sPortParam.format.video.nFrameHeight = 288;
+  pPort->sPortParam.format.video.nFrameWidth = 480;
+  pPort->sPortParam.format.video.nFrameHeight = 480;
   pPort->sPortParam.format.video.nBitrate = 0;
   pPort->sPortParam.format.video.xFramerate = 25;
   pPort->sPortParam.format.video.eColorFormat = OMX_COLOR_Format24bitRGB888;
@@ -188,7 +189,15 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Destructor(OMX_COMPONENTTYPE *openmaxStan
 
 OMX_S32 calcStride2(omx_fbdev_sink_component_PrivateType* omx_fbdev_sink_component_Private) {
   OMX_U32 stride;
-  stride = omx_fbdev_sink_component_Private->fscr_info.line_length;
+
+  if(omx_fbdev_sink_component_Private->vscr_info.bits_per_pixel == 32){
+    stride = omx_fbdev_sink_component_Private->fscr_info.line_length;
+  } else if(omx_fbdev_sink_component_Private->vscr_info.bits_per_pixel == 8){
+    stride = omx_fbdev_sink_component_Private->fscr_info.line_length*4;
+  } else{
+    stride = omx_fbdev_sink_component_Private->fscr_info.line_length*
+           omx_fbdev_sink_component_Private->vscr_info.bits_per_pixel/8;
+  }
   return stride;
 }
 /** The initialization function
@@ -252,7 +261,13 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Init(OMX_COMPONENTTYPE *openmaxStandComp)
   /** the allocated memory has more vertical reolution than needed because we want to show the
     * output displayed not at the corner of screen, but at the centre of upper part of screen
     */
-  omx_fbdev_sink_component_Private->product = omx_fbdev_sink_component_Private->fbstride * (omx_fbdev_sink_component_Private->fbheight + HEIGHT_OFFSET);
+  if (omx_fbdev_sink_component_Private->bDoubleBuffering) {
+    omx_fbdev_sink_component_Private->product = (omx_fbdev_sink_component_Private->vscr_info.xres_virtual *
+					         omx_fbdev_sink_component_Private->vscr_info.yres_virtual *
+					         omx_fbdev_sink_component_Private->vscr_info.bits_per_pixel) / 8;
+  } else {
+    omx_fbdev_sink_component_Private->product = omx_fbdev_sink_component_Private->fbstride * (omx_fbdev_sink_component_Private->fbheight+HEIGHT_OFFSET);
+  }
 
   /** memory map frame buf memory */
   omx_fbdev_sink_component_Private->scr_ptr = (unsigned char*) mmap(0, omx_fbdev_sink_component_Private->product, PROT_READ | PROT_WRITE, MAP_SHARED, omx_fbdev_sink_component_Private->fd,0);
@@ -282,6 +297,19 @@ OMX_ERRORTYPE omx_fbdev_sink_component_Deinit(OMX_COMPONENTTYPE *openmaxStandCom
   if (omx_fbdev_sink_component_Private->scr_ptr) {
     munmap(omx_fbdev_sink_component_Private->scr_ptr, omx_fbdev_sink_component_Private->product);
   }
+
+  if (omx_fbdev_sink_component_Private->bDoubleBuffering) {
+    /** Restore framebuffer panning state
+     * FIXME: instaed of resetting yoffset to 0 the value configured when this component
+     * was initialized should be used.
+     */
+    omx_fbdev_sink_component_Private->vscr_info.yoffset = 0;
+    if(ioctl(omx_fbdev_sink_component_Private->fd, FBIOPAN_DISPLAY, &omx_fbdev_sink_component_Private->vscr_info) == -1) {
+      DEBUG(DEB_LEV_ERR, "in %s Failed to restore panning state!\n", __func__);
+      /* Ignore errors */
+    }
+  }
+
   if (close(omx_fbdev_sink_component_Private->fd) == -1) {
     return OMX_ErrorHardware;
   }
@@ -520,6 +548,9 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
   OMX_U8 r,g,b,a;
   OMX_U8* org_src_cpy_ptr;
   OMX_U8* org_dst_cpy_ptr;
+
+  DEBUG(DEB_LEV_FUNCTION_NAME, "%s: memcpy  %p ---> %p\n",__func__, src_ptr, dest_ptr);
+
   /**  CAUTION: We don't do any checking of boundaries! (FIXME - see omx_ffmpeg_colorconv_component_BufferMgmtCallback)
     * Input frame is planar, not interleaved
     * Feel free to add more formats if implementing them
@@ -807,30 +838,19 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
           //last byte - all 1
           src_cpy_ptr += cp_byte;
           dest_cpy_ptr += 2;
+         /*
+          *(dest_cpy_ptr + 0) = b;
+          *(dest_cpy_ptr + 1) = g;
+          *(dest_cpy_ptr + 2) = r;
+          //last byte - all 1
+          *(dest_cpy_ptr + 3) = 0xff;
+          src_cpy_ptr += cp_byte;
+          dest_cpy_ptr += 4;
+        */
         }
         dest_cpy_ptr = org_dst_cpy_ptr + dest_stride;
         src_cpy_ptr =  org_src_cpy_ptr + src_stride;
       }
-    } else if(fbpxlfmt == OMX_COLOR_Format16bitBGR565 && colorformat == OMX_COLOR_Format24bitRGB888) {
-    	cp_byte = 3;
-    	for (i = 0; i < cpy_height; ++i) {
-    		// copy rows
-    		org_src_cpy_ptr = src_cpy_ptr;
-    		org_dst_cpy_ptr = dest_cpy_ptr;
-    		for(j = 0; j < cpy_byte_width; j += cp_byte) {
-    			//extract source rgba components
-    			r = *(src_cpy_ptr + 0);
-    			g = *(src_cpy_ptr + 1);
-    			b = *(src_cpy_ptr + 2);
-    			*(dest_cpy_ptr + 0) = ((r>>3) & 0x1f) | ((g<<3) & 0xE0);
-    			*(dest_cpy_ptr + 1) = ((g>>5) & 0x07) | (b & 0xf8);
-    			//last byte - all 1
-    			src_cpy_ptr += cp_byte;
-    			dest_cpy_ptr += 2;
-    		}
-    		dest_cpy_ptr = org_dst_cpy_ptr + dest_stride;
-    		src_cpy_ptr =  org_src_cpy_ptr + src_stride;
-    	}
     } else if(fbpxlfmt == OMX_COLOR_Format24bitRGB888 && colorformat == OMX_COLOR_Format24bitRGB888) {
       cp_byte = 3;
       for (i = 0; i < cpy_height; ++i) {
@@ -847,7 +867,7 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
           *(dest_cpy_ptr + 1) = g;
           *(dest_cpy_ptr + 2) = r;
           //last byte - all 1
-//          *(dest_cpy_ptr + 3) = 0xff;
+          *(dest_cpy_ptr + 3) = 0xff;
           src_cpy_ptr += cp_byte;
           dest_cpy_ptr += 4;
         }
@@ -1095,6 +1115,7 @@ void omx_fbdev_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
   omx_fbdev_sink_component_PortType     *pPort = (omx_fbdev_sink_component_PortType *) omx_fbdev_sink_component_Private->ports[OMX_BASE_SINK_INPUTPORT_INDEX];
   static long                           old_time = 0, new_time = 0;
   long                                  timediff=0;
+  static int input_dest_scr_index = 0;
 
   OMX_COLOR_FORMATTYPE input_colorformat = pPort->sVideoParam.eColorFormat;
   OMX_S32 input_cpy_width = (OMX_S32) pPort->omxConfigCrop.nWidth;      //  Width (in columns) of the crop rectangle
@@ -1112,11 +1133,14 @@ void omx_fbdev_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
   OMX_S32 input_src_offset_x = pPort->omxConfigCrop.nLeft;    //  Offset (in columns) to left side of crop rectangle
   OMX_S32 input_src_offset_y = pPort->omxConfigCrop.nTop;    //  Offset (in rows) from top of the image to crop rectangle
 
-  OMX_U8* input_dest_ptr = (OMX_U8*) omx_fbdev_sink_component_Private->scr_ptr + (omx_fbdev_sink_component_Private->fbstride * HEIGHT_OFFSET);
-  //OMX_U8* input_dest_ptr = (OMX_U8*) omx_fbdev_sink_component_Private->scr_ptr;
+  //OMX_U8 *input_dest_ptr = (OMX_U8*) omx_fbdev_sink_component_Private->scr_ptr + (omx_fbdev_sink_component_Private->fbstride * HEIGHT_OFFSET);
+  OMX_U8* input_dest_ptr = (OMX_U8*) omx_fbdev_sink_component_Private->scr_ptr;
+
+  if (omx_fbdev_sink_component_Private->bDoubleBuffering && input_dest_scr_index == 0) {
+	  input_dest_ptr += (omx_fbdev_sink_component_Private->product / 2);
+  }
+
   OMX_S32 input_dest_stride = (input_src_stride < 0) ? -1 * omx_fbdev_sink_component_Private->fbstride : omx_fbdev_sink_component_Private->fbstride;
-
-
   if (pPort->omxConfigMirror.eMirror == OMX_MirrorVertical || pPort->omxConfigMirror.eMirror == OMX_MirrorBoth) {
     input_dest_stride *= -1;
   }
@@ -1139,12 +1163,37 @@ void omx_fbdev_sink_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStand
     old_time = GetTime();
   }
 
+  //DEBUG(DEB_LEV_SIMPLE_SEQ, "%s Received buffer, addr: %p, sequence: %d\n", __func__, input_src_ptr, pInputBuffer->sequence);
+  DEBUG(DEB_LEV_SIMPLE_SEQ, "==> %s DEST: %dx%d, SRC: %dx%d\n", __func__,
+	(int)input_dest_height, (int)input_dest_width, (int)input_src_height, (int)input_src_width);
+
   /**  Copy image data into in_buffer */
   omx_img_copy(input_src_ptr, input_src_stride, input_src_width, input_src_height,
                input_src_offset_x, input_src_offset_y,
                input_dest_ptr, input_dest_stride, input_dest_width, input_dest_height,
                input_dest_offset_x, input_dest_offset_y,
                input_cpy_width, input_cpy_height, input_colorformat,omx_fbdev_sink_component_Private->fbpxlfmt);
+
+  if (omx_fbdev_sink_component_Private->bDoubleBuffering) {
+    int dummy = 0;
+    if(ioctl(omx_fbdev_sink_component_Private->fd, FBIO_WAITFORVSYNC, &dummy) == -1) {
+      DEBUG(DEB_LEV_ERR, "in %s Wait for VSYNC failed!\n", __func__);
+      /* Ignore errors */
+    }
+
+    if (input_dest_scr_index == 0)
+      omx_fbdev_sink_component_Private->vscr_info.yoffset = omx_fbdev_sink_component_Private->vscr_info.yres;
+    else
+      omx_fbdev_sink_component_Private->vscr_info.yoffset = 0;
+
+    if(ioctl(omx_fbdev_sink_component_Private->fd, FBIOPAN_DISPLAY, &omx_fbdev_sink_component_Private->vscr_info) == -1) {
+      DEBUG(DEB_LEV_ERR, "in %s PAN_DISPLAY failed!\n", __func__);
+      /* Ignore errors */
+    }
+    if (++input_dest_scr_index > 1)
+      input_dest_scr_index = 0;
+  }
+
   pInputBuffer->nFilledLen = 0;
 }
 

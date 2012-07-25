@@ -32,13 +32,15 @@
 #include <OMX_Core.h>
 #include <OMX_Video.h>
 #include <OMX_IVCommon.h>
+#include <pthread.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 #include <sys/time.h>
 
 #include <bellagio/omx_base_video_port.h>
-#include <bellagio/omx_base_clock_port.h>
 #include <bellagio/omx_base_sink.h>
 #include <linux/fb.h>
 
@@ -95,7 +97,8 @@ DERIVEDCLASS(omx_fbdev_sink_component_PrivateType, omx_base_sink_PrivateType)
   OMX_TIME_CLOCKSTATE          eState; \
   OMX_U32                      product;\
   OMX_BOOL                     frameDropFlag;\
-  int                          dropFrameCount;
+  int                          dropFrameCount; \
+  OMX_BOOL                     bDoubleBuffering;
 ENDCLASS(omx_fbdev_sink_component_PrivateType)
 
 /* Component private entry points declaration */
@@ -162,5 +165,7 @@ void omx_img_copy(OMX_U8* src_ptr, OMX_S32 src_stride, OMX_U32 src_width, OMX_U3
  *  return a value of (approximately) (n+m). This method is used, for
  *  instance, to compute the duration of call. */
 long GetTime();
+
+OMX_ERRORTYPE omx_fbdev_sink_component_port_FlushProcessingBuffers(omx_base_PortType *openmaxStandPort);
 
 #endif
