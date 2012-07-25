@@ -30,12 +30,21 @@
 /** defining global declarations */
 #define MPEG4_TYPE_SEL 1
 #define AVC_TYPE_SEL 2
-#define COMPONENT_NAME_BASE "OMX.st.video_decoder"
+
+enum codec_type {
+	CODEC_TYPE_H264,
+	CODEC_TYPE_MPEG4,
+	CODEC_TYPE_MPEG2,
+	CODEC_TYPE_H263,
+};
+
+#define COMPONENT_NAME_BASE "OMX.samsung.video_decoder"
+//#define COMPONENT_NAME_BASE "OMX.st.video_decoder"
 #define BASE_ROLE "video_decoder.avc"
-#define COMPONENT_NAME_BASE_LEN 20
+#define COMPONENT_NAME_BASE_LEN 25
 
 /** global variables */
-OMX_COLOR_FORMATTYPE COLOR_CONV_OUT_RGB_FORMAT = OMX_COLOR_Format24bitRGB888;
+OMX_COLOR_FORMATTYPE COLOR_CONV_OUT_RGB_FORMAT = OMX_COLOR_Format32bitARGB8888;
 
 appPrivateType* appPriv;
 
@@ -78,7 +87,7 @@ OMX_U32 out_height = 0, new_out_height = 0;
 
 FILE *fd,*outfile;
 char *input_file, *output_file;
-int selectedType = 0;
+enum codec_type selectedType = 0;
 
 int flagIsOutputExpected;
 int flagDecodedOutputReceived;
@@ -88,6 +97,7 @@ int flagIsSinkRequested;
 int flagIsFormatRequested;
 int flagSetupTunnel;
 int flagIsXrequired;
+int flagUseDrm;
 
 static OMX_BOOL bEOS = OMX_FALSE;
 
@@ -410,6 +420,7 @@ int main(int argc, char** argv) {
     flagIsSinkRequested = 0;
     flagIsFormatRequested = 0;
     flagIsXrequired = 0;
+    flagUseDrm = 0;
 
     argn_dec = 1;
     while (argn_dec < argc) {
@@ -441,6 +452,9 @@ int main(int argc, char** argv) {
           case 'x' :
         	  flagIsXrequired = 1;
             break;
+          case 'd':
+        	  flagUseDrm = 1;
+        	break;
           default:
             display_help();
         }
@@ -485,8 +499,14 @@ int main(int argc, char** argv) {
     }
 
     /** input file name check */
-    if ((!flagInputReceived) || ((strstr(input_file, ".m4v") == NULL) && (strstr(input_file, ".264") == NULL))) {
-      DEBUG(DEB_LEV_ERR, "\n you must specify appropriate input file of .m4v or .264 format\n");
+    if ((!flagInputReceived) ||
+    		(
+    				(strstr(input_file, ".m4v") == NULL) &&
+    				(strstr(input_file, ".m2v") == NULL) &&
+    				(strstr(input_file, ".264") == NULL) &&
+    				(strstr(input_file, ".263") == NULL)
+    )) {
+      DEBUG(DEB_LEV_ERR, "\n you must specify appropriate input file of .m4v, .m2v, .264, .263 format\n");
       display_help();
     }
 
@@ -534,9 +554,13 @@ int main(int argc, char** argv) {
 
     /** determine the input file format in case of decoding or color converting */
     if((strstr(input_file, ".m4v") != NULL)) {
-      selectedType = MPEG4_TYPE_SEL;
+      selectedType = CODEC_TYPE_MPEG4;
     } else if((strstr(input_file, ".264") != NULL)) {
-      selectedType = AVC_TYPE_SEL;
+      selectedType = CODEC_TYPE_H264;
+    } else if((strstr(input_file, ".m2v") != NULL)) {
+          selectedType = CODEC_TYPE_MPEG2;
+    } else if((strstr(input_file, ".263") != NULL)) {
+              selectedType = CODEC_TYPE_H263;
     } else {
       DEBUG(DEB_LEV_ERR, "\n input file format and operation not supported \n");
       display_help();
@@ -574,8 +598,8 @@ int main(int argc, char** argv) {
   }
 
   /** setting input picture width to a default value (vga format) for allocation of video decoder buffers */
-  out_width = 640;
-  out_height = 480;
+  out_width = 480;
+  out_height = 400;
 
   /* Initialize application private data */
   appPriv = malloc(sizeof(appPrivateType));
@@ -618,10 +642,20 @@ int main(int argc, char** argv) {
 
   full_component_name = malloc(sizeof(char*) * OMX_MAX_STRINGNAME_SIZE);
   strcpy(full_component_name, COMPONENT_NAME_BASE);
-  if(selectedType == MPEG4_TYPE_SEL) {
-    strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".mpeg4");
-  } else if (selectedType == AVC_TYPE_SEL) {
-    strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".avc");
+
+  switch (selectedType) {
+  case CODEC_TYPE_MPEG4:
+	  strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".mpeg4");
+	  break;
+  case CODEC_TYPE_H264:
+	  strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".avc");
+	  break;
+  case CODEC_TYPE_H263:
+  	  strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".h263");
+  	  break;
+  case CODEC_TYPE_MPEG2:
+	  strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".mpeg2");
+	  break;
   }
 
   DEBUG(DEFAULT_MESSAGES, "The component selected for decoding is %s\n", full_component_name);
@@ -637,7 +671,11 @@ int main(int argc, char** argv) {
 
   /** getting color converter component handle, if specified */
   if(flagIsColorConvRequested == 1) {
-    err = OMX_GetHandle(&appPriv->colorconv_handle, "OMX.st.video_colorconv.ffmpeg", NULL, &colorconv_callbacks);
+
+	  // Choose Samsung codec instead of the ST one
+	  //err = OMX_GetHandle(&appPriv->colorconv_handle, "OMX.st.video_colorconv.ffmpeg", NULL, &colorconv_callbacks);
+	  err = OMX_GetHandle(&appPriv->colorconv_handle, "OMX.samsung.v4l.video_colorconv", NULL, &colorconv_callbacks);
+
     if(err != OMX_ErrorNone){
       DEBUG(DEB_LEV_ERR, "No color converter component found. Exiting...\n");
       exit(1);
@@ -649,6 +687,8 @@ int main(int argc, char** argv) {
     if(flagIsSinkRequested == 1) {
     	if (flagIsXrequired) {
     		err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.video.xvideosink", NULL, &fbdev_sink_callbacks);
+    	} else if (flagUseDrm == 1) {
+    		err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.samsung.drmdev.drmdev_sink", NULL, &fbdev_sink_callbacks);
     	} else {
     		err = OMX_GetHandle(&appPriv->fbdev_sink_handle, "OMX.st.fbdev.fbdev_sink", NULL, &fbdev_sink_callbacks);
     	}
@@ -680,13 +720,98 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "Set up Tunnel between video dec & color conv Failed\n");
       exit(1);
     }
+
     err = OMX_SetupTunnel(appPriv->colorconv_handle, 1, appPriv->fbdev_sink_handle, 0);
-    if(err != OMX_ErrorNone) {
-      DEBUG(DEB_LEV_ERR, "Set up Tunnel between color conv & video sink Failed\n");
-      exit(1);
+        if(err != OMX_ErrorNone) {
+          DEBUG(DEB_LEV_ERR, "Set up Tunnel between color conv & video sink Failed\n");
+          exit(1);
+        }
+        DEBUG(DEFAULT_MESSAGES, "Set up Tunnel Completed\n");
+
+    // MFC the output port supplier
+
+    OMX_PARAM_BUFFERSUPPLIERTYPE sBufferSupplier;
+    setHeader(&sBufferSupplier, sizeof(OMX_PARAM_BUFFERSUPPLIERTYPE));
+
+    sBufferSupplier.nPortIndex = 1;
+
+    err = OMX_GetParameter(appPriv->videodechandle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+        if(err!=OMX_ErrorNone) {
+          DEBUG(DEB_LEV_ERR, "In %s Getting Video Encoder Output Port Buffer Supplier Error=%x\n",__func__,err);
+          return err;
+        }
+
+
+    sBufferSupplier.eBufferSupplier = OMX_BufferSupplyOutput;
+
+
+    err = OMX_SetParameter(appPriv->videodechandle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+    if(err!=OMX_ErrorNone) {
+      DEBUG(DEB_LEV_ERR, "In %s Setting Video Encoder Output Port Buffer Supplier Error=%x\n",__func__,err);
+      return err;
     }
     DEBUG(DEFAULT_MESSAGES, "Set up Tunnel Completed\n");
-  }
+
+    // MFC the port supplier
+
+    setHeader(&sBufferSupplier, sizeof(OMX_PARAM_BUFFERSUPPLIERTYPE));
+    sBufferSupplier.nPortIndex = 0;
+
+    err = OMX_GetParameter(appPriv->colorconv_handle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+            if(err!=OMX_ErrorNone) {
+              DEBUG(DEB_LEV_ERR, "In %s Getting color converter Input Port Buffer Supplier Error=%x\n",__func__,err);
+              return err;
+            }
+
+        sBufferSupplier.eBufferSupplier = OMX_BufferSupplyOutput;
+
+
+    err = OMX_SetParameter(appPriv->colorconv_handle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+        if(err!=OMX_ErrorNone) {
+          DEBUG(DEB_LEV_ERR, "In %s Setting Color Converter Input Port Buffer Supplier Error=%x\n",__func__,err);
+          return err;
+        }
+
+        // DRM port supplier
+	setHeader(&sBufferSupplier, sizeof(OMX_PARAM_BUFFERSUPPLIERTYPE));
+	sBufferSupplier.nPortIndex = 1;
+
+	err = OMX_GetParameter(appPriv->colorconv_handle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+		if(err!=OMX_ErrorNone) {
+		  DEBUG(DEB_LEV_ERR, "In %s Getting color converter Input Port Buffer Supplier Error=%x\n",__func__,err);
+		  return err;
+		}
+
+	    sBufferSupplier.eBufferSupplier = OMX_BufferSupplyInput;
+
+
+	err = OMX_SetParameter(appPriv->colorconv_handle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+	    if(err!=OMX_ErrorNone) {
+	      DEBUG(DEB_LEV_ERR, "In %s Setting Color Converter Input Port Buffer Supplier Error=%x\n",__func__,err);
+	      return err;
+	    }
+
+
+
+	// DRM port supplier
+	setHeader(&sBufferSupplier, sizeof(OMX_PARAM_BUFFERSUPPLIERTYPE));
+	sBufferSupplier.nPortIndex = 0;
+
+	err = OMX_GetParameter(appPriv->fbdev_sink_handle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+			if(err!=OMX_ErrorNone) {
+			  DEBUG(DEB_LEV_ERR, "In %s Getting color converter Input Port Buffer Supplier Error=%x\n",__func__,err);
+			  return err;
+			}
+
+		sBufferSupplier.eBufferSupplier = OMX_BufferSupplyInput;
+
+
+	err = OMX_SetParameter(appPriv->fbdev_sink_handle, OMX_IndexParamCompBufferSupplier, &sBufferSupplier);
+		if(err!=OMX_ErrorNone) {
+		  DEBUG(DEB_LEV_ERR, "In %s Setting Color Converter Input Port Buffer Supplier Error=%x\n",__func__,err);
+		  return err;
+		}
+	  }
 
 
   /** sending command to video decoder component to go to idle state */

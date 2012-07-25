@@ -1,6 +1,8 @@
-bin_PROGRAMS = omxaudiodectest omxvoicexchange omxaudioenctest \
-               omxcameratest omxmuxtest omxparsertest \
-               omxvideocapnplay omxvideoenctest omxvideodectest
+bin_PROGRAMS = omxvideodectest
+
+#bin_PROGRAMS = omxaudiodectest omxvoicexchange omxaudioenctest \
+#               omxcameratest omxmuxtest omxparsertest \
+#               omxvideocapnplay omxvideoenctest omxvideodectest
 
 bellagio_LDADD = $(OMXIL_LIBS)
 common_CFLAGS = -I$(top_srcdir)/test/components/common -I$(includedir) $(OMXIL_CFLAGS)
