@@ -28,8 +28,9 @@
 
 /** defining global declarations */
 #define MPEG4_TYPE_SEL 1
-#define COMPONENT_NAME_BASE "OMX.st.video_encoder"
-#define BASE_ROLE "video_encoder.mpeg4"
+//#define COMPONENT_NAME_BASE "OMX.st.video_encoder"
+#define COMPONENT_NAME_BASE "OMX.samsung.video_encoder"
+#define BASE_ROLE "video_encoder.avc"
 #define COMPONENT_NAME_BASE_LEN 20
 
 OMX_CALLBACKTYPE videoenccallbacks = {
@@ -49,13 +50,14 @@ appPrivateType* appPriv;
 
 char *input_file, *output_file;
 FILE *infile,*outfile;
+int infile_size;
 int selectedType = 0;
 static OMX_BOOL bEOS = OMX_FALSE;
 OMX_U32 in_width = 176;
 OMX_U32 in_height = 144;
 OMX_U32 frame_rate = 25;
 int buffer_in_size = BUFFER_IN_SIZE;
-OMX_U32 buffer_out_size = 32768;
+OMX_U32 buffer_out_size = 2097152;
 OMX_U32 outbuf_colorconv_size;
 char codecName[10];
 
@@ -435,6 +437,9 @@ int main(int argc, char** argv) {
       DEBUG(DEB_LEV_ERR, "Error in opening input file %s\n", input_file);
       exit(1);
     }
+    fseek(infile, 0L, SEEK_END);
+    infile_size = ftell(infile);
+    fseek(infile, 0L, SEEK_SET);
   }
 
   outfile = fopen(output_file, "wb");
@@ -462,19 +467,19 @@ int main(int argc, char** argv) {
   }
 
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_ComponentNameEnum();
+//  test_OMX_ComponentNameEnum();
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_RoleEnum(COMPONENT_NAME_BASE);
+//  test_OMX_RoleEnum(COMPONENT_NAME_BASE);
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OMX_ComponentEnumByRole(BASE_ROLE);
+//  test_OMX_ComponentEnumByRole(BASE_ROLE);
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
-  test_OpenClose(COMPONENT_NAME_BASE);
+//  test_OpenClose(COMPONENT_NAME_BASE);
   DEBUG(DEFAULT_MESSAGES, "------------------------------------\n");
 
   full_component_name = (OMX_STRING) malloc(sizeof(char*) * OMX_MAX_STRINGNAME_SIZE);
   strcpy(full_component_name, COMPONENT_NAME_BASE);
   if(selectedType == MPEG4_TYPE_SEL) {
-    strcpy(full_component_name + COMPONENT_NAME_BASE_LEN, ".mpeg4");
+    strcat(full_component_name, ".avc");
   }
 
   DEBUG(DEFAULT_MESSAGES, "The component selected for encoding is %s\n", full_component_name);
@@ -668,7 +673,7 @@ int main(int argc, char** argv) {
   }
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "video encoder and source freed\n");
-
+return 0;
   OMX_Deinit();
 
   DEBUG(DEFAULT_MESSAGES, "All components freed. Closing...\n");
@@ -833,13 +838,17 @@ OMX_ERRORTYPE videoencEmptyBufferDone(
   DEBUG(DEB_LEV_FULL_SEQ, "Hi there, I am in the %s callback.\n", __func__);
 
   if(!flagIsCameraRequested) {
-    data_read = fread(pBuffer->pBuffer, sizeof(char), buffer_in_size, infile);
-    if (data_read <= 0) {
+    if (ftell(infile) < infile_size) {
+      data_read = fread(pBuffer->pBuffer, sizeof(char), buffer_in_size, infile);
+      if (data_read <= 0) {
+	return OMX_ErrorNone;
+      }
+    } else
+	return OMX_ErrorNone;
+
+    if (ftell(infile) >= infile_size) {
       DEBUG(DEB_LEV_SIMPLE_SEQ, "In the %s no more input data available\n", __func__);
-      pBuffer->nFlags = pBuffer->nFlags | OMX_BUFFERFLAG_EOS;
-      pBuffer->nFilledLen = 0;
-      tsem_up(appPriv->eofSem);
-      return OMX_ErrorNone;
+      pBuffer->nFlags |= OMX_BUFFERFLAG_EOS;
     }
     pBuffer->nFilledLen = data_read;
     DEBUG(DEB_LEV_PARAMS, "Empty buffer %p\n", pBuffer);
@@ -884,5 +893,3 @@ OMX_ERRORTYPE videoencFillBufferDone(
   }
   return OMX_ErrorNone;
 }
-
-

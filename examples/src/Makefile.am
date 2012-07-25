@@ -1,4 +1,4 @@
-bin_PROGRAMS = omxvideodectest
+bin_PROGRAMS = omxvideodectest omxvideoenctest
 
 #bin_PROGRAMS = omxaudiodectest omxvoicexchange omxaudioenctest \
 #               omxcameratest omxmuxtest omxparsertest \

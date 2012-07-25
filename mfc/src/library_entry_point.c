@@ -31,6 +31,7 @@
 #include <bellagio/st_static_component_loader.h>
 #include <config.h>
 #include <omx_videodec_component.h>
+#include <omx_videoenc_component.h>
 
 /** @brief The library entry point. It must have the same name for each
 * library of the components loaded by the ST static component loader.
@@ -51,10 +52,10 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
 
   if (stComponents == NULL) {
     DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
-    return 1;
+    return 2;
   }
 
-  /** component 2 - video decoder */
+  /** component 1 - video decoder */
   stComponents[0]->componentVersion.s.nVersionMajor = 1;
   stComponents[0]->componentVersion.s.nVersionMinor = 1;
   stComponents[0]->componentVersion.s.nRevision = 1;
@@ -93,6 +94,42 @@ int omx_component_library_Setup(stLoaderComponentType **stComponents) {
   strcpy(stComponents[0]->name_specific[3], "OMX.samsung.video_decoder.h263");
   strcpy(stComponents[0]->role_specific[3], "video_decoder.h263");
 
+  /** component 2 - video encoder */
+  stComponents[1]->componentVersion.s.nVersionMajor = 1;
+  stComponents[1]->componentVersion.s.nVersionMinor = 1;
+  stComponents[1]->componentVersion.s.nRevision = 1;
+  stComponents[1]->componentVersion.s.nStep = 1;
+
+  stComponents[1]->name = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+  if (stComponents[1]->name == NULL) {
+    return OMX_ErrorInsufficientResources;
+  }
+  strcpy(stComponents[1]->name, "OMX.samsung.video_encoder");
+  stComponents[1]->name_specific_length = 3;
+  stComponents[1]->constructor = omx_videoenc_component_Constructor;
+
+  stComponents[1]->name_specific = calloc(stComponents[1]->name_specific_length,sizeof(char *));
+  stComponents[1]->role_specific = calloc(stComponents[1]->name_specific_length,sizeof(char *));
+
+  for(i=0;i<stComponents[1]->name_specific_length;i++) {
+    stComponents[1]->name_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[1]->name_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+  for(i=0;i<stComponents[1]->name_specific_length;i++) {
+    stComponents[1]->role_specific[i] = calloc(1, OMX_MAX_STRINGNAME_SIZE);
+    if (stComponents[1]->role_specific[i] == NULL) {
+      return OMX_ErrorInsufficientResources;
+    }
+  }
+
+  strcpy(stComponents[1]->name_specific[0], "OMX.samsung.video_encoder.mpeg4");
+  strcpy(stComponents[1]->role_specific[0], "video_encoder.mpeg4");
+  strcpy(stComponents[1]->name_specific[1], "OMX.samsung.video_encoder.avc");
+  strcpy(stComponents[1]->role_specific[1], "video_encoder.avc");
+  strcpy(stComponents[1]->name_specific[2], "OMX.samsung.video_encoder.h263");
+  strcpy(stComponents[1]->role_specific[2], "video_encoder.h263");
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "Out of %s \n",__func__);
 
