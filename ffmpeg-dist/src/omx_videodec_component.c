@@ -125,7 +125,7 @@ OMX_ERRORTYPE omx_videodec_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
 
   SetInternalVideoParameters(openmaxStandComp);
 
-  omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_YUV420P;
+  omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_YUV420P;
 
   if(omx_videodec_component_Private->video_coding_type == OMX_VIDEO_CodingMPEG4) {
     omx_videodec_component_Private->ports[OMX_BASE_FILTER_INPUTPORT_INDEX]->sPortParam.format.video.eCompressionFormat = OMX_VIDEO_CodingMPEG4;
@@ -195,17 +195,17 @@ OMX_ERRORTYPE omx_videodec_component_Destructor(OMX_COMPONENTTYPE *openmaxStandC
 OMX_ERRORTYPE omx_videodec_component_ffmpegLibInit(omx_videodec_component_PrivateType* omx_videodec_component_Private) {
 
   OMX_U32 target_codecID;
-  avcodec_init();
+  avcodec_register_all();
   av_register_all();
 
   DEBUG(DEB_LEV_SIMPLE_SEQ, "FFmpeg library/codec initialized\n");
 
   switch(omx_videodec_component_Private->video_coding_type) {
     case OMX_VIDEO_CodingMPEG4 :
-      target_codecID = CODEC_ID_MPEG4;
+      target_codecID = AV_CODEC_ID_MPEG4;
       break;
     case OMX_VIDEO_CodingAVC :
-      target_codecID = CODEC_ID_H264;
+      target_codecID = AV_CODEC_ID_H264;
       break;
     default :
       DEBUG(DEB_LEV_ERR, "\n codecs other than H.264 / MPEG-4 AVC are not supported -- codec not found\n");
@@ -219,10 +219,10 @@ OMX_ERRORTYPE omx_videodec_component_ffmpegLibInit(omx_videodec_component_Privat
     return OMX_ErrorInsufficientResources;
   }
 
-  omx_videodec_component_Private->avCodecContext = avcodec_alloc_context();
+  omx_videodec_component_Private->avCodecContext = avcodec_alloc_context3(NULL);
 
   /** necessary flags for MPEG-4 or H.264 stream */
-  omx_videodec_component_Private->avFrame = avcodec_alloc_frame();
+  omx_videodec_component_Private->avFrame = av_frame_alloc();
   if(omx_videodec_component_Private->extradata_size >0) {
     omx_videodec_component_Private->avCodecContext->extradata = omx_videodec_component_Private->extradata;
     omx_videodec_component_Private->avCodecContext->extradata_size = (int)omx_videodec_component_Private->extradata_size;
@@ -230,7 +230,7 @@ OMX_ERRORTYPE omx_videodec_component_ffmpegLibInit(omx_videodec_component_Privat
     omx_videodec_component_Private->avCodecContext->flags |= CODEC_FLAG_TRUNCATED;
   }
 
-  if (avcodec_open(omx_videodec_component_Private->avCodecContext, omx_videodec_component_Private->avCodec) < 0) {
+  if (avcodec_open2(omx_videodec_component_Private->avCodecContext, omx_videodec_component_Private->avCodec, NULL) < 0) {
     DEBUG(DEB_LEV_ERR, "Could not open codec\n");
     return OMX_ErrorInsufficientResources;
   }
@@ -453,12 +453,15 @@ void omx_videodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 
   while (!nOutputFilled) {
     omx_videodec_component_Private->avCodecContext->frame_number++;
+    AVPacket pkt;
+    av_init_packet(&pkt);
+    pkt.buf = av_buffer_create(omx_videodec_component_Private->inputCurrBuffer,
+                               omx_videodec_component_Private->inputCurrLength + AV_INPUT_BUFFER_PADDING_SIZE, NULL, NULL, 0);
+    pkt.data = omx_videodec_component_Private->inputCurrBuffer;
+    pkt.size = omx_videodec_component_Private->inputCurrLength;
 
-    nLen = avcodec_decode_video(omx_videodec_component_Private->avCodecContext,
-          omx_videodec_component_Private->avFrame,
-          (int*)&internalOutputFilled,
-          omx_videodec_component_Private->inputCurrBuffer,
-          omx_videodec_component_Private->inputCurrLength);
+    nLen = avcodec_decode_video2(omx_videodec_component_Private->avCodecContext,
+                                 omx_videodec_component_Private->avFrame, (int*)&internalOutputFilled, &pkt);
 
     if (nLen < 0) {
       DEBUG(DEB_LEV_ERR, "A general error or simply frame not decoded?\n");
@@ -601,28 +604,28 @@ OMX_ERRORTYPE omx_videodec_component_SetParameter(
           if (portIndex == 1) {
             switch(port->sVideoParam.eColorFormat) {
               case OMX_COLOR_Format24bitRGB888 :
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_RGB24;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_RGB24;
                 break;
               case OMX_COLOR_Format24bitBGR888 :
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_BGR24;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_BGR24;
                 break;
               case OMX_COLOR_Format32bitBGRA8888 :
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_BGR32;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_BGR32;
                 break;
               case OMX_COLOR_Format32bitARGB8888 :
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_RGB32;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_RGB32;
                 break;
               case OMX_COLOR_Format16bitARGB1555 :
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_RGB555;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_RGB555;
                 break;
               case OMX_COLOR_Format16bitRGB565 :
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_RGB565;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_RGB565;
                 break;
               case OMX_COLOR_Format16bitBGR565 :
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_BGR565;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_BGR565;
                 break;
               default:
-                omx_videodec_component_Private->eOutFramePixFmt = PIX_FMT_YUV420P;
+                omx_videodec_component_Private->eOutFramePixFmt = AV_PIX_FMT_YUV420P;
                 break;
             }
             UpdateFrameSize (openmaxStandComp);

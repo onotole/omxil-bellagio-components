@@ -9,7 +9,7 @@ AC_SUBST(OMXIL_CFLAGS)
 AC_SUBST(OMXIL_LIBS)
 
 AC_CONFIG_HEADERS([config.h])
-CFLAGS="${CFLAGS} -Werror"
+CFLAGS="${CFLAGS}"
 AC_PREFIX_DEFAULT(/usr/local/lib/extern_omxcomp)
 ################################################################################
 # Set the shared versioning info, according to section 6.3 of the libtool info #

@@ -146,9 +146,9 @@ OMX_ERRORTYPE omx_audiodec_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
   omx_audiodec_component_Private->BufferMgmtCallback = omx_audiodec_component_BufferMgmtCallback;
 
   /** first initializing the codec context etc that was done earlier by ffmpeglibinit function */
-  avcodec_init();
+  avcodec_register_all();
   av_register_all();
-  omx_audiodec_component_Private->avCodecContext = avcodec_alloc_context();
+  omx_audiodec_component_Private->avCodecContext = avcodec_alloc_context3(NULL);
 
   omx_audiodec_component_Private->messageHandler = omx_audiodec_component_MessageHandler;
   omx_audiodec_component_Private->destructor = omx_audiodec_component_Destructor;
@@ -207,16 +207,16 @@ OMX_ERRORTYPE omx_audiodec_component_ffmpegLibInit(omx_audiodec_component_Privat
 
   switch(omx_audiodec_component_Private->audio_coding_type){
   case OMX_AUDIO_CodingMP3 :
-    target_codecID = CODEC_ID_MP3;
+    target_codecID = AV_CODEC_ID_MP3;
     break;
   case OMX_AUDIO_CodingVORBIS :
-    target_codecID = CODEC_ID_VORBIS;
+    target_codecID = AV_CODEC_ID_VORBIS;
     break;
   case OMX_AUDIO_CodingAAC :
-    target_codecID = CODEC_ID_AAC;
+    target_codecID = AV_CODEC_ID_AAC;
     break;
   case OMX_AUDIO_CodingG726 :
-    target_codecID = CODEC_ID_ADPCM_G726;
+    target_codecID = AV_CODEC_ID_ADPCM_G726;
     break;
   default :
     DEBUG(DEB_LEV_ERR, "Audio format other than not supported\nCodec not found\n");
@@ -264,7 +264,7 @@ OMX_ERRORTYPE omx_audiodec_component_ffmpegLibInit(omx_audiodec_component_Privat
   //DEBUG(DEB_LEV_ERR, "Extra Data Size=%d\n",(int)omx_audiodec_component_Private->extradata_size);
 
   /*open the avcodec if MP3,AAC,VORBIS format selected */
-  if (avcodec_open(omx_audiodec_component_Private->avCodecContext, omx_audiodec_component_Private->avCodec) < 0) {
+  if (avcodec_open2(omx_audiodec_component_Private->avCodecContext, omx_audiodec_component_Private->avCodec, NULL) < 0) {
     DEBUG(DEB_LEV_ERR, "Could not open codec\n");
     return OMX_ErrorInsufficientResources;
   }
@@ -454,19 +454,36 @@ void omx_audiodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
   pOutputBuffer->nOffset=0;
   /** resetting output length to a predefined value */
   output_length = OUTPUT_LEN_STANDARD_FFMPEG;
-#if FFMPEG_DECODER_VERSION >= 2
-  len  = avcodec_decode_audio2(omx_audiodec_component_Private->avCodecContext,
-                              (short*)(pOutputBuffer->pBuffer),
-                              &output_length,
-                              pInputBuffer->pBuffer,
-                              pInputBuffer->nFilledLen);
-#else
-  len  = avcodec_decode_audio(omx_audiodec_component_Private->avCodecContext,
-                              (short*)(pOutputBuffer->pBuffer),
-                              &output_length,
-                              pInputBuffer->pBuffer,
-                              pInputBuffer->nFilledLen);
-#endif
+  AVPacket pkt;
+  av_init_packet(&pkt);
+  pkt.buf = av_buffer_create(pInputBuffer->pBuffer, pInputBuffer->nFilledLen, NULL, NULL, 0);
+  pkt.data = pInputBuffer->pBuffer;
+  pkt.size = pInputBuffer->nFilledLen;
+
+  AVFrame *frame = av_frame_alloc();
+  int got_frame = 0;
+
+  len = avcodec_decode_audio4(omx_audiodec_component_Private->avCodecContext, frame, &got_frame, &pkt);
+
+  if (len >= 0 && got_frame) {
+    int ch, plane_size;
+    int planar    = av_sample_fmt_is_planar(omx_audiodec_component_Private->avCodecContext->sample_fmt);
+    int data_size = av_samples_get_buffer_size(&plane_size, omx_audiodec_component_Private->avCodecContext->channels,
+                                               frame->nb_samples, omx_audiodec_component_Private->avCodecContext->sample_fmt, 1);
+    memcpy(pOutputBuffer->pBuffer, frame->extended_data[0], plane_size);
+    if (planar && omx_audiodec_component_Private->avCodecContext->channels > 1) {
+      uint8_t *out = ((uint8_t *)pOutputBuffer->pBuffer) + plane_size;
+      for (ch = 1; ch < omx_audiodec_component_Private->avCodecContext->channels; ch++) {
+        memcpy(out, frame->extended_data[ch], plane_size);
+        out += plane_size;
+      }
+    }
+    pOutputBuffer->nFilledLen = data_size;
+  } else {
+    pOutputBuffer->nFilledLen = 0;
+  }
+
+  av_frame_free(&frame);
 
   DEBUG(DEB_LEV_FULL_SEQ, "In %s chl=%d sRate=%d \n", __func__,
     (int)omx_audiodec_component_Private->pAudioPcmMode.nChannels,
@@ -524,9 +541,9 @@ void omx_audiodec_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
 
     /*pAudioPcmMode is for output port PCM data*/
     omx_audiodec_component_Private->pAudioPcmMode.nChannels = omx_audiodec_component_Private->avCodecContext->channels;
-    if(omx_audiodec_component_Private->avCodecContext->sample_fmt==SAMPLE_FMT_S16)
+    if(omx_audiodec_component_Private->avCodecContext->sample_fmt==AV_SAMPLE_FMT_S16)
       omx_audiodec_component_Private->pAudioPcmMode.nBitPerSample = 16;
-    else if(omx_audiodec_component_Private->avCodecContext->sample_fmt==SAMPLE_FMT_S32)
+    else if(omx_audiodec_component_Private->avCodecContext->sample_fmt==AV_SAMPLE_FMT_S32)
       omx_audiodec_component_Private->pAudioPcmMode.nBitPerSample = 32;
     omx_audiodec_component_Private->pAudioPcmMode.nSamplingRate = omx_audiodec_component_Private->avCodecContext->sample_rate;
 

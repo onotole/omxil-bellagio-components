@@ -86,7 +86,7 @@ DERIVEDCLASS(omx_videodec_component_PrivateType, omx_base_filter_PrivateType)
   /** @param video_coding_type Field that indicate the supported video format of video decoder */ \
   OMX_U32 video_coding_type;   \
   /** @param eOutFramePixFmt Field that indicate output frame pixel format */ \
-  enum PixelFormat eOutFramePixFmt; \
+  enum AVPixelFormat eOutFramePixFmt; \
   /** @param extradata pointer to extradata*/ \
   OMX_U8* extradata; \
   /** @param extradata_size extradata size*/ \

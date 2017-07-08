@@ -72,7 +72,7 @@ DERIVEDCLASS(omx_ffmpeg_colorconv_component_PortType, omx_base_video_PortType)
   /** @param omxConfigOutputPosition Top-Left offset from intermediate buffer to output buffer */ \
   OMX_CONFIG_POINTTYPE omxConfigOutputPosition; \
   /** @param ffmpeg_pixelformat The FFmpeg enum for pixel format */ \
-  enum PixelFormat ffmpeg_pxlfmt;
+  enum AVPixelFormat ffmpeg_pxlfmt;
 ENDCLASS(omx_ffmpeg_colorconv_component_PortType)
 
 /** ffmpeg color converter component private structure.
@@ -126,7 +126,7 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_GetConfig(
   OMX_PTR pComponentConfigStructure);
 
 /** finds pixel format */
-enum PixelFormat find_ffmpeg_pxlfmt(OMX_COLOR_FORMATTYPE omx_pxlfmt);
+enum AVPixelFormat find_ffmpeg_pxlfmt(OMX_COLOR_FORMATTYPE omx_pxlfmt);
 
 /** stride calculation */
 OMX_S32 calcStride(OMX_U32 width, OMX_COLOR_FORMATTYPE omx_pxlfmt);

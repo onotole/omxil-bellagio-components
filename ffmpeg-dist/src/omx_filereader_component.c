@@ -163,16 +163,13 @@ OMX_ERRORTYPE omx_filereader_component_Init(OMX_COMPONENTTYPE *openmaxStandComp)
 
   DEBUG(DEB_LEV_FUNCTION_NAME,"In %s \n",__func__);
 
-  avcodec_init();
+  avcodec_register_all();
   av_register_all();
 
   /** initialization of file reader component private data structures */
   /** opening the input file whose name is already set via setParameter */
-  error = av_open_input_file(&omx_filereader_component_Private->avformatcontext,
-                            (char*)omx_filereader_component_Private->sInputFileName,
-                            NULL,
-                            0,
-                            NULL);
+  error = avformat_open_input(&omx_filereader_component_Private->avformatcontext,
+                              (char*)omx_filereader_component_Private->sInputFileName, NULL, 0);
 
   if(error != 0) {
     DEBUG(DEB_LEV_ERR,"Couldn't Open Input Stream error=%d File Name=%s--\n",
@@ -189,7 +186,7 @@ OMX_ERRORTYPE omx_filereader_component_Init(OMX_COMPONENTTYPE *openmaxStandComp)
     return OMX_ErrorBadParameter;
   }
 
-  av_find_stream_info(omx_filereader_component_Private->avformatcontext);
+  avformat_find_stream_info(omx_filereader_component_Private->avformatcontext, NULL);
 
   if(omx_filereader_component_Private->audio_coding_type == OMX_AUDIO_CodingMP3) {
     DEBUG(DEB_LEV_SIMPLE_SEQ,"In %s Audio Coding Type Mp3\n",__func__);
@@ -241,7 +238,7 @@ OMX_ERRORTYPE omx_filereader_component_Deinit(OMX_COMPONENTTYPE *openmaxStandCom
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
   /** closing input file */
-  av_close_input_file(omx_filereader_component_Private->avformatcontext);
+  avformat_close_input(&omx_filereader_component_Private->avformatcontext);
 
   omx_filereader_component_Private->avformatReady = OMX_FALSE;
   tsem_reset(omx_filereader_component_Private->avformatSyncSem);
@@ -507,9 +504,9 @@ OMX_ERRORTYPE omx_filereader_component_GetParameter(
         pAudioAmr->eAMRBandMode =  OMX_AUDIO_AMRBandModeWB8;
         break;
       default:
-        if(omx_filereader_component_Private->avformatcontext->streams[0]->codec->codec_id == CODEC_ID_AMR_NB) {
+        if(omx_filereader_component_Private->avformatcontext->streams[0]->codec->codec_id == AV_CODEC_ID_AMR_NB) {
           pAudioAmr->eAMRBandMode = OMX_AUDIO_AMRBandModeNB0;
-        } else if(omx_filereader_component_Private->avformatcontext->streams[0]->codec->codec_id == CODEC_ID_AMR_WB) {
+        } else if(omx_filereader_component_Private->avformatcontext->streams[0]->codec->codec_id == AV_CODEC_ID_AMR_WB) {
           pAudioAmr->eAMRBandMode = OMX_AUDIO_AMRBandModeWB0;
         } else {
           pAudioAmr->eAMRBandMode = OMX_AUDIO_AMRBandModeUnused;

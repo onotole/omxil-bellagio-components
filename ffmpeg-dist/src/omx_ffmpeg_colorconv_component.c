@@ -41,52 +41,52 @@ static OMX_U32 noVideoColorConvInstance = 0;
 #define DEFAULT_VIDEO_INPUT_BUF_SIZE DEFAULT_WIDTH*DEFAULT_HEIGHT*3/2
 
 
-/**  Figure out equivalent FFmpeg PixelFormat based on OMX_COLOR_FORMATTYPE
+/**  Figure out equivalent FFmpeg AVPixelFormat based on OMX_COLOR_FORMATTYPE
   * @param omx_pxlfmt is the input OpenMAX standard pixel format
   * output is the FFmpeg library supported pixel format corresponding to this input pixel format
   * this output FFmpeg pixel format will be needed in port parameter settings
   */
-enum PixelFormat find_ffmpeg_pxlfmt(OMX_COLOR_FORMATTYPE omx_pxlfmt) {
-  enum PixelFormat ffmpeg_pxlfmt;
+enum AVPixelFormat find_ffmpeg_pxlfmt(OMX_COLOR_FORMATTYPE omx_pxlfmt) {
+  enum AVPixelFormat ffmpeg_pxlfmt;
 
   switch (omx_pxlfmt) {
     case OMX_COLOR_FormatL8:
-      ffmpeg_pxlfmt = PIX_FMT_GRAY8;
+      ffmpeg_pxlfmt = AV_PIX_FMT_GRAY8;
       break;
     case OMX_COLOR_Format16bitARGB1555:
-      ffmpeg_pxlfmt = PIX_FMT_RGB555;
+      ffmpeg_pxlfmt = AV_PIX_FMT_RGB555;
       break;
     case OMX_COLOR_Format16bitRGB565:
     case OMX_COLOR_Format16bitBGR565:
-      ffmpeg_pxlfmt = PIX_FMT_RGB565;
+      ffmpeg_pxlfmt = AV_PIX_FMT_RGB565;
       break;
     case OMX_COLOR_Format24bitRGB888:
-      ffmpeg_pxlfmt = PIX_FMT_RGB24;
+      ffmpeg_pxlfmt = AV_PIX_FMT_RGB24;
       break;
     case OMX_COLOR_Format24bitBGR888:
-      ffmpeg_pxlfmt = PIX_FMT_BGR24;
+      ffmpeg_pxlfmt = AV_PIX_FMT_BGR24;
       break;
     case OMX_COLOR_Format32bitBGRA8888:
     case OMX_COLOR_Format32bitARGB8888:
-      ffmpeg_pxlfmt = PIX_FMT_RGBA32;
+      ffmpeg_pxlfmt = AV_PIX_FMT_RGBA;
       break;
     case OMX_COLOR_FormatYUV411Planar:
     case OMX_COLOR_FormatYUV411PackedPlanar:
-      ffmpeg_pxlfmt = PIX_FMT_YUV411P;
+      ffmpeg_pxlfmt = AV_PIX_FMT_YUV411P;
       break;
     case OMX_COLOR_FormatYUV420Planar:
     case OMX_COLOR_FormatYUV420PackedPlanar:
-      ffmpeg_pxlfmt = PIX_FMT_YUV420P;
+      ffmpeg_pxlfmt = AV_PIX_FMT_YUV420P;
       break;
     case OMX_COLOR_FormatYUV422Planar:
     case OMX_COLOR_FormatYUV422PackedPlanar:
-      ffmpeg_pxlfmt = PIX_FMT_YUV422P;
+      ffmpeg_pxlfmt = AV_PIX_FMT_YUV422P;
       break;
     case OMX_COLOR_FormatCbYCrY:
-      ffmpeg_pxlfmt = PIX_FMT_UYVY422;
+      ffmpeg_pxlfmt = AV_PIX_FMT_UYVY422;
       break;
     case OMX_COLOR_FormatMonochrome:  //  Better hope resolutions are multiples of 8
-      ffmpeg_pxlfmt = PIX_FMT_MONOBLACK;
+      ffmpeg_pxlfmt = AV_PIX_FMT_MONOBLACK;
       break;
     case OMX_COLOR_FormatL2:
     case OMX_COLOR_FormatL4:
@@ -112,7 +112,7 @@ enum PixelFormat find_ffmpeg_pxlfmt(OMX_COLOR_FORMATTYPE omx_pxlfmt) {
     case OMX_COLOR_FormatRawBayer8bitcompressed:
     case OMX_COLOR_FormatUnused:
     default:
-      ffmpeg_pxlfmt = PIX_FMT_NONE;
+      ffmpeg_pxlfmt = AV_PIX_FMT_NONE;
       break;
   }
   return ffmpeg_pxlfmt;
@@ -261,7 +261,7 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Constructor(OMX_COMPONENTTYPE *open
   inPort->sPortParam.format.video.nSliceHeight = inPort->sPortParam.format.video.nFrameHeight;  //  No support for slices yet
 
   inPort->sPortParam.format.video.xFramerate = 25;
-  inPort->ffmpeg_pxlfmt = PIX_FMT_YUV420P;
+  inPort->ffmpeg_pxlfmt = AV_PIX_FMT_YUV420P;
   inPort->sPortParam.nBufferSize = DEFAULT_VIDEO_INPUT_BUF_SIZE;
   inPort->sPortParam.format.video.eColorFormat = OMX_COLOR_FormatYUV420Planar;
   inPort->sPortParam.format.video.pNativeWindow = NULL;
@@ -272,7 +272,7 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Constructor(OMX_COMPONENTTYPE *open
   outPort->sPortParam.format.video.nStride = calcStride(outPort->sPortParam.format.video.nFrameWidth, outPort->sVideoParam.eColorFormat);
   outPort->sPortParam.format.video.nSliceHeight = outPort->sPortParam.format.video.nFrameHeight;  //  No support for slices yet
   outPort->sPortParam.format.video.xFramerate = 25;
-  outPort->ffmpeg_pxlfmt = PIX_FMT_RGB24;
+  outPort->ffmpeg_pxlfmt = AV_PIX_FMT_RGB24;
   outPort->sPortParam.nBufferSize = DEFAULT_VIDEO_INPUT_BUF_SIZE * 2;
   outPort->sPortParam.format.video.eColorFormat = OMX_COLOR_Format24bitRGB888;
 
@@ -406,8 +406,8 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_Init(OMX_COMPONENTTYPE *openmaxStan
     return OMX_ErrorInsufficientResources;
   }
   av_register_all();
-  omx_ffmpeg_colorconv_component_Private->in_frame = avcodec_alloc_frame();
-  omx_ffmpeg_colorconv_component_Private->conv_frame = avcodec_alloc_frame();
+  omx_ffmpeg_colorconv_component_Private->in_frame = av_frame_alloc();
+  omx_ffmpeg_colorconv_component_Private->conv_frame = av_frame_alloc();
 
   return err;
 };
@@ -1098,7 +1098,7 @@ OMX_ERRORTYPE omx_ffmpeg_colorconv_component_SetParameter(
       pPort->sPortParam.format.video.eColorFormat = pVideoPortFormat->eColorFormat;
       pPort->ffmpeg_pxlfmt = find_ffmpeg_pxlfmt(pPort->sVideoParam.eColorFormat);
 
-      if(pPort->ffmpeg_pxlfmt == PIX_FMT_NONE) {
+      if(pPort->ffmpeg_pxlfmt == AV_PIX_FMT_NONE) {
         /** no real pixel format supported by ffmpeg for this user input color format
           * so return bad parameter error to user application */
         return OMX_ErrorBadParameter;

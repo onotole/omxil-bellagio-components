@@ -129,9 +129,9 @@ OMX_ERRORTYPE omx_audioenc_component_Constructor(OMX_COMPONENTTYPE *openmaxStand
   omx_audioenc_component_Private->BufferMgmtCallback = omx_audioenc_component_BufferMgmtCallback;
 
   /** first initializing the codec context etc that was done earlier by ffmpeglibinit function */
-  avcodec_init();
+  avcodec_register_all();
   av_register_all();
-  omx_audioenc_component_Private->avCodecContext = avcodec_alloc_context();
+  omx_audioenc_component_Private->avCodecContext = avcodec_alloc_context3(NULL);
 
   omx_audioenc_component_Private->messageHandler = omx_audioenc_component_MessageHandler;
   omx_audioenc_component_Private->destructor = omx_audioenc_component_Destructor;
@@ -186,13 +186,13 @@ OMX_ERRORTYPE omx_audioenc_component_ffmpegLibInit(omx_audioenc_component_Privat
 
   switch(omx_audioenc_component_Private->audio_coding_type){
   case OMX_AUDIO_CodingMP3 :
-    target_codecID = CODEC_ID_MP3;
+    target_codecID = AV_CODEC_ID_MP3;
     break;
   case OMX_AUDIO_CodingAAC :
-    target_codecID = CODEC_ID_AAC;
+    target_codecID = AV_CODEC_ID_AAC;
     break;
   case OMX_AUDIO_CodingG726 :
-    target_codecID = CODEC_ID_ADPCM_G726;
+    target_codecID = AV_CODEC_ID_ADPCM_G726;
     break;
   default :
     DEBUG(DEB_LEV_ERR, "Audio format other than not supported\nCodec not found\n");
@@ -212,13 +212,13 @@ OMX_ERRORTYPE omx_audioenc_component_ffmpegLibInit(omx_audioenc_component_Privat
     omx_audioenc_component_Private->avCodecContext->channels = omx_audioenc_component_Private->pAudioMp3.nChannels;
     omx_audioenc_component_Private->avCodecContext->bit_rate = (int)omx_audioenc_component_Private->pAudioMp3.nBitRate;
     omx_audioenc_component_Private->avCodecContext->sample_rate = omx_audioenc_component_Private->pAudioMp3.nSampleRate;
-    omx_audioenc_component_Private->avCodecContext->sample_fmt = SAMPLE_FMT_S16;
+    omx_audioenc_component_Private->avCodecContext->sample_fmt = AV_SAMPLE_FMT_S16;
     break;
   case OMX_AUDIO_CodingAAC :
     omx_audioenc_component_Private->avCodecContext->channels = omx_audioenc_component_Private->pAudioAac.nChannels;
     omx_audioenc_component_Private->avCodecContext->bit_rate = (int)omx_audioenc_component_Private->pAudioAac.nBitRate;
     omx_audioenc_component_Private->avCodecContext->sample_rate = omx_audioenc_component_Private->pAudioAac.nSampleRate;
-    omx_audioenc_component_Private->avCodecContext->sample_fmt = SAMPLE_FMT_S16;
+    omx_audioenc_component_Private->avCodecContext->sample_fmt = AV_SAMPLE_FMT_S16;
     break;
   case OMX_AUDIO_CodingG726 :
     omx_audioenc_component_Private->avCodecContext->channels = omx_audioenc_component_Private->pAudioG726.nChannels;
@@ -240,7 +240,7 @@ OMX_ERRORTYPE omx_audioenc_component_ffmpegLibInit(omx_audioenc_component_Privat
       break;
     }
     omx_audioenc_component_Private->avCodecContext->sample_rate = 8000;
-    omx_audioenc_component_Private->avCodecContext->sample_fmt = SAMPLE_FMT_S16;
+    omx_audioenc_component_Private->avCodecContext->sample_fmt = AV_SAMPLE_FMT_S16;
     omx_audioenc_component_Private->avCodecContext->strict_std_compliance = FF_COMPLIANCE_STRICT;
     break;
   default :
@@ -250,7 +250,7 @@ OMX_ERRORTYPE omx_audioenc_component_ffmpegLibInit(omx_audioenc_component_Privat
 
   DEBUG(DEB_LEV_FULL_SEQ, "In %s Coding Type=%x target id=%x\n",__func__,(int)omx_audioenc_component_Private->audio_coding_type,(int)target_codecID);
   /*open the avcodec if mp3,aac,g726 format selected */
-  if (avcodec_open(omx_audioenc_component_Private->avCodecContext, omx_audioenc_component_Private->avCodec) < 0) {
+  if (avcodec_open2(omx_audioenc_component_Private->avCodecContext, omx_audioenc_component_Private->avCodec, NULL) < 0) {
     DEBUG(DEB_LEV_ERR, "Could not open codec\n");
     return OMX_ErrorInsufficientResources;
   }
@@ -421,10 +421,10 @@ void omx_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
     while (!nOutputFilled) {
       omx_audioenc_component_Private->avCodecContext->frame_number++;
 
-      nLen = avcodec_encode_audio(omx_audioenc_component_Private->avCodecContext,
-                                  pOutputBuffer->pBuffer,
-                                  omx_audioenc_component_Private->avCodecContext->frame_size,
-                                  (short*)omx_audioenc_component_Private->temp_buffer);
+      nLen = avcodec_encode_audio2(omx_audioenc_component_Private->avCodecContext,
+                                   pOutputBuffer->pBuffer,
+                                   omx_audioenc_component_Private->avCodecContext->frame_size,
+                                   (short*)omx_audioenc_component_Private->temp_buffer);
 
       if (nLen < 0) {
         DEBUG(DEB_LEV_ERR, "----> A general error or simply frame not encoded?\n");
@@ -464,10 +464,10 @@ void omx_audioenc_component_BufferMgmtCallback(OMX_COMPONENTTYPE *openmaxStandCo
     while (!nOutputFilled) {
       omx_audioenc_component_Private->avCodecContext->frame_number++;
 
-      nLen = avcodec_encode_audio(omx_audioenc_component_Private->avCodecContext,
-                                  pOutputBuffer->pBuffer,
-                                  omx_audioenc_component_Private->avCodecContext->frame_size,
-                                  (short*)data);
+      nLen = avcodec_encode_audio2(omx_audioenc_component_Private->avCodecContext,
+                                   pOutputBuffer->pBuffer,
+                                   omx_audioenc_component_Private->avCodecContext->frame_size,
+                                   (short*)data);
 
       if (nLen < 0) {
         DEBUG(DEB_LEV_ERR, "----> A general error or simply frame not encoded?\n");

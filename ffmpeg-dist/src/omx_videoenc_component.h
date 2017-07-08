@@ -76,7 +76,7 @@ DERIVEDCLASS(omx_videoenc_component_PrivateType, omx_base_filter_PrivateType)
   /** @param video_encoding_type Field that indicate the supported video format of video encoder */ \
   OMX_U32 video_encoding_type;   \
   /** @param eOutFramePixFmt Field that indicate output frame pixel format */ \
-  enum PixelFormat eOutFramePixFmt;
+  enum AVPixelFormat eOutFramePixFmt;
 ENDCLASS(omx_videoenc_component_PrivateType)
 
 /* Component private entry points enclaration */

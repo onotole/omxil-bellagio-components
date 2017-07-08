@@ -212,11 +212,8 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
 
   /** initialization of parser3gp  component private data structures */
   /** opening the input file whose name is already set via setParameter */
-  error = av_open_input_file(&omx_parser3gp_component_Private->avformatcontext,
-                            (char*)omx_parser3gp_component_Private->sInputFileName,
-                            NULL,
-                            0,
-                            NULL);
+  error = avformat_open_input(&omx_parser3gp_component_Private->avformatcontext,
+                              (char*)omx_parser3gp_component_Private->sInputFileName, NULL, 0);
 
   if(error != 0) {
     DEBUG(DEB_LEV_ERR,"Couldn't Open Input Stream error=%d File Name=%s\n",
@@ -225,20 +222,20 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
     return OMX_ErrorBadParameter;
   }
 
-  av_find_stream_info(omx_parser3gp_component_Private->avformatcontext);
+  avformat_find_stream_info(omx_parser3gp_component_Private->avformatcontext, NULL);
 
  /* Setting the audio and video coding types of the audio and video ports based on the information obtained from the stream */
  /* for the video port */
   pPortV = (omx_base_video_PortType *) omx_parser3gp_component_Private->ports[VIDEO_PORT_INDEX];
   switch(omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_PORT_INDEX]->codec->codec_id){
-    case  CODEC_ID_H264:
+    case AV_CODEC_ID_H264:
         pPortV->sPortParam.format.video.eCompressionFormat = OMX_VIDEO_CodingAVC;
         pPortV->sPortParam.format.video.nFrameWidth =omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->width;
         pPortV->sPortParam.format.video.nFrameHeight =omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->height;
         omx_parser3gp_component_Private->video_coding_type = OMX_VIDEO_CodingAVC;
         DEBUG(DEB_LEV_SIMPLE_SEQ,"In %s Video Coding Type h.264\n",__func__);
         break;
-    case CODEC_ID_MPEG4:
+    case AV_CODEC_ID_MPEG4:
         pPortV->sPortParam.format.video.eCompressionFormat = OMX_VIDEO_CodingMPEG4;
         pPortV->sPortParam.format.video.nFrameWidth =omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->width;
         pPortV->sPortParam.format.video.nFrameHeight =omx_parser3gp_component_Private->avformatcontext->streams[VIDEO_STREAM]->codec->height;
@@ -260,12 +257,12 @@ OMX_ERRORTYPE omx_parser3gp_component_Init(OMX_COMPONENTTYPE *openmaxStandComp) 
   /* for the audio port*/
   pPortA = (omx_base_audio_PortType *) omx_parser3gp_component_Private->ports[AUDIO_PORT_INDEX];
   switch(omx_parser3gp_component_Private->avformatcontext->streams[AUDIO_STREAM]->codec->codec_id){
-    case CODEC_ID_MP3:
+    case AV_CODEC_ID_MP3:
         pPortA->sPortParam.format.audio.eEncoding = OMX_AUDIO_CodingMP3;
         pPortA->sAudioParam.eEncoding = OMX_AUDIO_CodingMP3;
         omx_parser3gp_component_Private->audio_coding_type = OMX_AUDIO_CodingMP3;
         break;
-    case CODEC_ID_AAC:
+    case AV_CODEC_ID_AAC:
         pPortA->sPortParam.format.audio.eEncoding = OMX_AUDIO_CodingAAC;
         pPortA->sAudioParam.eEncoding = OMX_AUDIO_CodingAAC;
         omx_parser3gp_component_Private->audio_coding_type = OMX_AUDIO_CodingAAC;
@@ -340,7 +337,7 @@ OMX_ERRORTYPE omx_parser3gp_component_Deinit(OMX_COMPONENTTYPE *openmaxStandComp
 
   DEBUG(DEB_LEV_FUNCTION_NAME, "In %s \n",__func__);
   /** closing input file */
-  av_close_input_file(omx_parser3gp_component_Private->avformatcontext);
+  avformat_close_input(&omx_parser3gp_component_Private->avformatcontext);
 
   omx_parser3gp_component_Private->avformatReady = OMX_FALSE;
   tsem_reset(omx_parser3gp_component_Private->avformatSyncSem);
